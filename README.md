@@ -5,4 +5,4 @@
 - Katherine Zhang
 - Jiarun (Rachel) Li
 - Julia Baylon
-![hi!!](public/assets/julia.jpg)
+<img src="public/assets/julia.jpg" width=25%/>
