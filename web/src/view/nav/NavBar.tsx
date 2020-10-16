@@ -12,23 +12,23 @@ import { link } from './Link'
 import { getLoginPath, getPath, getSurveyPath, Route } from './route'
 
 const title = {
-  name: 'CS188',
-  path: getPath(Route.HOME),
+  name: 'Gigly',
+  path: getPath(Route.HOME), // Landing
   title: true,
 }
 
 const otherTabs = [
   {
-    name: 'lectures',
-    path: getPath(Route.LECTURES),
+    name: 'Selling',
+    path: getPath(Route.LECTURES), // Selling
   },
   {
-    name: 'projects',
-    path: getPath(Route.PROJECTS),
+    name: 'Account',
+    path: getPath(Route.PROJECTS), // Account/form
   },
   {
-    name: 'playground',
-    path: getPath(Route.PLAYGROUND),
+    name: 'Popup',
+    path: getPath(Route.PLAYGROUND), // Popup for now
   },
 ]
 
