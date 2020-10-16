@@ -123,7 +123,7 @@ const Nav = style(
     opacity: '0.9',
     paddingTop: p.$isSubNav ? 0 : undefined,
     paddingBottom: p.$isSubNav ? 0 : undefined,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-start",
   })
 )
 
@@ -131,7 +131,9 @@ function NavItem(props: { name: string; path: string; title?: boolean }) {
   const location = useLocation()
   return (
     <NavLink $title={props.title} $bold={props.title || location.pathname.startsWith(props.path)} to={props.path}>
-      <div style={{color:'#C4C4C4'}} className="logo">{props.name}</div>
+      {props.name === "Gigly" ?
+         <div style={{color:'#3C82DC'}} className="logo">{props.name}</div>
+        : <div style={{color:'#C4C4C4'}} className="logo">{props.name}</div>}
     </NavLink>
   )
 }
