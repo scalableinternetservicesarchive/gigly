@@ -119,11 +119,11 @@ const Nav = style(
   'nav',
   'flex white items-center list pa2 ph4 ph5-ns ph7-l avenir f4',
   (p: { $isSubNav?: boolean }) => ({
-    background: `linear-gradient(90deg, ${'#005587'} 0%, ${'#2774AE'} 100%)`,
+    background: `linear-gradient(90deg, ${'#FFFFFF'} 0%, ${'#FFFFFF'} 100%)`,
     opacity: '0.9',
     paddingTop: p.$isSubNav ? 0 : undefined,
     paddingBottom: p.$isSubNav ? 0 : undefined,
-    justifyContent: p.$isSubNav ? 'flex-end' : 'space-between',
+    justifyContent: 'flex-end',
   })
 )
 
@@ -131,7 +131,7 @@ function NavItem(props: { name: string; path: string; title?: boolean }) {
   const location = useLocation()
   return (
     <NavLink $title={props.title} $bold={props.title || location.pathname.startsWith(props.path)} to={props.path}>
-      {props.name}
+      <div style={{color:'#C4C4C4'}} className="logo">{props.name}</div>
     </NavLink>
   )
 }
