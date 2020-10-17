@@ -1,15 +1,14 @@
 import { useLocation } from '@reach/router'
 import * as React from 'react'
-import { useContext, useEffect } from 'react'
+import { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
 import { breakpoints } from '../../style/breakpoints'
 import { MenuIcon } from '../../style/icons'
 import { style } from '../../style/styled'
-import { UserContext } from '../auth/user'
 import { addToastListener, removeToastListener, Toast, ToastType } from '../toast/toast'
 import { link } from './Link'
-import { getLoginPath, getPath, getSurveyPath, Route } from './route'
+import { getPath, Route } from './route'
 
 const title = {
   name: 'Gigly',
@@ -102,15 +101,15 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
 
 function SubNav() {
   const location = useLocation()
-  const { user } = useContext(UserContext)
+  // const { user } = useContext(UserContext)
   if (!location.pathname.startsWith(getPath(Route.PLAYGROUND))) {
     // only playground has subnav
     return null
   }
   return (
     <Nav $isSubNav>
-      <NavItem name="surveys" path={getSurveyPath()} />
-      <NavItem name={user ? 'logout' : 'login'} path={getLoginPath()} />
+      {/* <NavItem name="surveys" path={getSurveyPath()} />
+      <NavItem name={user ? 'logout' : 'login'} path={getLoginPath()} /> */}
     </Nav>
   )
 }
@@ -132,8 +131,8 @@ function NavItem(props: { name: string; path: string; title?: boolean }) {
   return (
     <NavLink $title={props.title} $bold={props.title || location.pathname.startsWith(props.path)} to={props.path}>
       {props.name === "Gigly" ?
-         <div style={{color:'#3C82DC'}} className="logo">{props.name}</div>
-        : <div style={{color:'#C4C4C4'}} className="logo">{props.name}</div>}
+        <div style={{ color: '#3C82DC' }} className="logo">{props.name}</div>
+        : <div style={{ color: '#C4C4C4' }} className="logo">{props.name}</div>}
     </NavLink>
   )
 }
