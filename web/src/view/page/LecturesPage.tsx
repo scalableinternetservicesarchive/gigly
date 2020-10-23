@@ -6,44 +6,82 @@ import { Page } from './Page'
 
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
 
+interface CardData {
+  serviceName: string
+  username: string
+  profPic: string
+  price: number
+}
+
+function getCard(c: CardData) {
+  return (
+    <Card key={c.serviceName}>
+      <CardInfo>
+        <div
+          style={{
+            backgroundColor: 'white',
+            paddingLeft: '15px',
+            fontWeight: 'bold',
+            paddingRight: '15px',
+            paddingTop: '8px',
+            borderRadius: '25px 25px 0px 0px',
+            color: '#696969',
+            width: '250px',
+          }}
+        >
+          {c.serviceName}
+        </div>
+        <div
+          className="flex flex-row"
+          style={{
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingTop: '5px',
+            paddingLeft: '5px',
+            paddingBottom: '5px',
+            backgroundColor: 'white',
+            borderRadius: '0px 0px 25px 25px',
+          }}
+        >
+          <UserInfo $img={c.profPic} />
+          <div style={{ paddingLeft: '15px', color: '#696969' }}>{c.username}</div>
+          <div style={{ paddingLeft: '25px', color: '#3C82DC' }}>{'$' + c.price}</div>
+        </div>
+      </CardInfo>
+    </Card>
+  )
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function LecturesPage(props: LecturesPageProps) {
+  const cards: CardData[] = [
+    {
+      serviceName: 'Personalized Guitar Lessons',
+      username: 'Dolphin123',
+      price: 30,
+      profPic:
+        'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+    },
+    {
+      serviceName: 'Spanish Translation',
+      username: 'Fox456',
+      price: 18,
+      profPic:
+        'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+    },
+    {
+      serviceName: ':))))))))))',
+      username: 'lol',
+      price: 9000,
+      profPic:
+        'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+    },
+  ]
+  console.log()
   return (
     <Page>
-      <div style={{ paddingTop: '100px' }}>
-        <Card>
-          <CardInfo>
-            <div
-              style={{
-                backgroundColor: 'white',
-                paddingLeft: '15px',
-                fontWeight: 'bold',
-                paddingRight: '15px',
-                paddingTop: '8px',
-                borderRadius: '25px 25px 0px 0px',
-                color: '#696969',
-              }}
-            >
-              Personalized Guitar Lessons
-            </div>
-            <div
-              className="flex flex-row"
-              style={{
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                paddingTop: '5px',
-                paddingLeft: '5px',
-                paddingBottom: '5px',
-                backgroundColor: 'white',
-                borderRadius: '0px 0px 25px 25px',
-              }}
-            >
-              <UserInfo />
-              <div style={{ paddingLeft: '15px', color: '#696969' }}>Dolphin 123</div>
-              <div style={{ paddingLeft: '25px', color: '#3C82DC' }}>$30</div>
-            </div>
-          </CardInfo>
-        </Card>
+      <div className="flex flex-row" style={{ paddingTop: '100px' }}>
+        {cards.map(card => getCard(card))}
       </div>
     </Page>
   )
@@ -69,7 +107,7 @@ const CardInfo = style('div', 'flex flex-column', {
   paddingTop: '100px',
 })
 
-const UserInfo = style('div', {
+const UserInfo = style('div', (c: { $img?: string }) => ({
   width: '50px',
   height: '50px',
   borderRadius: '180px',
@@ -77,7 +115,9 @@ const UserInfo = style('div', {
   backgroundPositionY: 'center',
   backgroundSize: 'cover',
   backgroundImage:
-    'url(' +
-    'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' +
-    ')',
-})
+    c.$img !== undefined
+      ? 'url(' + c.$img + ')'
+      : 'url(' +
+        'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' +
+        ')',
+}))
