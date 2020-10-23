@@ -1,240 +1,339 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
-import { ColorName, Colors } from '../../../../common/src/colors'
-import { H2 } from '../../style/header'
-import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
-import { BodyText } from '../../style/text'
-import { Link } from '../nav/Link'
-import { AppRouteParams, getPlaygroundPath } from '../nav/route'
+import { AppRouteParams } from '../nav/route'
 import { Page } from './Page'
 
 interface ProjectsPageProps extends RouteComponentProps, AppRouteParams {}
-
+// const imageSrc = require('../../../../public/assets/julia.jpg')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+interface TestUser {
+  name: string
+  email: string
+  phone: string
+  location: string
+}
+
+interface Post {
+  name: string
+  price: number
+  start: string
+  end: string
+  location: string
+  tags: string
+  description: string
+}
+
 export function ProjectsPage(props: ProjectsPageProps) {
+  const [editForm, showEditForm] = React.useState(false)
+  const [user, editUser] = React.useState<TestUser>({
+    name: 'Julia Baylon',
+    email: 'julia@gmail.com',
+    phone: '(123) 456 - 7890',
+    location: 'Westwood, CA',
+  })
   return (
     <Page>
-      <Section>
-        <ProjectOverview />
-        <Spacer $h5 />
-        <ProjectRequirements />
-        <Spacer $h5 />
-        <ProjectIdeas />
-        <Spacer $h5 />
-        <SprintSchedule />
-      </Section>
+      <div style={{ width: '100%' }}>
+        <Row>
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                margin: 'auto',
+                width: '180px',
+                height: '180px',
+                borderRadius: '180px',
+                border: '0.5px solid #18A0FB',
+                backgroundPositionY: 'center',
+                backgroundSize: 'cover',
+                backgroundImage:
+                  'url(' +
+                  'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' +
+                  ')',
+              }}
+            ></div>
+          </div>
+          <div style={{ flex: 2, flexDirection: 'column' }}>
+            {editForm ? (
+              <form onSubmit={() => showEditForm(false)}>
+                <HeaderLabelText> EDIT MY INFORMATION: </HeaderLabelText>
+                <FormInput>
+                  <input
+                    type="text"
+                    placeholder="name"
+                    style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                    onChange={e =>
+                      editUser({ name: e.target.value, email: user.email, phone: user.phone, location: user.location })
+                    }
+                    value={user.name}
+                  />
+                </FormInput>
+                <FormInput>
+                  <input
+                    type="text"
+                    placeholder="email"
+                    style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                    onChange={e =>
+                      editUser({ name: user.name, email: e.target.value, phone: user.phone, location: user.location })
+                    }
+                    value={user.email}
+                  />
+                </FormInput>
+                <FormInput>
+                  <input
+                    type="text"
+                    placeholder="phone number"
+                    style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                    onChange={e =>
+                      editUser({ name: user.name, email: user.email, phone: e.target.value, location: user.location })
+                    }
+                    value={user.phone}
+                  />
+                </FormInput>
+                <FormInput>
+                  <input
+                    type="text"
+                    placeholder="location"
+                    style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                    onChange={e =>
+                      editUser({ name: user.name, email: user.email, phone: user.phone, location: e.target.value })
+                    }
+                    value={user.location}
+                  />
+                </FormInput>
+                <input accept="image" type="file" />
+                <br />
+                <SubmitButton type="submit">
+                  <LabelText>SUBMIT</LabelText>
+                </SubmitButton>
+              </form>
+            ) : (
+              <>
+                <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
+                <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
+                  <LabelText>EDIT</LabelText>
+                </SubmitButton>
+              </>
+            )}
+          </div>
+        </Row>
+        <NewPostForm />
+      </div>
+      <p style={{ color: 'white' }}>
+        The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
+        the internet. This is a "learn
+      </p>
     </Page>
   )
 }
-
-function ProjectOverview() {
+function MyAccountInfo(props: TestUser) {
   return (
     <>
-      <H2>Course Project</H2>
-      <Spacer $h4 />
-      <BodyText>
-        The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
-        the internet. This is a "learn by doing" course so we'll spend time in lectures and lab sessions building
-        features, watching them fail at scale, and then fixing them. 😉
-      </BodyText>
-      <Spacer $h4 />
-      <BodyText>
-        This class website is built on the framework you'll use for your project. During lectures we'll add new features
-        to the <Link to={getPlaygroundPath()}>playground</Link>. The website source code is located{' '}
-        <Link href="https://github.com/scalableinternetservices/cs188">here</Link>.
-      </BodyText>
+      <HeaderLabelText> MY INFORMATION:</HeaderLabelText>
+      <FormInput>
+        <FormText>{props.name}</FormText>
+      </FormInput>
+      <FormInput>
+        <FormText>{props.email}</FormText>
+      </FormInput>
+      <FormInput>
+        <FormText>{props.phone}</FormText>
+      </FormInput>
+      <FormInput>
+        <FormText>{props.location} </FormText>
+      </FormInput>
     </>
   )
 }
 
-function ProjectRequirements() {
+function NewPostForm() {
+  const [post, editPost] = React.useState<Post>({
+    name: '',
+    price: 0,
+    start: '',
+    end: '',
+    location: '',
+    tags: '',
+    description: '',
+  })
   return (
     <>
-      <H2>Project Requirements</H2>
-      <Spacer $h4 />
-      <BodyText>
-        <ul className="pl4">
-          <li>Must be deployable (and load-testable) web applications of non-trivial complexity</li>
-          <li>Must be developed in teams of 4</li>
-          <li>
-            Must use the class project framework located <Link href="https://github.com/rothfels/bespin">here</Link>
-          </li>
-          <li>Must use TypeScript (or JavaScript)</li>
-          <li>Must use at least 4 MySQL tables</li>
-          <li>
-            Must use at least 2 <code>JOIN</code> relations
-          </li>
-          <li>Must use at least 1 "background" process running regardless of user activity</li>
-        </ul>
-      </BodyText>
+      <form>
+        <HeaderLabelText>NEW POST: </HeaderLabelText>
+        <FormLabelText>service name </FormLabelText>
+        <FormInput>
+          <input
+            type="text"
+            placeholder="Service Name"
+            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+            onChange={e =>
+              editPost({
+                name: e.target.value,
+                price: post.price,
+                start: post.start,
+                end: post.end,
+                location: post.location,
+                tags: post.tags,
+                description: post.description,
+              })
+            }
+          />
+        </FormInput>
+        <FormLabelText>service price </FormLabelText>
+        <FormInput>
+          <input
+            type="number"
+            placeholder="Service Price"
+            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+            onChange={e =>
+              editPost({
+                name: post.name,
+                price: parseInt(e.target.value),
+                start: post.start,
+                end: post.end,
+                location: post.location,
+                tags: post.tags,
+                description: post.description,
+              })
+            }
+          />
+        </FormInput>
+        <FormLabelText>service availability start date</FormLabelText>
+        <FormInput>
+          <input
+            type="date"
+            placeholder="Service Availability"
+            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+            onChange={e =>
+              editPost({
+                name: post.name,
+                price: post.price,
+                start: e.target.value,
+                end: post.end,
+                location: post.location,
+                tags: post.tags,
+                description: post.description,
+              })
+            }
+          />
+        </FormInput>
+        <FormLabelText>service availability end date</FormLabelText>
+        <FormInput>
+          <input
+            type="date"
+            placeholder="Service Availability"
+            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+            onChange={e =>
+              editPost({
+                name: post.name,
+                price: post.price,
+                start: post.start,
+                end: e.target.value,
+                location: post.location,
+                tags: post.tags,
+                description: post.description,
+              })
+            }
+          />
+        </FormInput>
+        <FormLabelText>service location </FormLabelText>
+        <FormInput>
+          <input
+            type="text"
+            placeholder="Service Location"
+            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+            onChange={e =>
+              editPost({
+                name: post.name,
+                price: post.price,
+                start: post.start,
+                end: post.end,
+                location: e.target.value,
+                tags: post.tags,
+                description: post.description,
+              })
+            }
+          />
+        </FormInput>
+        <FormLabelText> service tags </FormLabelText>
+        <FormInput>
+          <input
+            type="text"
+            placeholder="Service Tags"
+            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+            onChange={e =>
+              editPost({
+                name: post.name,
+                price: post.price,
+                start: post.start,
+                end: post.end,
+                location: post.location,
+                tags: e.target.value,
+                description: post.description,
+              })
+            }
+          />
+        </FormInput>
+        <FormLabelText>service description </FormLabelText>
+        <FormInput>
+          <input
+            type="text"
+            placeholder="Service Description"
+            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+            onChange={e =>
+              editPost({
+                name: post.name,
+                price: post.price,
+                start: post.start,
+                end: post.end,
+                location: post.location,
+                tags: post.tags,
+                description: e.target.value,
+              })
+            }
+          />
+        </FormInput>
+        <FormLabelText>upload image(s) </FormLabelText>
+        <input style={{ marginTop: '10px' }} accept="image" type="file" />
+        <br />
+        <SubmitButton type="submit">
+          <LabelText>SUBMIT</LabelText>
+        </SubmitButton>
+      </form>
+      <h2>{post.name}</h2>
+      <h2>{post.price}</h2>
+      <h2>{post.start} </h2>
+      <h2>{post.end} </h2>
+      <h2>{post.tags} </h2>
+      <h2>{post.location} </h2>
+      <h2>{post.description}</h2>
     </>
   )
 }
 
-function ProjectIdeas() {
-  return (
-    <>
-      <H2>Project Ideas</H2>
-      <Spacer $h4 />
-      <BodyText>
-        <ul className="pl4">
-          <li>
-            Implement some portion of one of the YCombinator{' '}
-            <Link href="https://www.ycombinator.com/rfs/">"Startup ideas we would like to fund"</Link>
-          </li>
-          <li>
-            Build something around a large dataset. Use data from e.g.{' '}
-            <Link href="https://www.data.gov/">data.gov</Link> or{' '}
-            <Link href="https://registry.opendata.aws/">Amazon's public datasets</Link>.
-          </li>
-          <li>
-            Build something for the government. See the{' '}
-            <Link href="https://sunlightfoundation.com/our-work/">Sunlight Foundation</Link> for ideas.
-          </li>
-          <li>
-            Build something around public APIs. For example, the <Link href="">New York Times Developer API</Link> has
-            APIs covering geography, movie reviews, and more.
-          </li>
-          <li>
-            <i>{'<your idea here>'}</i>
-          </li>
-        </ul>
-      </BodyText>
-    </>
-  )
-}
-
-function SprintSchedule() {
-  return (
-    <>
-      <H2>Sprint Schedule</H2>
-      <Spacer $h4 />
-      <Table>
-        <colgroup>
-          <col span={1} style={{ width: '15%' }} />
-          <col span={1} style={{ width: '85%' }} />
-        </colgroup>
-        <tbody>
-          <Sprint
-            day="Fri Oct 2"
-            title="Setup dev environment"
-            checklistFull={[
-              {
-                name: 'follow Quickstart section until you have a running dev server',
-                href: 'https://github.com/rothfels/bespin#quickstart',
-              },
-              {
-                name: 'learn TypeScript',
-                href: 'https://www.typescriptlang.org/docs/handbook/intro.html',
-              },
-              {
-                name: 'learn React',
-                href: 'https://reactjs.org/tutorial/tutorial.html',
-              },
-              {
-                name: 'write a React component in TypeScript / Storybook',
-                href: 'https://github.com/rothfels/bespin#run-react-storybook',
-              },
-            ]}
-          />
-          <Sprint
-            day="Fri Oct 9"
-            title="Plan project"
-            checklist={[
-              'find project team',
-              'choose project and get approved by professor and TA',
-              'start writing stories for your project in GitHub issues',
-            ]}
-          />
-          <Sprint day="Fri Oct 16" title="Write features" checklist={['implement user stories']} />
-          <Sprint day="Fri Oct 23" title="Write features" checklist={['implement user stories']} />
-          <Sprint
-            day="Fri Oct 30"
-            title="Write features, write a load test"
-            checklist={[
-              'write a load test user script',
-              'setup honeycomb project',
-              'run load test against local dev server',
-              'verify results in honeycomb',
-              'implement more user stories',
-            ]}
-          />
-          <Sprint
-            day="Fri Nov 6"
-            title="Deploy code on AWS, run load test"
-            checklist={['run terraform', 'run load test against AWS resources', 'delete terraform resources']}
-          />
-          <Sprint
-            day="Fri Nov 13"
-            title="Deploy code on AWS, try different scaling configurations"
-            checklist={['run terraform', 'run load test against AWS resources', 'delete terraform resources']}
-          />
-          <Sprint
-            day="Fri Nov 20"
-            title="Deploy code on AWS, try different scaling configurations"
-            checklist={['run terraform', 'run load test against AWS resources', 'delete terraform resources']}
-          />
-          <Sprint day="Fri Nov 27" title="Thanksgiving (no lab)" />
-          <Sprint
-            day="Fri Dec 4"
-            title="Deploy code on AWS, try different scaling configurations"
-            checklist={['run terraform', 'run load test against AWS resources', 'delete terraform resources']}
-          />
-          <Sprint day="Fri Dec 11" title="Project presentations" />
-        </tbody>
-      </Table>
-    </>
-  )
-}
-
-interface ChecklistItem {
-  name: string
-  href?: string
-}
-
-function Sprint(props: { day: string; title: string; checklist?: string[]; checklistFull?: ChecklistItem[] }) {
-  return (
-    <TR>
-      <TD style={{ textAlign: 'center' }}>
-        <BodyText>{props.day}</BodyText>
-      </TD>
-      <TD>
-        <BodyText>
-          <b>{props.title}</b>
-          {props.checklist && (
-            <>
-              <Spacer $h3 />
-              <ul className="pl4">
-                {props.checklist.map((str, i) => (
-                  <li key={i}>{str}</li>
-                ))}
-              </ul>
-            </>
-          )}
-          {props.checklistFull && (
-            <>
-              <Spacer $h3 />
-              <ul className="pl4">
-                {props.checklistFull.map((item, i) => (
-                  <li key={i}>{item.href ? <Link href={item.href}>{item.name}</Link> : item.name}</li>
-                ))}
-              </ul>
-            </>
-          )}
-        </BodyText>
-      </TD>
-    </TR>
-  )
-}
-
-const Table = style('table', 'w-100 ba b--black')
-
-const Section = style('div', 'mb4 mid-gray ba b--mid-gray br2 pa3', (p: { $color?: ColorName }) => ({
-  borderLeftColor: Colors[p.$color || 'lemon'] + '!important',
-  borderLeftWidth: '3px',
-}))
-
-const TR = style('tr', 'ba b--black')
-
-const TD = style('td', 'mid-gray pa3 v-mid', { minWidth: '7em' })
+const Row = style('div', { display: 'flex', flexDirection: 'row' })
+const FormInput = style('div', {
+  border: '1px solid #808080',
+  display: 'flex',
+  borderRadius: '20px',
+  padding: '5px',
+  paddingLeft: '10px',
+  margin: '5px',
+  minHeight: '13px',
+})
+const SubmitButton = style('button', {
+  display: 'block',
+  borderRadius: '20px',
+  color: 'white',
+  backgroundColor: '#18A0FB',
+  padding: '10px',
+  paddingLeft: '15px',
+  paddingRight: '15px',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+})
+const FormLabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '8px' })
+const LabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px' })
+const HeaderLabelText = style('h1', { fontSize: '1.2em', letterSpacing: '1.25px' })
+const FormText = style('p', { fontSize: '0.9em', color: 'black', resize: 'none', width: '100%' })
