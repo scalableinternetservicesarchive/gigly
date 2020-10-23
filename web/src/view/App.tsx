@@ -14,6 +14,13 @@ import { HomePage } from './page/HomePage'
 import { LecturesPage } from './page/LecturesPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { ProjectsPage } from './page/ProjectsPage'
+// import WebFont from 'webfontloader';
+
+// WebFont.load({
+//   google: {
+//     families: ['Ribeye Marrow', 'sans-serif']
+//   }
+// })
 
 const Styletron = require('styletron-engine-monolithic')
 
@@ -59,13 +66,14 @@ export function AppBody() {
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
       </Router>
       <Footer>
-        <FooterText>© 2020 John Rothfels</FooterText>
+        <FooterText>© 2020 GiGly</FooterText>
       </Footer>
     </>
   )
 }
 
-const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt6 min-vh-100 sans-serif'
+// const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt6 min-vh-100 sans-serif'
+const bodyClass = 'flex flex-column items-center'
 
 const Footer = style('footer', 'fixed flex items-center bottom-0 w-100')
 
