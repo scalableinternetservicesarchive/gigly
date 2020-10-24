@@ -54,6 +54,7 @@ function getCard(c: CardData) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function LecturesPage(props: LecturesPageProps) {
+  const [search, setSearch] = React.useState<string>('')
   const cards: CardData[] = [
     {
       serviceName: 'Personalized Guitar Lessons',
@@ -77,11 +78,35 @@ export function LecturesPage(props: LecturesPageProps) {
         'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
     },
   ]
-  console.log()
+  const filteredCards = cards.filter(card => {
+    return (
+      card.serviceName.toLowerCase().includes(search.toLowerCase()) ||
+      card.username.toLowerCase().includes(search.toLowerCase())
+    )
+  })
   return (
     <Page>
-      <div className="flex flex-row" style={{ paddingTop: '100px' }}>
-        {cards.map(card => getCard(card))}
+      <div style={{ paddingTop: '100px' }}>
+        <input
+          className="input"
+          type="text"
+          style={{
+            backgroundColor: 'E3E3E3',
+            borderRadius: '20px',
+            height: '5vh',
+            width: '50vw',
+            padding: '1.5rem',
+            fontFamily: 'Roboto',
+          }}
+          placeholder="Search"
+          value={search}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setSearch(e.target.value)
+          }}
+        />
+      </div>
+      <div className="flex flex-row" style={{ paddingTop: '80px' }}>
+        {filteredCards.map(card => getCard(card))}
       </div>
     </Page>
   )
