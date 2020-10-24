@@ -142,7 +142,7 @@ const Card = style('div', 'flex white items-center list pa6 ph2 ', {
   backgroundSize: 'cover',
   backgroundImage:
     'url(' +
-    'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' +
+    'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80' +
     ')',
   paddingTop: '20px',
   paddingBottom: '10px',
