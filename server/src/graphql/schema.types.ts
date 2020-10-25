@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql'
+import { Listing } from '../entities/Listing'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } &
@@ -24,6 +25,10 @@ export interface MutationAnswerSurveyArgs {
 
 export interface MutationNextSurveyQuestionArgs {
   surveyId: Scalars['Int']
+}
+
+export interface MutationNewListingArgs {
+  listing: Listing
 }
 
 export interface Query {
@@ -176,6 +181,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   SurveyQuestion: ResolverTypeWrapper<SurveyQuestion>
   SurveyAnswer: ResolverTypeWrapper<SurveyAnswer>
+  Listing: ResolverTypeWrapper<Listing>
   Mutation: ResolverTypeWrapper<{}>
   SurveyInput: SurveyInput
   Subscription: ResolverTypeWrapper<{}>
@@ -211,6 +217,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationNextSurveyQuestionArgs, 'surveyId'>
+  >
+  addListing?: Resolver<
+  Maybe<ResolversTypes['Listing']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationNewListingArgs, 'listing'>
   >
 }
 

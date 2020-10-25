@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { Listing } from '../entities/Listing'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
@@ -50,6 +51,18 @@ export const graphqlRoot: Resolvers<Context> = {
       await survey.save()
       ctx.pubsub.publish('SURVEY_UPDATE_' + surveyId, survey)
       return survey
+    },
+    addListing: async(_, {listing}, ctx) => {
+      const {username, price, sellingName} = listing
+      const newListing = new Listing()
+      if(username !== undefined && price !== undefined && sellingName !== undefined) {
+      newListing.username = username
+      newListing.price = price
+      newListing.sellingName = sellingName
+      await newListing.save()
+      return newListing
+      }
+      return null
     },
   },
   Subscription: {
