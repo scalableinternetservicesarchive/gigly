@@ -53,14 +53,15 @@ export const graphqlRoot: Resolvers<Context> = {
       return survey
     },
     addListing: async(_, {listing}, ctx) => {
-      const {username, price, sellingName} = listing
-      const newListing = new Listing()
-      if(username !== undefined && price !== undefined && sellingName !== undefined) {
+      if(listing !== undefined && listing !== null) {
+        const {username, price, sellingName} = listing
+        const newListing = new Listing()
+        if(username !== undefined && price !== undefined && sellingName !== undefined) {
       newListing.username = username
       newListing.price = price
       newListing.sellingName = sellingName
       await newListing.save()
-      return newListing
+      return newListing}
       }
       return null
     },

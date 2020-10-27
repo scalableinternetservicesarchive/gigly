@@ -9,7 +9,7 @@ export class Listing extends BaseEntity {
   username: string
 
   @Column('price')
-  price: number
+  price: number | null
 
   @Column('sellingName')
   sellingName: string
