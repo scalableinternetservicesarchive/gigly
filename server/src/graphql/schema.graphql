@@ -30,7 +30,7 @@ type Mutation {
   nextSurveyQuestion (surveyId: Int!): Survey
 
   # Create a new listing in the database (either a service being offered/requested)
-  addListing(listing: Listing): Listing
+  addListing(listing: ListingInput): Listing
 }
 
 type Subscription {
@@ -94,6 +94,17 @@ input SurveyInput {
 
 
 type Listing {
+  # username of user who posted this listing
+  username: String!
+
+  # price. Null if user is requesting a service
+  price: Int
+
+  # name of service being offered
+  sellingName: String!
+}
+
+input ListingInput {
   # username of user who posted this listing
   username: String!
 
