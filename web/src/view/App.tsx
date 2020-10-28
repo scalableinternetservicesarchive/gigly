@@ -73,7 +73,8 @@ export function AppBody() {
 }
 
 // const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt6 min-vh-100 sans-serif'
-const bodyClass = 'flex flex-column items-center'
+// const bodyClass = 'flex flex-column items-center'
+const bodyClass = 'flex flex-column items-center sans-serif'
 
 const Footer = style('footer', 'fixed flex items-center bottom-0 w-100')
 
