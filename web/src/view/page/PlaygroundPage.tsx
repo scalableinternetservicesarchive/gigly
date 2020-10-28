@@ -17,6 +17,108 @@ interface ListingInfo {
   numPics: number;
 }
 
+interface Hour {
+  dayIndex: number;
+  hourIndex: number;
+  checked: number;
+}
+
+function getHourBox(h: Hour) {
+  return (
+    <div key={(h.dayIndex) * 24 + h.hourIndex} >
+      {
+        (h.checked == 1) ?
+          <div style={{ backgroundColor: '#78A1E0', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
+          :
+          <div style={{ borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
+      } </div>
+  )
+}
+
+function getHourBoxLeft(h: Hour) {
+  return (
+    <div key={(h.dayIndex) * 24 + h.hourIndex} >
+      {
+        (h.checked == 1) ?
+          <div style={{ backgroundColor: '#78A1E0', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
+          :
+          <div style={{ borderLeft: '1px solid #707070', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
+      } </div>
+  )
+}
+
+function getDayColumn(d: number, hourBools: number[], earliestTime: number, latestTime: number, abbrev: string) {
+  var hoursOfDay: Hour[] = [];
+  for (var i = earliestTime; i < latestTime + 1; i++) {
+    hoursOfDay.push(
+      { dayIndex: d, hourIndex: i, checked: hourBools[i] }
+    );
+  }
+  return (
+    <div>
+      <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {abbrev}
+        </div>
+      </div>
+      {hoursOfDay.map(testhour => getHourBox(testhour))}
+    </div>
+  )
+}
+
+function getSundayColumn(d: number, hourBools: number[], earliestTime: number, latestTime: number, abbrev: string) {
+  var hoursOfDay: Hour[] = [];
+  for (var i = earliestTime; i < latestTime + 1; i++) {
+    hoursOfDay.push(
+      { dayIndex: d, hourIndex: i, checked: hourBools[i] }
+    );
+  }
+  return (
+    <div>
+      <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {abbrev}
+        </div>
+      </div>
+      {hoursOfDay.map(testhour => getHourBoxLeft(testhour))}
+    </div>
+  )
+}
+
+function getAvailabilityChart(bools: number[][]) {
+  var earliest = 23; var latest = 0;
+  for (var i = 0; i < 7; i++) {
+    for (var j = 0; j < 24; j++) {
+      if ((bools[i][j] == 1) && (j < earliest)) {
+        earliest = j;
+      }
+      if ((bools[i][j] == 1) && (j > latest)) {
+        latest = j;
+      }
+    }
+  }
+  var hrs = ['5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM',
+    '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM',
+    '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM', '3 AM', '4 AM'];
+  var hours = hrs.slice(earliest, latest + 1);
+
+  return (
+    <div style={{ width: '100%', display: 'flex' }}>
+      <div style={{ fontSize: '0.8em', letterSpacing: '1.25px', paddingRight: '3px', color: '#707070', textAlign: 'right', flex: '12.5%', width: '100%' }}>
+        <div style={{ height: '4vh' }}> </div>
+        {hours.map((hr) => <div style={{ height: '3vh' }}>{hr}</div>)}
+      </div>
+      <div style={{ flex: '12.5%', width: '100%' }}> {getSundayColumn(0, bools[0], earliest, latest, 'S')} </div>
+      <div style={{ flex: '12.5%', width: '100%' }}> {getDayColumn(0, bools[1], earliest, latest, 'M')} </div>
+      <div style={{ flex: '12.5%', width: '100%' }}> {getDayColumn(0, bools[2], earliest, latest, 'T')} </div>
+      <div style={{ flex: '12.5%', width: '100%' }}> {getDayColumn(0, bools[3], earliest, latest, 'W')} </div>
+      <div style={{ flex: '12.5%', width: '100%' }}> {getDayColumn(0, bools[4], earliest, latest, 'R')} </div>
+      <div style={{ flex: '12.5%', width: '100%' }}> {getDayColumn(0, bools[5], earliest, latest, 'F')} </div>
+      <div style={{ flex: '12.5%', width: '100%' }}> {getDayColumn(0, bools[6], earliest, latest, 'S')} </div>
+    </div>
+  )
+}
+
 export function PlaygroundPage(props: PlaygroundPageProps) {
   const [user] = React.useState<TestUser>({ name: 'Julia B.', email: 'julia@gmail.com', phone: '(123) 456 - 7890' });
   const [listing] = React.useState<ListingInfo>({ title: 'Tutoring Near UCLA', numPics: 3 });
@@ -32,30 +134,14 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
     picIndices.push(i);
   }
 
+  var bools = [[0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0]];
 
-  var sun = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  var mon = [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  var tues = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  var wed = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0];
-  var thurs = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  var fri = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  var sat = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0];
-  var hrs = ['5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM',
-    '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM',
-    '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM', '3 AM', '4 AM'];
-
-  var earliest = 6;
-  var latest = 20;
-  var sunday = sun.slice(earliest, latest + 1);
-  var monday = mon.slice(earliest, latest + 1);
-  var tuesday = tues.slice(earliest, latest + 1);
-  var wednesday = wed.slice(earliest, latest + 1);
-  var thursday = thurs.slice(earliest, latest + 1);
-  var friday = fri.slice(earliest, latest + 1);
-  var saturday = sat.slice(earliest, latest + 1);
-  var hours = hrs.slice(earliest, latest + 1);
-
-  // var ppl = ["Katherine", "Julia", "Chelsey", "Rachel"];
 
   return <>
     {/* <head>
@@ -154,102 +240,16 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
               </div>
             </div>
             :
-            <div style={{ width: '100%', marginRight: '10%', marginTop: '5%', display: 'flex' }}>
-              <div style={{ fontSize: '0.8em', letterSpacing: '1.25px', paddingRight: '3px', color: '#707070', textAlign: 'right', flex: '12.5%', width: '100%' }}>
-                <div style={{ height: '4vh' }}> </div>
-                {hours.map((hr) => <div style={{ height: '3vh' }}>{hr}</div>)}
-              </div>
-              <div style={{ flex: '12.5%', width: '100%' }}>
-                <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    S
-                    </div>
-                </div>
-                {sunday.map((hr) => (hr == 0) ?
-                  <div style={{ borderLeft: '1px solid #707070', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                  :
-                  <div style={{ backgroundColor: '#78A1E0', borderLeft: '1px solid #707070', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                )}
-              </div>
-              <div style={{ flex: '12.5%', width: '100%' }}>
-                <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    M
-                    </div>
-                </div>
-                {monday.map((hr) => (hr == 0) ?
-                  <div style={{ borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                  :
-                  <div style={{ backgroundColor: '#78A1E0', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                )}
-              </div>
-              <div style={{ flex: '12.5%', width: '100%' }}>
-                <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    T
-                    </div>
-                </div>
-                {tuesday.map((hr) => (hr == 0) ?
-                  <div style={{ borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                  :
-                  <div style={{ backgroundColor: '#78A1E0', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                )}
-              </div>
-              <div style={{ flex: '12.5%', width: '100%' }}>
-                <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    W
-                    </div>
-                </div>
-                {wednesday.map((hr) => (hr == 0) ?
-                  <div style={{ borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                  :
-                  <div style={{ backgroundColor: '#78A1E0', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                )}
-              </div>
-              <div style={{ flex: '12.5%', width: '100%' }}>
-                <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    R
-                    </div>
-                </div>
-                {thursday.map((hr) => (hr == 0) ?
-                  <div style={{ borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                  :
-                  <div style={{ backgroundColor: '#78A1E0', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                )}
-              </div>
-              <div style={{ flex: '12.5%', width: '100%' }}>
-                <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    F
-                    </div>
-                </div>
-                {friday.map((hr) => (hr == 0) ?
-                  <div style={{ borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                  :
-                  <div style={{ backgroundColor: '#78A1E0', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                )}
-              </div>
-              <div style={{ flex: '12.5%', width: '100%' }}>
-                <div style={{ height: '4vh', borderBottom: '1px solid #707070', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <div style={{ fontSize: '0.8em', width: '3vh', height: '3vh', borderRadius: '3vh', backgroundColor: '#6DA1E5', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    S
-                    </div>
-                </div>
-                {saturday.map((hr) => (hr == 0) ?
-                  <div style={{ borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                  :
-                  <div style={{ backgroundColor: '#78A1E0', borderRight: '1px solid #707070', borderBottom: '1px solid #707070', height: '3vh' }}></div>
-                )}
-              </div>
-            </div>}
+            <div style={{ width: '100%', marginRight: '10%', marginTop: '5%' }}>
+              <div style={{ width: '100%', display: 'flex' }}> {getAvailabilityChart(bools)} </div>
+            </div>
+          }
         </div>
       </div>
-      {/* <div style={{ flex: '50%', backgroundColor: 'blue' }}>wtf is going on</div> */}
     </div>
   </>
 }
+
 
 // function getPlaygroundApp(app?: PlaygroundApp) {
 //   if (!app) {
@@ -267,3 +267,4 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
 //       throw new Error('no app found')
 //   }
 // }
+
