@@ -2,9 +2,10 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
+import { AvailabilityChart } from './components/AvailabilityChart'
 import { Page } from './Page'
 
-interface ProjectsPageProps extends RouteComponentProps, AppRouteParams {}
+interface ProjectsPageProps extends RouteComponentProps, AppRouteParams { }
 // const imageSrc = require('../../../../public/assets/julia.jpg')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
@@ -33,6 +34,15 @@ export function ProjectsPage(props: ProjectsPageProps) {
     phone: '(123) 456 - 7890',
     location: 'Westwood, CA',
   })
+
+  var bools = [[0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0]];
+
   return (
     <Page>
       <div style={{ width: '100%' }}>
@@ -109,13 +119,13 @@ export function ProjectsPage(props: ProjectsPageProps) {
                 </SubmitButton>
               </form>
             ) : (
-              <>
-                <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
-                <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
-                  <LabelText>EDIT</LabelText>
-                </SubmitButton>
-              </>
-            )}
+                <>
+                  <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
+                  <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
+                    <LabelText>EDIT</LabelText>
+                  </SubmitButton>
+                </>
+              )}
           </div>
         </Row>
         <NewPostForm />
@@ -124,6 +134,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
         The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
         the internet. This is a "learn
       </p>
+      <div style={{ width: '100%', display: 'flex' }}> {AvailabilityChart(bools)} </div>
     </Page>
   )
 }
