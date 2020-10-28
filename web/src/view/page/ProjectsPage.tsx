@@ -43,6 +43,8 @@ export function ProjectsPage(props: ProjectsPageProps) {
   [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0]];
 
+  const [edit] = React.useState(true);
+
   return (
     <Page>
       <div style={{ width: '100%' }}>
@@ -134,7 +136,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
         The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
         the internet. This is a "learn
       </p>
-      <div style={{ width: '100%', display: 'flex' }}> {AvailabilityChart(bools)} </div>
+      <div style={{ width: '100%', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
     </Page>
   )
 }
