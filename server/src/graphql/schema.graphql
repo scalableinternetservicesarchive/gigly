@@ -20,6 +20,9 @@ type Query {
 
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
+
+  # Returns a list of all the listings in the database
+  listings: [Listing!]
 }
 
 type Mutation {
