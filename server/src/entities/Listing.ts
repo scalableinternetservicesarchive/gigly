@@ -5,7 +5,7 @@ export class Listing extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column('username')
   username: string
 
   @Column('price')
