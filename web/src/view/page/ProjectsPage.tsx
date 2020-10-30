@@ -8,7 +8,7 @@ import { AvailabilityChart } from './components/AvailabilityChart'
 import { addListing } from './mutateListings'
 import { Page } from './Page'
 
-interface ProjectsPageProps extends RouteComponentProps, AppRouteParams {}
+interface ProjectsPageProps extends RouteComponentProps, AppRouteParams { }
 // const imageSrc = require('../../../../public/assets/julia.jpg')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
@@ -126,13 +126,13 @@ export function ProjectsPage(props: ProjectsPageProps) {
                 </SubmitButton>
               </form>
             ) : (
-              <>
-                <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
-                <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
-                  <LabelText>EDIT</LabelText>
-                </SubmitButton>
-              </>
-            )}
+                <>
+                  <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
+                  <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
+                    <LabelText>EDIT</LabelText>
+                  </SubmitButton>
+                </>
+              )}
           </div>
         </Row>
         <NewPostForm />

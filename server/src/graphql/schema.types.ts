@@ -18,6 +18,7 @@ export interface Query {
   surveys: Array<Survey>
   survey?: Maybe<Survey>
   listings?: Maybe<Array<Listing>>
+  comments?: Maybe<Array<Comment>>
 }
 
 export interface QuerySurveyArgs {
@@ -29,6 +30,7 @@ export interface Mutation {
   answerSurvey: Scalars['Boolean']
   nextSurveyQuestion?: Maybe<Survey>
   addListing?: Maybe<Listing>
+  addComment?: Maybe<Comment>
 }
 
 export interface MutationAnswerSurveyArgs {
@@ -41,6 +43,10 @@ export interface MutationNextSurveyQuestionArgs {
 
 export interface MutationAddListingArgs {
   listing?: Maybe<ListingInput>
+}
+
+export interface MutationAddCommentArgs {
+  comment?: Maybe<CommentInput>
 }
 
 export interface Subscription {
@@ -107,6 +113,19 @@ export interface ListingInput {
   username: Scalars['String']
   price?: Maybe<Scalars['Int']>
   sellingName: Scalars['String']
+}
+
+export interface Comment {
+  __typename?: 'Comment'
+  listingId: Scalars['Int']
+  username: Scalars['String']
+  commentContents: Scalars['String']
+}
+
+export interface CommentInput {
+  listingId: Scalars['Int']
+  username: Scalars['String']
+  commentContents: Scalars['String']
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -200,6 +219,8 @@ export type ResolversTypes = {
   SurveyInput: SurveyInput
   Listing: ResolverTypeWrapper<Listing>
   ListingInput: ListingInput
+  Comment: ResolverTypeWrapper<Comment>
+  CommentInput: CommentInput
 }
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -217,6 +238,8 @@ export type ResolversParentTypes = {
   SurveyInput: SurveyInput
   Listing: Listing
   ListingInput: ListingInput
+  Comment: Comment
+  CommentInput: CommentInput
 }
 
 export type QueryResolvers<
@@ -232,6 +255,7 @@ export type QueryResolvers<
     RequireFields<QuerySurveyArgs, 'surveyId'>
   >
   listings?: Resolver<Maybe<Array<ResolversTypes['Listing']>>, ParentType, ContextType>
+  comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>
 }
 
 export type MutationResolvers<
@@ -255,6 +279,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationAddListingArgs, never>
+  >
+  addComment?: Resolver<
+    Maybe<ResolversTypes['Comment']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddCommentArgs, never>
   >
 }
 
@@ -327,6 +357,16 @@ export type ListingResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
+export type CommentResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']
+> = {
+  listingId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  commentContents?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
+
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>
   Mutation?: MutationResolvers<ContextType>
@@ -336,6 +376,7 @@ export type Resolvers<ContextType = any> = {
   SurveyQuestion?: SurveyQuestionResolvers<ContextType>
   SurveyAnswer?: SurveyAnswerResolvers<ContextType>
   Listing?: ListingResolvers<ContextType>
+  Comment?: CommentResolvers<ContextType>
 }
 
 /**
