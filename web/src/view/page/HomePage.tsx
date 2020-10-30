@@ -4,10 +4,9 @@ import { useState } from 'react'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
 import { Page } from './Page'
+import { Spacer } from '../../style/spacer'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams {}
-// const imageSrc = require('../../../../public/assets/julia.jpg')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 interface SignupForm {
   name: string
@@ -15,6 +14,7 @@ interface SignupForm {
   password: string
   comfirmPassword: string
 }
+
 interface LoginForm {
   name: string
   password: string
@@ -32,13 +32,7 @@ export function HomePage(props: HomePageProps) {
     name: '',
     password: '',
   })
-  const [userName, setUsername] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [confirm, setConfirm] = useState<string>('')
   const [success, setSuccess] = useState<boolean>(false) //check status for login or signup
-
-  const [edit] = React.useState(true)
 
   return (
     <Home>
@@ -50,7 +44,7 @@ export function HomePage(props: HomePageProps) {
           <div>
             {signup ? (
               <>
-                <form onSubmit={() => setsignup(false)}>
+                <form onSubmit={() => createUser(signupUser)}>
                   <FormInput>
                     <input
                       type="text"
@@ -67,6 +61,7 @@ export function HomePage(props: HomePageProps) {
                       value={signupUser.name}
                     />
                   </FormInput>
+                  <Spacer $h1 />
                   <FormInput>
                     <input
                       type="text"
@@ -83,6 +78,7 @@ export function HomePage(props: HomePageProps) {
                       value={signupUser.email}
                     />
                   </FormInput>
+                  <Spacer $h1 />
                   <FormInput>
                     <input
                       type="text"
@@ -99,6 +95,7 @@ export function HomePage(props: HomePageProps) {
                       value={signupUser.password}
                     />
                   </FormInput>
+                  <Spacer $h1 />
                   <FormInput>
                     <input
                       type="text"
@@ -117,21 +114,22 @@ export function HomePage(props: HomePageProps) {
                   </FormInput>
                   <br />
                   <SubmitButton type="submit">
-                    <LabelText>Sign Up</LabelText>
+                    <LabelText>Signup</LabelText>
                   </SubmitButton>
                 </form>
-                <SubmitButton onClick={() => setsignup(false)} style={{ marginBottom: '16px' }}>
+                <LinkButton onClick={() => setsignup(false)} style={{ marginBottom: '16px' }}>
                   <LabelText>Already have an account? Login here!</LabelText>
-                </SubmitButton>
+                </LinkButton>
               </>
             ) : (
               <>
-                <form onSubmit={() => setsignup(false)}>
-                  <FormInput>
+                <form onSubmit={() => validateUser(loginUser)}>
+                  <Spacer $h2 />
+                  <FormInput style={{ backgroundColor: 'E3E3E3', borderRadius: '20px' }}>
                     <input
                       type="text"
                       placeholder="Username"
-                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      style={{ fontSize: '0.9em', resize: 'none', width: '100%' }}
                       onChange={e =>
                         setLogin({
                           name: e.target.value,
@@ -141,6 +139,7 @@ export function HomePage(props: HomePageProps) {
                       value={loginUser.name}
                     />
                   </FormInput>
+                  <Spacer $h2 />
                   <FormInput>
                     <input
                       type="text"
@@ -160,9 +159,9 @@ export function HomePage(props: HomePageProps) {
                     <LabelText>Login</LabelText>
                   </SubmitButton>
                 </form>
-                <SubmitButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
+                <LinkButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
                   <LabelText>Don't have an account? Create Now!</LabelText>
-                </SubmitButton>
+                </LinkButton>
               </>
             )}
           </div>
@@ -170,6 +169,16 @@ export function HomePage(props: HomePageProps) {
       </Page>
     </Home>
   )
+}
+
+function createUser(props: SignupForm) {
+  //dummy function for creating user
+  return true
+}
+
+function validateUser(props: LoginForm) {
+  //dummy function for validating user
+  return true
 }
 
 const Home = style('div', 'flex', {
@@ -185,14 +194,14 @@ const Home = style('div', 'flex', {
 const Title = style('div', 'flex-l', {
   fontSize: '6rem',
   justifyContent: 'center',
-  padding: '0.8rem',
+  padding: '0.7rem',
   color: '#FFF',
   fontFamily: "'Ribeye Marrow', sans-serif",
 })
 
 const Subtitle = style('div', 'flex-l', {
   fontSize: '4rem',
-  marginTop: '25%',
+  marginTop: '22%',
   justifyContent: 'center',
   color: '#FFF',
   fontFamily: "'Ribeye Marrow', sans-serif",
@@ -202,31 +211,47 @@ const CatchPhrase = style('div', 'flex-l', {
   fontSize: '1.5rem',
   fontFamily: "'Risque', sans-serif",
   justifyContent: 'center',
-  paddingTop: '0.8rem',
-  paddingBottom: '1.3rem',
+  paddingTop: '0.7rem',
+  paddingBottom: '1.2rem',
   color: '#FFF',
 })
 
 const FormInput = style('div', {
-  border: '1px solid #808080',
   display: 'flex',
-  borderRadius: '20px',
   padding: '5px',
   paddingLeft: '10px',
   margin: '5px',
   minHeight: '13px',
+  backgroundColor: 'E3E3E3',
+  borderRadius: '20px',
+  height: '4.5vh',
+  width: '35vw',
 })
 const SubmitButton = style('button', {
   display: 'block',
   borderRadius: '20px',
-  color: 'white',
-  backgroundColor: '#18A0FB',
+  color: '#B0C4DE',
+  backgroundColor: 'F5F5F5',
   padding: '10px',
   paddingLeft: '15px',
   paddingRight: '15px',
   marginLeft: 'auto',
   marginRight: 'auto',
+  width: '15vw',
 })
+
+const LinkButton = style('button', {
+  display: 'block',
+  borderRadius: '20px',
+  color: 'white',
+  backgroundColor: '#B0C4DE',
+  paddingLeft: '15px',
+  paddingRight: '15px',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  textDecoration: 'underline',
+})
+
 const FormLabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '8px' })
 const LabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px' })
 const HeaderLabelText = style('h1', { fontSize: '1.2em', letterSpacing: '1.25px' })
