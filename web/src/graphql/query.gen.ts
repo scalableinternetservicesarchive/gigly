@@ -24,6 +24,30 @@ export interface FetchUserContext {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: AddListing
+// ====================================================
+
+export interface AddListing_addListing {
+  __typename: "Listing";
+  username: string;
+  price: number | null;
+  sellingName: string;
+}
+
+export interface AddListing {
+  addListing: AddListing_addListing | null;
+}
+
+export interface AddListingVariables {
+  input: ListingInput;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchSurveys
 // ====================================================
 
@@ -252,6 +276,12 @@ export interface SurveyQuestion {
 export enum UserType {
   ADMIN = "ADMIN",
   USER = "USER",
+}
+
+export interface ListingInput {
+  username: string;
+  price?: number | null;
+  sellingName: string;
 }
 
 export interface SurveyInput {

@@ -1,11 +1,14 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import { getApolloClient } from '../../graphql/apolloClient'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
+import { toast } from '../toast/toast'
 import { AvailabilityChart } from './components/AvailabilityChart'
+import { addListing } from './mutateListings'
 import { Page } from './Page'
 
-interface ProjectsPageProps extends RouteComponentProps, AppRouteParams { }
+interface ProjectsPageProps extends RouteComponentProps, AppRouteParams {}
 // const imageSrc = require('../../../../public/assets/julia.jpg')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
@@ -35,15 +38,17 @@ export function ProjectsPage(props: ProjectsPageProps) {
     location: 'Westwood, CA',
   })
 
-  var bools = [[0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0]];
+  var bools = [
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+  ]
 
-  const [edit] = React.useState(true);
+  const [edit] = React.useState(true)
 
   return (
     <Page>
@@ -121,13 +126,13 @@ export function ProjectsPage(props: ProjectsPageProps) {
                 </SubmitButton>
               </form>
             ) : (
-                <>
-                  <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
-                  <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
-                    <LabelText>EDIT</LabelText>
-                  </SubmitButton>
-                </>
-              )}
+              <>
+                <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
+                <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
+                  <LabelText>EDIT</LabelText>
+                </SubmitButton>
+              </>
+            )}
           </div>
         </Row>
         <NewPostForm />
@@ -310,7 +315,12 @@ function NewPostForm() {
         <FormLabelText>upload image(s) </FormLabelText>
         <input style={{ marginTop: '10px' }} accept="image" type="file" />
         <br />
-        <SubmitButton type="submit">
+        <SubmitButton
+          type="submit"
+          onClick={() => {
+            // handleSubmit('test', 10, 'i hope this works')
+          }}
+        >
           <LabelText>SUBMIT</LabelText>
         </SubmitButton>
       </form>
@@ -323,6 +333,17 @@ function NewPostForm() {
       <h2>{post.description}</h2>
     </>
   )
+}
+
+function handleSubmit(username: string, price: number, sellingName: string) {
+  addListing(getApolloClient(), { username, price, sellingName })
+    .then(() => {
+      toast('submitted!')
+    })
+    .catch(err => {
+      console.log('oops')
+      console.log(err)
+    })
 }
 
 const Row = style('div', { display: 'flex', flexDirection: 'row' })
