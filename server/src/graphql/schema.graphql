@@ -23,6 +23,9 @@ type Query {
 
   # Returns a list of all the listings in the database
   listings: [Listing!]
+
+  # Returns a list of all the comments in the database
+  comments: [Comment!]
 }
 
 type Mutation {
@@ -34,6 +37,9 @@ type Mutation {
 
   # Create a new listing in the database (either a service being offered/requested)
   addListing(listing: ListingInput): Listing
+
+  # Create a new comment on a listing in the database
+  addComment(comment: CommentInput): Comment
 }
 
 type Subscription {
@@ -116,4 +122,26 @@ input ListingInput {
 
   # name of service being offered
   sellingName: String!
+}
+
+type Comment {
+  # ID of the listing that this comment is on
+  listingId: Int!
+
+  # username of the person who posted this comment
+  username: String!
+
+  # contents of this comment
+  commentContents: String!
+}
+
+input CommentInput {
+  # ID of the listing that this comment is on
+  listingId: Int!
+
+  # username of the person who posted this comment
+  username: String!
+
+  # contents of this comment
+  commentContents: String!
 }

@@ -24,6 +24,30 @@ export interface FetchUserContext {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: AddComment
+// ====================================================
+
+export interface AddComment_addComment {
+  __typename: "Comment";
+  listingId: number;
+  username: string;
+  commentContents: string;
+}
+
+export interface AddComment {
+  addComment: AddComment_addComment | null;
+}
+
+export interface AddCommentVariables {
+  input: CommentInput;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: AddListing
 // ====================================================
 
@@ -276,6 +300,12 @@ export interface SurveyQuestion {
 export enum UserType {
   ADMIN = "ADMIN",
   USER = "USER",
+}
+
+export interface CommentInput {
+  listingId: number;
+  username: string;
+  commentContents: string;
 }
 
 export interface ListingInput {

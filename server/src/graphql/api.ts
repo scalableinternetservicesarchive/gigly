@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { Comment } from '../entities/Comment'
 import { Listing } from '../entities/Listing'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
@@ -28,7 +29,8 @@ export const graphqlRoot: Resolvers<Context> = {
     self: (_, args, ctx) => ctx.user,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
-    listings: () => Listing.find()
+    listings: () => Listing.find(),
+    comments: () => Comment.find(),
   },
   Mutation: {
     answerSurvey: async (_, { input }, ctx) => {
@@ -53,16 +55,31 @@ export const graphqlRoot: Resolvers<Context> = {
       ctx.pubsub.publish('SURVEY_UPDATE_' + surveyId, survey)
       return survey
     },
-    addListing: async(_, {listing}, ctx) => {
-      if(listing !== undefined && listing !== null) {
-        const {username, price, sellingName} = listing
+    addListing: async (_, { listing }, ctx) => {
+      if (listing !== undefined && listing !== null) {
+        const { username, price, sellingName } = listing
         const newListing = new Listing()
-        if(username !== undefined && price !== undefined && sellingName !== undefined) {
-      newListing.username = username
-      newListing.price = price
-      newListing.sellingName = sellingName
-      await newListing.save()
-      return newListing}
+        if (username !== undefined && price !== undefined && sellingName !== undefined) {
+          newListing.username = username
+          newListing.price = price
+          newListing.sellingName = sellingName
+          await newListing.save()
+          return newListing
+        }
+      }
+      return null
+    },
+    addComment: async (_, { comment }, ctx) => {
+      if (comment !== undefined && comment !== null) {
+        const { listingId, username, commentContents } = comment
+        const newComment = new Comment()
+        if (listingId !== undefined && username !== undefined && commentContents !== undefined) {
+          newComment.listingId = listingId
+          newComment.username = username
+          newComment.commentContents = commentContents
+          await newComment.save()
+          return newComment
+        }
       }
       return null
     },
