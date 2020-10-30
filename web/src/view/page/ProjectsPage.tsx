@@ -315,7 +315,12 @@ function NewPostForm() {
         <FormLabelText>upload image(s) </FormLabelText>
         <input style={{ marginTop: '10px' }} accept="image" type="file" />
         <br />
-        <SubmitButton type="submit">
+        <SubmitButton
+          type="submit"
+          onClick={() => {
+            handleSubmit('test', 10, 'i hope this works')
+          }}
+        >
           <LabelText>SUBMIT</LabelText>
         </SubmitButton>
       </form>

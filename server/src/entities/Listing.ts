@@ -1,3 +1,4 @@
+import { int } from 'aws-sdk/clients/datapipeline'
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
@@ -5,12 +6,12 @@ export class Listing extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column('username')
+  @Column()
   username: string
 
-  @Column('price')
-  price: number | null
+  @Column({type: "int", name: "price", nullable: true})
+  price: int | null
 
-  @Column('sellingName')
+  @Column()
   sellingName: string
 }
