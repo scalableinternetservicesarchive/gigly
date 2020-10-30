@@ -52,14 +52,14 @@ export function PostFormPage(props: PostFormPageProps) {
 
   return (
     <Page>
-      <div style={{ width: '100%' }}>
+      <div style={{ paddingTop: '80px'}}>
         <NewPostForm />
-      </div>
+      <div style={{ width: '100%', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
       <p style={{ color: 'white' }}>
         The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
         the internet. This is a "learn
       </p>
-      <div style={{ width: '100%', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
+      </div>
     </Page>
   )
 }
