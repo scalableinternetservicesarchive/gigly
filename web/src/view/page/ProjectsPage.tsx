@@ -1,8 +1,11 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import { getApolloClient } from '../../graphql/apolloClient'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
+import { toast } from '../toast/toast'
 import { AvailabilityChart } from './components/AvailabilityChart'
+import { addListing } from './mutateListings'
 import { Page } from './Page'
 
 interface ProjectsPageProps extends RouteComponentProps, AppRouteParams {}
@@ -325,6 +328,17 @@ function NewPostForm() {
       <h2>{post.description}</h2>
     </>
   )
+}
+
+function handleSubmit(username: string, price: number, sellingName: string) {
+  addListing(getApolloClient(), { username, price, sellingName })
+    .then(() => {
+      toast('submitted!')
+    })
+    .catch(err => {
+      console.log('oops')
+      console.log(err)
+    })
 }
 
 const Row = style('div', { display: 'flex', flexDirection: 'row' })
