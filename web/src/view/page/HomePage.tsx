@@ -1,41 +1,36 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { useState } from 'react'
-import { getApolloClient } from '../../graphql/apolloClient'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
-import { toast } from '../toast/toast'
-import { addListing } from './mutateListings'
 import { Page } from './Page'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams {}
 // const imageSrc = require('../../../../public/assets/julia.jpg')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-interface TestUser {
+interface SignupForm {
   name: string
   email: string
-  phone: string
-  location: string
+  password: string
+  comfirmPassword: string
 }
-
-interface Post {
+interface LoginForm {
   name: string
-  price: number
-  start: string
-  end: string
-  location: string
-  tags: string
-  description: string
+  password: string
 }
 
 export function HomePage(props: HomePageProps) {
   const [signup, setsignup] = useState(false)
-  const [user, editUser] = React.useState<TestUser>({
-    name: 'Julia Baylon',
-    email: 'julia@gmail.com',
-    phone: '(123) 456 - 7890',
-    location: 'Westwood, CA',
+  const [signupUser, setSignup] = React.useState<SignupForm>({
+    name: '',
+    email: '',
+    password: '',
+    comfirmPassword: '',
+  })
+  const [loginUser, setLogin] = React.useState<LoginForm>({
+    name: '',
+    password: '',
   })
   const [userName, setUsername] = useState<string>('')
   const [email, setEmail] = useState<string>('')
@@ -52,189 +47,135 @@ export function HomePage(props: HomePageProps) {
         <Title> GiGly </Title>
         <CatchPhrase> Finding and offering services easily! </CatchPhrase>
         <div style={{ width: '100%' }}>
-            <div>
-              {signup ? (
-                <>
-                  <form onSubmit={() => setsignup(false)}>
-                    <HeaderLabelText> Sign Up: </HeaderLabelText>
-                    <FormInput>
-                      <input
-                        type="text"
-                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          setEmail(e.target.value)
-                        }}
-                      />
-                    </FormInput>
-                    <FormInput>
-                      <input
-                        type="text"
-                        placeholder="email"
-                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                        onChange={e =>
-                          editUser({
-                            name: user.name,
-                            email: e.target.value,
-                            phone: user.phone,
-                            location: user.location,
-                          })
-                        }
-                        value={user.email}
-                      />
-                    </FormInput>
-                    <FormInput>
-                      <input
-                        type="text"
-                        placeholder="phone number"
-                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                        onChange={e =>
-                          editUser({
-                            name: user.name,
-                            email: user.email,
-                            phone: e.target.value,
-                            location: user.location,
-                          })
-                        }
-                        value={user.phone}
-                      />
-                    </FormInput>
-                    <FormInput>
-                      <input
-                        type="text"
-                        placeholder="location"
-                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                        onChange={e =>
-                          editUser({ name: user.name, email: user.email, phone: user.phone, location: e.target.value })
-                        }
-                        value={user.location}
-                      />
-                    </FormInput>
-                    <input accept="image" type="file" />
-                    <br />
-                    <SubmitButton type="submit">
-                      <LabelText>Sign Up</LabelText>
-                    </SubmitButton>
-                  </form>
-                  <SubmitButton onClick={() => setsignup(false)} style={{ marginBottom: '16px' }}>
-                    <LabelText>Already have an account? Login here!</LabelText>
+          <div>
+            {signup ? (
+              <>
+                <form onSubmit={() => setsignup(false)}>
+                  <FormInput>
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      onChange={e =>
+                        setSignup({
+                          name: e.target.value,
+                          email: signupUser.email,
+                          password: signupUser.password,
+                          comfirmPassword: signupUser.comfirmPassword,
+                        })
+                      }
+                      value={signupUser.name}
+                    />
+                  </FormInput>
+                  <FormInput>
+                    <input
+                      type="text"
+                      placeholder="Email"
+                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      onChange={e =>
+                        setSignup({
+                          name: signupUser.name,
+                          email: e.target.value,
+                          password: signupUser.password,
+                          comfirmPassword: signupUser.comfirmPassword,
+                        })
+                      }
+                      value={signupUser.email}
+                    />
+                  </FormInput>
+                  <FormInput>
+                    <input
+                      type="text"
+                      placeholder="Password"
+                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      onChange={e =>
+                        setSignup({
+                          name: signupUser.name,
+                          email: signupUser.email,
+                          password: e.target.value,
+                          comfirmPassword: signupUser.comfirmPassword,
+                        })
+                      }
+                      value={signupUser.password}
+                    />
+                  </FormInput>
+                  <FormInput>
+                    <input
+                      type="text"
+                      placeholder="Comfirm Password"
+                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      onChange={e =>
+                        setSignup({
+                          name: signupUser.name,
+                          email: signupUser.email,
+                          password: signupUser.password,
+                          comfirmPassword: e.target.value,
+                        })
+                      }
+                      value={signupUser.comfirmPassword}
+                    />
+                  </FormInput>
+                  <br />
+                  <SubmitButton type="submit">
+                    <LabelText>Sign Up</LabelText>
                   </SubmitButton>
-                </>
-              ) : (
-                <>
-                  <form onSubmit={() => setsignup(false)}>
-                    <HeaderLabelText> Login: </HeaderLabelText>
-                    <FormInput>
-                      <input
-                        type="text"
-                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          setEmail(e.target.value)
-                        }}
-                      />
-                    </FormInput>
-                    <FormInput>
-                      <input
-                        type="text"
-                        placeholder="email"
-                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                        onChange={e =>
-                          editUser({
-                            name: user.name,
-                            email: e.target.value,
-                            phone: user.phone,
-                            location: user.location,
-                          })
-                        }
-                        value={user.email}
-                      />
-                    </FormInput>
-                    <FormInput>
-                      <input
-                        type="text"
-                        placeholder="phone number"
-                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                        onChange={e =>
-                          editUser({
-                            name: user.name,
-                            email: user.email,
-                            phone: e.target.value,
-                            location: user.location,
-                          })
-                        }
-                        value={user.phone}
-                      />
-                    </FormInput>
-                    <FormInput>
-                      <input
-                        type="text"
-                        placeholder="location"
-                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                        onChange={e =>
-                          editUser({ name: user.name, email: user.email, phone: user.phone, location: e.target.value })
-                        }
-                        value={user.location}
-                      />
-                    </FormInput>
-                    <input accept="image" type="file" />
-                    <br />
-                    <SubmitButton type="submit">
-                      <LabelText>Login</LabelText>
-                    </SubmitButton>
-                  </form>
-                  <SubmitButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
-                    <LabelText>Don't have an account? Create Now!</LabelText>
+                </form>
+                <SubmitButton onClick={() => setsignup(false)} style={{ marginBottom: '16px' }}>
+                  <LabelText>Already have an account? Login here!</LabelText>
+                </SubmitButton>
+              </>
+            ) : (
+              <>
+                <form onSubmit={() => setsignup(false)}>
+                  <FormInput>
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      onChange={e =>
+                        setLogin({
+                          name: e.target.value,
+                          password: loginUser.password,
+                        })
+                      }
+                      value={loginUser.name}
+                    />
+                  </FormInput>
+                  <FormInput>
+                    <input
+                      type="text"
+                      placeholder="Password"
+                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      onChange={e =>
+                        setLogin({
+                          name: loginUser.name,
+                          password: e.target.value,
+                        })
+                      }
+                      value={loginUser.password}
+                    />
+                  </FormInput>
+                  <br />
+                  <SubmitButton type="submit">
+                    <LabelText>Login</LabelText>
                   </SubmitButton>
-                </>
-              )}
-            </div>
+                </form>
+                <SubmitButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
+                  <LabelText>Don't have an account? Create Now!</LabelText>
+                </SubmitButton>
+              </>
+            )}
+          </div>
         </div>
-        <p style={{ color: 'white' }}>
-          The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
-          the internet. This is a "learn
-        </p>
       </Page>
     </Home>
   )
-}
-function MyAccountInfo(props: TestUser) {
-  return (
-    <>
-      <HeaderLabelText> MY INFORMATION:</HeaderLabelText>
-      <FormInput>
-        <FormText>{props.name}</FormText>
-      </FormInput>
-      <FormInput>
-        <FormText>{props.email}</FormText>
-      </FormInput>
-      <FormInput>
-        <FormText>{props.phone}</FormText>
-      </FormInput>
-      <FormInput>
-        <FormText>{props.location} </FormText>
-      </FormInput>
-    </>
-  )
-}
-
-function handleSubmit(username: string, price: number, sellingName: string) {
-  addListing(getApolloClient(), { username, price, sellingName })
-    .then(() => {
-      toast('submitted!')
-    })
-    .catch(err => {
-      console.log('oops')
-      console.log(err)
-    })
 }
 
 const Home = style('div', 'flex', {
   backgroundColor: '#B0C4DE',
   width: '100vw',
-  height: '100%',
+  height: '100vh',
   margin: 'none',
   border: 'none',
   display: 'flex',
@@ -265,8 +206,6 @@ const CatchPhrase = style('div', 'flex-l', {
   paddingBottom: '1.3rem',
   color: '#FFF',
 })
-
-{/* // const Row = style('div', { display: 'flex', flexDirection: 'row' }) */}
 
 const FormInput = style('div', {
   border: '1px solid #808080',
