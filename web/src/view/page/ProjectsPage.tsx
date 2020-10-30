@@ -318,7 +318,7 @@ function NewPostForm() {
         <SubmitButton
           type="submit"
           onClick={() => {
-            handleSubmit('test', 10, 'i hope this works')
+            // handleSubmit('test', 10, 'i hope this works')
           }}
         >
           <LabelText>SUBMIT</LabelText>
