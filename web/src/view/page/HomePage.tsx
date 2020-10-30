@@ -52,25 +52,7 @@ export function HomePage(props: HomePageProps) {
         <Title> GiGly </Title>
         <CatchPhrase> Finding and offering services easily! </CatchPhrase>
         <div style={{ width: '100%' }}>
-          <Row>
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  margin: 'auto',
-                  width: '180px',
-                  height: '180px',
-                  borderRadius: '180px',
-                  border: '0.5px solid #18A0FB',
-                  backgroundPositionY: 'center',
-                  backgroundSize: 'cover',
-                  backgroundImage:
-                    'url(' +
-                    'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' +
-                    ')',
-                }}
-              ></div>
-            </div>
-            <div style={{ flex: 2, flexDirection: 'column' }}>
+            <div>
               {signup ? (
                 <>
                   <form onSubmit={() => setsignup(false)}>
@@ -135,25 +117,80 @@ export function HomePage(props: HomePageProps) {
                       <LabelText>Sign Up</LabelText>
                     </SubmitButton>
                   </form>
-                  <form onSubmit={() => setsignup(false)}>
-                    <HeaderLabelText> signup: </HeaderLabelText>
-                    <input accept="image" type="file" />
-                    <br />
-                    <SubmitButton type="submit">
-                      <LabelText>Already have an account? Login here!</LabelText>
-                    </SubmitButton>
-                  </form>
+                  <SubmitButton onClick={() => setsignup(false)} style={{ marginBottom: '16px' }}>
+                    <LabelText>Already have an account? Login here!</LabelText>
+                  </SubmitButton>
                 </>
               ) : (
                 <>
-                  <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
+                  <form onSubmit={() => setsignup(false)}>
+                    <HeaderLabelText> Login: </HeaderLabelText>
+                    <FormInput>
+                      <input
+                        type="text"
+                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          setEmail(e.target.value)
+                        }}
+                      />
+                    </FormInput>
+                    <FormInput>
+                      <input
+                        type="text"
+                        placeholder="email"
+                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                        onChange={e =>
+                          editUser({
+                            name: user.name,
+                            email: e.target.value,
+                            phone: user.phone,
+                            location: user.location,
+                          })
+                        }
+                        value={user.email}
+                      />
+                    </FormInput>
+                    <FormInput>
+                      <input
+                        type="text"
+                        placeholder="phone number"
+                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                        onChange={e =>
+                          editUser({
+                            name: user.name,
+                            email: user.email,
+                            phone: e.target.value,
+                            location: user.location,
+                          })
+                        }
+                        value={user.phone}
+                      />
+                    </FormInput>
+                    <FormInput>
+                      <input
+                        type="text"
+                        placeholder="location"
+                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                        onChange={e =>
+                          editUser({ name: user.name, email: user.email, phone: user.phone, location: e.target.value })
+                        }
+                        value={user.location}
+                      />
+                    </FormInput>
+                    <input accept="image" type="file" />
+                    <br />
+                    <SubmitButton type="submit">
+                      <LabelText>Login</LabelText>
+                    </SubmitButton>
+                  </form>
                   <SubmitButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
-                    <LabelText>Login</LabelText>
+                    <LabelText>Don't have an account? Create Now!</LabelText>
                   </SubmitButton>
                 </>
               )}
             </div>
-          </Row>
         </div>
         <p style={{ color: 'white' }}>
           The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
@@ -229,7 +266,8 @@ const CatchPhrase = style('div', 'flex-l', {
   color: '#FFF',
 })
 
-const Row = style('div', { display: 'flex', flexDirection: 'row' })
+{/* // const Row = style('div', { display: 'flex', flexDirection: 'row' }) */}
+
 const FormInput = style('div', {
   border: '1px solid #808080',
   display: 'flex',
