@@ -1,5 +1,7 @@
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
+import { style } from '../../style/styled';
 // import hello from '../../../../../public/assets/julia.jpg';
 import { NavBar } from '../nav/NavBar';
 import { AppRouteParams } from '../nav/route';
@@ -7,7 +9,11 @@ import { AvailabilityChart } from './components/AvailabilityChart';
 
 interface PlaygroundPageProps extends RouteComponentProps, AppRouteParams { }
 
-interface TestUser {
+interface User {
+  profPic: string;
+}
+
+interface ListingPoster {
   name: string;
   email: string;
   phone: string;
@@ -18,12 +24,91 @@ interface ListingInfo {
   numPics: number;
 }
 
+interface ListingInfo {
+  title: string;
+  numPics: number;
+}
+
+interface Comment {
+  commenter: string,
+  commenterPic: string,
+  comment: string,
+}
+
+function getCommenterPhoto(l: string) {
+  return (
+    <div style={{ width: '6vh', height: '6vh', WebkitBorderRadius: '6vh', borderRadius: '6vh', border: '0.5px solid #18A0FB', backgroundPositionY: 'center', backgroundSize: 'cover', backgroundImage: "url(" + l + ")" }}>
+    </div>
+  )
+}
+
+function getNewCommentArea(userProfPic: string) {
+  return (
+    <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
+      <div style={{ flex: '10%' }}> {getCommenterPhoto(userProfPic)} </div>
+      <form style={{ width: "100%", flex: '90%', display: 'flex' }}>
+        <div style={{ flex: '90%', marginLeft: '5%', marginTop: '2vh', borderBottom: '1.5px solid #18A0FB', display: 'flex', paddingBottom: '5px' }}>
+         {/* <textarea rows={1} style={{ maxHeight: '500px', width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none' }} placeholder='Add a comment...' /> */}
+         <TextareaAutosize placeholder='Add a comment...' style={{ width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none' }}/>
+        </div>
+        <CommentPostButton
+          type="submit"
+          onClick={() => {
+            // handleSubmit('test', 10, 'i hope this works')
+          }}
+        >
+          POST
+        </CommentPostButton>
+      </form>
+    </div>
+  )
+}
+
+function getComment(c: Comment) {
+  return (
+    <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
+      <div style={{ flex: '10%' }}> {getCommenterPhoto(c.commenterPic)} </div>
+      <div style={{ flex: '90%', marginLeft: '5%' }}>
+        <div style={{ fontSize: '0.9em', WebkitTextStrokeWidth: '0.5px'}}> {c.commenter} </div>
+        <div style={{ fontSize: '0.9em', color: '#666666'}}> {c.comment} </div>
+      </div>
+    </div>
+  )
+}
+
 export function PlaygroundPage(props: PlaygroundPageProps) {
-  const [user] = React.useState<TestUser>({ name: 'Julia B.', email: 'julia@gmail.com', phone: '(123) 456 - 7890' });
+  const [listingPoster] = React.useState<ListingPoster>({ name: 'Julia B.', email: 'julia@gmail.com', phone: '(123) 456 - 7890' });
   const [listing] = React.useState<ListingInfo>({ title: 'Tutoring Near UCLA', numPics: 3 });
-  const [showingImages, setShowImg] = React.useState(true);
+  const [showing, setShowing] = React.useState('Images');
   const [curPic, setCurPic] = React.useState(0);
+  const [user] = React.useState<User>({ profPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' });
   const [selling] = React.useState(true);
+
+  const comments: Comment[] = [
+    {
+      commenter: 'Majid Sarrafzadeh',
+      commenterPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+      comment: `Hey, I've been looking for a CS 32 tutor. This class is really giving me a hard time. Would you be free for a tutoring session next week? If so, please text me.`
+    },
+    {
+      commenter: 'Joe Biden',
+      commenterPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+      comment: 'Hey Julia, The team at the DNC just briefed me on our progress, and it looks like we can hit our final fundraising goal of this race if just 10 more hot singles in your area chip in. Will you split a $30 contribution between my campaign and our party?'
+    },
+    {
+      commenter: 'Toast Malone',
+      commenterPic: 'https://i.imgur.com/v9M5LOE.jpg',
+      comment: `Hollywood's bleeding, vampires feedin'
+      Darkness turns to dust
+      Everyone's gone, but no one's leavin'
+      Nobody left but us 😉`,
+    },
+    {
+      commenter: 'Ralph de la Baguettois',
+      commenterPic: 'https://pbs.twimg.com/profile_images/572961680591867905/4RGfve1i_400x400.jpeg',
+      comment: `hmmMMMfdsbn mdfm HRRGGGGGGGGGGGGGGGGG ESSCCCHHHHHHHHHHHeee.... ahhh. GRANDSON, HOW DO I TURN OFF THE VOICE TO TEXT FEATURE ON MY COMPUTER`,
+    },
+  ]
 
   var pics = ['https://images.unsplash.com/photo-1547567667-1aa64e6f58dc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
     'https://images.unsplash.com/photo-1598647401237-a9387d7ae2da?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1748&q=80',
@@ -56,26 +141,21 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
             <div style={{ width: '10vh', height: '10vh', WebkitBorderRadius: '10vh', borderRadius: '10vh', border: '0.5px solid #18A0FB', backgroundPositionY: 'center', backgroundSize: 'cover', backgroundImage: "url(" + "https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80" + ")" }}>
             </div>
             <h1 style={{ marginLeft: '5%', fontSize: '1.6em' }}>
-              {user.name}
+              {listingPoster.name}
             </h1>
           </div>
           <div style={{ display: 'flex', marginLeft: '2%', marginBottom: '3%', alignItems: 'center' }}>
             <div style={{ width: '20px', height: '20px', marginRight: '5%', backgroundSize: 'cover', backgroundImage: "url(" + "https://i.ibb.co/0Fzs8GN/phone-call.png" + ")" }}></div>
             <h2 style={{ fontSize: '0.9em', marginLeft: '2%' }}>
-              {user.phone}
+              {listingPoster.phone}
             </h2>
           </div>
           <div style={{ display: 'flex', marginLeft: '2%', alignItems: 'center' }}>
             <div style={{ width: '20px', height: '20px', marginRight: '5%', backgroundSize: 'cover', backgroundImage: "url(" + "https://i.ibb.co/mT7pkQq/email.png" + ")" }}></div>
             <h2 style={{ fontSize: '0.9em', marginLeft: '2%' }}>
-              {user.email}
+              {listingPoster.email}
             </h2>
           </div>
-          <form>
-            <div style={{ width: "60%", border: '1px solid #808080', display: 'flex', borderRadius: '20px', paddingLeft: '5%', paddingTop: '2.5%', paddingBottom: '2.5%', marginTop: '5%' }}>
-              <textarea style={{ fontSize: '0.9em', color: '#808080', resize: 'none' }} placeholder='Message Julia' rows={1} />
-            </div>
-          </form>
           {selling ? <h1 style={{ fontSize: '0.9em', letterSpacing: '1.25px', marginTop: '10%' }}>
             ABOUT
           </h1> : <h1></h1>}
@@ -121,19 +201,24 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
           </div>
           {selling ?
             <div style={{ display: 'flex', marginTop: '10%' }}>
-              {showingImages ?
+              {(showing == 'Images') ?
                 <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px', WebkitTextStrokeWidth: '1px' }}>
                   IMAGES </h2>
-                : <h2 onClick={() => setShowImg(true)} style={{ fontSize: '0.9em', letterSpacing: '1.25px' }}>
+                : <h2 onClick={() => setShowing('Images')} style={{ fontSize: '0.9em', letterSpacing: '1.25px' }}>
                   IMAGES </h2>}
-              {showingImages ?
-                <h2 onClick={() => setShowImg(false)} style={{ fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '10%' }}>
+              {(showing == 'Availability') ?
+                <h2 style={{ fontSize: '0.9em', WebkitTextStrokeWidth: '1px', letterSpacing: '1.25px', marginLeft: '10%' }}>
                   AVAILABILITY </h2>
-                : <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px', WebkitTextStrokeWidth: '1px', marginLeft: '10%' }}>
+                : <h2 onClick={() => setShowing('Availability')} style={{ fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '10%' }}>
                   AVAILABILITY </h2>}
+              {(showing == 'Comments') ?
+                <h2 style={{ fontSize: '0.9em', WebkitTextStrokeWidth: '1px', letterSpacing: '1.25px', marginLeft: '10%' }}>
+                  COMMENTS </h2>
+                : <h2 onClick={() => setShowing('Comments')} style={{ fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '10%' }}>
+                  COMMENTS </h2>}
             </div> : <div style={{ display: 'flex', marginTop: '10%' }}><h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px', WebkitTextStrokeWidth: '1px' }}>
               AVAILABILITY </h2></div>}
-          {(selling && showingImages) ?
+          {(selling && (showing == 'Images')) ?
             <div style={{ width: '100%', marginRight: '10%', marginTop: '5%' }}>
               <div style={{ display: 'flex' }}>
                 {picIndices.map((pi) =>
@@ -146,9 +231,13 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
               </div>
             </div>
             :
-            <div style={{ width: '100%', marginRight: '10%', marginTop: '5%' }}>
-              <div style={{ width: '99%', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
-            </div>
+            <>
+              {(showing == 'Availability') ?
+                <div style={{ width: '100%', marginRight: '10%', marginTop: '5%' }}>
+                  <div style={{ width: '99%', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
+                </div> : <div style={{ width: '99%' }}> {getNewCommentArea(user.profPic)}
+                {comments.map(c => getComment(c))}
+                </div>} </>
           }
         </div>
       </div>
@@ -156,6 +245,14 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
   </>
 }
 
+const CommentPostButton = style('button', {
+  flex: '10%',
+  display: 'block',
+  borderRadius: '20px',
+  color: 'rgba(24, 160, 251, 0.5)',
+  padding: '10px',
+  fontSize: '0.9em'
+})
 
 // function getPlaygroundApp(app?: PlaygroundApp) {
 //   if (!app) {
@@ -173,4 +270,5 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
 //       throw new Error('no app found')
 //   }
 // }
+
 
