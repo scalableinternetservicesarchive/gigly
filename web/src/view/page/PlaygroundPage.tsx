@@ -31,6 +31,7 @@ interface ListingInfo {
 
 interface Comment {
   commenter: string,
+  date: string,
   commenterPic: string,
   comment: string,
 }
@@ -70,6 +71,7 @@ function getComment(c: Comment) {
       <div style={{ flex: '10%' }}> {getCommenterPhoto(c.commenterPic)} </div>
       <div style={{ flex: '90%', marginLeft: '5%' }}>
         <div style={{ fontSize: '0.9em', WebkitTextStrokeWidth: '0.5px'}}> {c.commenter} </div>
+        <div style={{ fontSize: '0.8em', color: 'rgba(0, 0, 0, 0.8)', marginTop: '1%', marginBottom: '1%'}}> {c.date} </div>
         <div style={{ fontSize: '0.9em', color: '#666666'}}> {c.comment} </div>
       </div>
     </div>
@@ -87,16 +89,19 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
   const comments: Comment[] = [
     {
       commenter: 'Majid Sarrafzadeh',
+      date: '10/30/2020',
       commenterPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
       comment: `Hey, I've been looking for a CS 32 tutor. This class is really giving me a hard time. Would you be free for a tutoring session next week? If so, please text me.`
     },
     {
-      commenter: 'Joe Biden',
+      commenter: 'Glennifer',
+      date: '10/30/2020',
       commenterPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-      comment: 'Hey Julia, The team at the DNC just briefed me on our progress, and it looks like we can hit our final fundraising goal of this race if just 10 more hot singles in your area chip in. Will you split a $30 contribution between my campaign and our party?'
+      comment: `Just texted you. Can you help me with my bomb lab for CS 33? I'm stuck at level 3. The lab is due next Monday.`
     },
     {
       commenter: 'Toast Malone',
+      date: '10/30/2020',
       commenterPic: 'https://i.imgur.com/v9M5LOE.jpg',
       comment: `Hollywood's bleeding, vampires feedin'
       Darkness turns to dust
@@ -105,6 +110,7 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
     },
     {
       commenter: 'Ralph de la Baguettois',
+      date: '10/30/2020',
       commenterPic: 'https://pbs.twimg.com/profile_images/572961680591867905/4RGfve1i_400x400.jpeg',
       comment: `hmmMMMfdsbn mdfm HRRGGGGGGGGGGGGGGGGG ESSCCCHHHHHHHHHHHeee.... ahhh. GRANDSON, HOW DO I TURN OFF THE VOICE TO TEXT FEATURE ON MY COMPUTER`,
     },
@@ -270,5 +276,3 @@ const CommentPostButton = style('button', {
 //       throw new Error('no app found')
 //   }
 // }
-
-
