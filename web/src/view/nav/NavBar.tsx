@@ -11,7 +11,7 @@ import { link } from './Link'
 import { getPath, Route } from './route'
 
 const title = {
-  name: 'Gigly',
+  name: 'GiGly',
   path: getPath(Route.HOME), // Landing
   title: true,
 }
@@ -29,6 +29,10 @@ const otherTabs = [
     name: 'Popup',
     path: getPath(Route.PLAYGROUND), // Popup for now
   },
+  {
+    name: 'Post Form',
+    path: getPath(Route.POSTFORM),
+  }
 ]
 
 export function NavBar() {
@@ -130,7 +134,7 @@ function NavItem(props: { name: string; path: string; title?: boolean }) {
   const location = useLocation()
   return (
     <NavLink $title={props.title} $bold={props.title || location.pathname.startsWith(props.path)} to={props.path}>
-      {props.name === 'Gigly' ? (
+      {props.name === 'GiGly' ? (
         <div style={{ color: '#3C82DC', fontFamily: 'Ribeye Marrow' }} className="logo">
           {props.name}
         </div>

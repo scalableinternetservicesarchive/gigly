@@ -44,6 +44,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-responsive": "^8.1.0",
+    "react-textarea-autosize": "^8.2.0",
     "styletron-engine-monolithic": "0.0.3",
     "styletron-react": "^5.2.7",
     "subscriptions-transport-ws": "^0.9.18",

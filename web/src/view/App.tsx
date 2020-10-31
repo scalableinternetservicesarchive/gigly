@@ -13,6 +13,7 @@ import { Route } from './nav/route'
 import { HomePage } from './page/HomePage'
 import { LecturesPage } from './page/LecturesPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
+import { PostFormPage } from './page/PostFormPage'
 import { ProjectsPage } from './page/ProjectsPage'
 // import WebFont from 'webfontloader';
 
@@ -64,6 +65,7 @@ export function AppBody() {
         <ProjectsPage path={Route.PROJECTS} />
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
+        <PostFormPage path={Route.POSTFORM} />
       </Router>
       <Footer>
         <FooterText>© 2020 GiGly</FooterText>

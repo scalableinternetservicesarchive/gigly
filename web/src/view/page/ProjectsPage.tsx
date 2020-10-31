@@ -4,7 +4,6 @@ import { getApolloClient } from '../../graphql/apolloClient'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
-import { AvailabilityChart } from './components/AvailabilityChart'
 import { addListing } from './mutateListings'
 import { Page } from './Page'
 
@@ -19,16 +18,6 @@ interface TestUser {
   location: string
 }
 
-interface Post {
-  name: string
-  price: number
-  start: string
-  end: string
-  location: string
-  tags: string
-  description: string
-}
-
 export function ProjectsPage(props: ProjectsPageProps) {
   const [editForm, showEditForm] = React.useState(false)
   const [user, editUser] = React.useState<TestUser>({
@@ -38,21 +27,9 @@ export function ProjectsPage(props: ProjectsPageProps) {
     location: 'Westwood, CA',
   })
 
-  var bools = [
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-  ]
-
-  const [edit] = React.useState(true)
-
   return (
     <Page>
-      <div style={{ width: '100%' }}>
+      <div style={{ marginTop: '80px' }}>
         <Row>
           <div style={{ flex: 1 }}>
             <div
@@ -135,13 +112,11 @@ export function ProjectsPage(props: ProjectsPageProps) {
               )}
           </div>
         </Row>
-        <NewPostForm />
       </div>
       <p style={{ color: 'white' }}>
         The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
         the internet. This is a "learn
       </p>
-      <div style={{ width: '100%', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
     </Page>
   )
 }
@@ -161,176 +136,6 @@ function MyAccountInfo(props: TestUser) {
       <FormInput>
         <FormText>{props.location} </FormText>
       </FormInput>
-    </>
-  )
-}
-
-function NewPostForm() {
-  const [post, editPost] = React.useState<Post>({
-    name: '',
-    price: 0,
-    start: '',
-    end: '',
-    location: '',
-    tags: '',
-    description: '',
-  })
-  return (
-    <>
-      <form>
-        <HeaderLabelText>NEW POST: </HeaderLabelText>
-        <FormLabelText>service name </FormLabelText>
-        <FormInput>
-          <input
-            type="text"
-            placeholder="Service Name"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: e.target.value,
-                price: post.price,
-                start: post.start,
-                end: post.end,
-                location: post.location,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service price </FormLabelText>
-        <FormInput>
-          <input
-            type="number"
-            placeholder="Service Price"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: parseInt(e.target.value),
-                start: post.start,
-                end: post.end,
-                location: post.location,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service availability start date</FormLabelText>
-        <FormInput>
-          <input
-            type="date"
-            placeholder="Service Availability"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: e.target.value,
-                end: post.end,
-                location: post.location,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service availability end date</FormLabelText>
-        <FormInput>
-          <input
-            type="date"
-            placeholder="Service Availability"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: post.start,
-                end: e.target.value,
-                location: post.location,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service location </FormLabelText>
-        <FormInput>
-          <input
-            type="text"
-            placeholder="Service Location"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: post.start,
-                end: post.end,
-                location: e.target.value,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText> service tags </FormLabelText>
-        <FormInput>
-          <input
-            type="text"
-            placeholder="Service Tags"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: post.start,
-                end: post.end,
-                location: post.location,
-                tags: e.target.value,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service description </FormLabelText>
-        <FormInput>
-          <input
-            type="text"
-            placeholder="Service Description"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: post.start,
-                end: post.end,
-                location: post.location,
-                tags: post.tags,
-                description: e.target.value,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>upload image(s) </FormLabelText>
-        <input style={{ marginTop: '10px' }} accept="image" type="file" />
-        <br />
-        <SubmitButton
-          type="submit"
-          onClick={() => {
-            // handleSubmit('test', 10, 'i hope this works')
-          }}
-        >
-          <LabelText>SUBMIT</LabelText>
-        </SubmitButton>
-      </form>
-      <h2>{post.name}</h2>
-      <h2>{post.price}</h2>
-      <h2>{post.start} </h2>
-      <h2>{post.end} </h2>
-      <h2>{post.tags} </h2>
-      <h2>{post.location} </h2>
-      <h2>{post.description}</h2>
     </>
   )
 }
@@ -367,7 +172,6 @@ const SubmitButton = style('button', {
   marginLeft: 'auto',
   marginRight: 'auto',
 })
-const FormLabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '8px' })
 const LabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px' })
 const HeaderLabelText = style('h1', { fontSize: '1.2em', letterSpacing: '1.25px' })
 const FormText = style('p', { fontSize: '0.9em', color: 'black', resize: 'none', width: '100%' })
