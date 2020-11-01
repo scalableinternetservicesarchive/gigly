@@ -1,7 +1,10 @@
+import { useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import { FetchListings } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
+import { fetchListings } from './fetchListings'
 import { Page } from './Page'
 
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
@@ -54,87 +57,166 @@ function getCard(c: CardData) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function LecturesPage(props: LecturesPageProps) {
+  // Whether or not to read from the listings
+  const [haveListings, setHaveListings] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
-  const cards: CardData[] = [
-    {
-      serviceName: 'Personalized Guitar Lessons',
-      username: 'Dolphin123',
-      price: 30,
-      profPic:
-        'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-    },
-    {
-      serviceName: 'Spanish Translation',
-      username: 'Fox456',
-      price: 18,
-      profPic:
-        'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-    },
-    {
-      serviceName: ':))))))))))',
-      username: 'lol',
-      price: 9000,
-      profPic:
-        'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-    },
-  ]
-  const filteredCards = cards.filter(card => {
+  const { loading, data } = useQuery<FetchListings>(fetchListings)
+
+  let cards: CardData[] = []
+  if (data) {
+    const cards: CardData[] = []
+    data?.listings?.map(listing => {
+      cards.push({
+        serviceName: listing.sellingName,
+
+        username: listing.username,
+
+        price: listing.price ?? 0,
+
+        profPic:
+          'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+      })
+    })
+    const filteredCards = cards.filter(card => {
+      return (
+        card.serviceName.toLowerCase().includes(search.toLowerCase()) ||
+        card.username.toLowerCase().includes(search.toLowerCase())
+      )
+    })
     return (
-      card.serviceName.toLowerCase().includes(search.toLowerCase()) ||
-      card.username.toLowerCase().includes(search.toLowerCase())
-    )
-  })
-  return (
-    <Page>
-      <div style={{ paddingTop: '100px' }}>
-        <div
-          style={{
-            height: '100%',
-            width: '225px',
-            position: 'fixed',
-            zIndex: 1,
-            top: 0,
-            left: 0,
-            backgroundColor: '#696969',
-            overflowX: 'hidden',
-            fontFamily: 'Roboto',
-          }}
-        >
-          <div style={{ marginTop: '100px' }}>
-            <SideBarHeader>SORT</SideBarHeader>
-            <SideBarItem>Most Recent</SideBarItem>
-            <SideBarItem>Low to High</SideBarItem>
-            <SideBarItem>Seller Rating</SideBarItem>
-            <SideBarHeader>FILTER</SideBarHeader>
-            <SideBarItem>Minimum Rating</SideBarItem>
-            <SideBarItem>Maximum Price</SideBarItem>
-          </div>
-        </div>
-        <div>
-          <input
-            className="input"
-            type="text"
+      <Page>
+        <div style={{ paddingTop: '100px' }}>
+          <div
             style={{
-              backgroundColor: 'E3E3E3',
-              borderRadius: '20px',
-              height: '5vh',
-              width: '50vw',
-              padding: '1.5rem',
+              height: '100%',
+              width: '225px',
+              position: 'fixed',
+              zIndex: 1,
+              top: 0,
+              left: 0,
+              backgroundColor: '#696969',
+              overflowX: 'hidden',
               fontFamily: 'Roboto',
             }}
-            placeholder="Search"
-            value={search}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setSearch(e.target.value)
+          >
+            <div style={{ marginTop: '100px' }}>
+              <SideBarHeader>SORT</SideBarHeader>
+              <SideBarItem>Most Recent</SideBarItem>
+              <SideBarItem>Low to High</SideBarItem>
+              <SideBarItem>Seller Rating</SideBarItem>
+              <SideBarHeader>FILTER</SideBarHeader>
+              <SideBarItem>Minimum Rating</SideBarItem>
+              <SideBarItem>Maximum Price</SideBarItem>
+            </div>
+          </div>
+          <div>
+            <input
+              className="input"
+              type="text"
+              style={{
+                backgroundColor: 'E3E3E3',
+                borderRadius: '20px',
+                height: '5vh',
+                width: '50vw',
+                padding: '1.5rem',
+                fontFamily: 'Roboto',
+              }}
+              placeholder="Search"
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setSearch(e.target.value)
+              }}
+            />
+          </div>
+          <div className="flex flex-row" style={{ paddingTop: '80px' }}>
+            {filteredCards.map(card => getCard(card))}
+          </div>
+        </div>
+      </Page>
+    )
+  } else {
+    // Failed GraphQL query :(( fall back on this dummy data
+    cards = [
+      {
+        serviceName: 'Personalized Guitar Lessons',
+        username: 'Dolphin123',
+        price: 30,
+        profPic:
+          'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+      },
+      {
+        serviceName: 'Spanish Translation',
+        username: 'Fox456',
+        price: 18,
+        profPic:
+          'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+      },
+      {
+        serviceName: ':))))))))))',
+        username: 'lol',
+        price: 9000,
+        profPic:
+          'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+      },
+    ]
+    const filteredCards = cards.filter(card => {
+      return (
+        card.serviceName.toLowerCase().includes(search.toLowerCase()) ||
+        card.username.toLowerCase().includes(search.toLowerCase())
+      )
+    })
+    return (
+      <Page>
+        <div style={{ paddingTop: '100px' }}>
+          <div
+            style={{
+              height: '100%',
+              width: '225px',
+              position: 'fixed',
+              zIndex: 1,
+              top: 0,
+              left: 0,
+              backgroundColor: '#696969',
+              overflowX: 'hidden',
+              fontFamily: 'Roboto',
             }}
-          />
+          >
+            <div style={{ marginTop: '100px' }}>
+              <SideBarHeader>SORT</SideBarHeader>
+              <SideBarItem>Most Recent</SideBarItem>
+              <SideBarItem>Low to High</SideBarItem>
+              <SideBarItem>Seller Rating</SideBarItem>
+              <SideBarHeader>FILTER</SideBarHeader>
+              <SideBarItem>Minimum Rating</SideBarItem>
+              <SideBarItem>Maximum Price</SideBarItem>
+            </div>
+          </div>
+          <div>
+            <input
+              className="input"
+              type="text"
+              style={{
+                backgroundColor: 'E3E3E3',
+                borderRadius: '20px',
+                height: '5vh',
+                width: '50vw',
+                padding: '1.5rem',
+                fontFamily: 'Roboto',
+              }}
+              placeholder="Search"
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setSearch(e.target.value)
+              }}
+            />
+          </div>
+          <div className="flex flex-row" style={{ paddingTop: '80px' }}>
+            {filteredCards.map(card => getCard(card))}
+          </div>
         </div>
-        <div className="flex flex-row" style={{ paddingTop: '80px' }}>
-          {filteredCards.map(card => getCard(card))}
-        </div>
-      </div>
-    </Page>
-  )
+      </Page>
+    )
+  }
 }
 
 const Card = style('div', 'flex white items-center list pa6 ph2 ', {
