@@ -24,6 +24,26 @@ export interface FetchUserContext {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: FetchListings
+// ====================================================
+
+export interface FetchListings_listings {
+  __typename: "Listing";
+  username: string;
+  price: number | null;
+  sellingName: string;
+}
+
+export interface FetchListings {
+  listings: FetchListings_listings[] | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: AddComment
 // ====================================================
 
