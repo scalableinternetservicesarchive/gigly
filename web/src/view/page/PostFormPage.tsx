@@ -204,7 +204,7 @@ export function PostFormPage(props: PostFormPageProps) {
           <SubmitButton
             type="submit"
             onClick={() => {
-              handleSubmit('julia', post.price, post.name)
+              handleSubmit(user.name, post.price, post.name)
             }}
           >
             <LabelText>SUBMIT</LabelText>
@@ -217,11 +217,7 @@ export function PostFormPage(props: PostFormPageProps) {
         <h2>{post.tags} </h2>
         <h2>{post.location} </h2>
         <h2>{post.description}</h2>
-        <div style={{ width: '100%', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
-        <p style={{ color: 'white' }}>
-          The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
-          the internet. This is a "learn
-        </p>
+        <div style={{ width: '1000px', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
       </div>
     </Page>
   )
@@ -242,176 +238,6 @@ function MyAccountInfo(props: TestUser) {
       <FormInput>
         <FormText>{props.location} </FormText>
       </FormInput>
-    </>
-  )
-}
-
-function NewPostForm(user: string) {
-  const [post, editPost] = React.useState<Post>({
-    name: '',
-    price: 0,
-    start: '',
-    end: '',
-    location: '',
-    tags: '',
-    description: '',
-  })
-  return (
-    <>
-      <form>
-        <HeaderLabelText>NEW POST: </HeaderLabelText>
-        <FormLabelText>service name </FormLabelText>
-        <FormInput>
-          <input
-            type="text"
-            placeholder="Service Name"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: e.target.value,
-                price: post.price,
-                start: post.start,
-                end: post.end,
-                location: post.location,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service price </FormLabelText>
-        <FormInput>
-          <input
-            type="number"
-            placeholder="Service Price"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: parseInt(e.target.value),
-                start: post.start,
-                end: post.end,
-                location: post.location,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service availability start date</FormLabelText>
-        <FormInput>
-          <input
-            type="date"
-            placeholder="Service Availability"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: e.target.value,
-                end: post.end,
-                location: post.location,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service availability end date</FormLabelText>
-        <FormInput>
-          <input
-            type="date"
-            placeholder="Service Availability"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: post.start,
-                end: e.target.value,
-                location: post.location,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service location </FormLabelText>
-        <FormInput>
-          <input
-            type="text"
-            placeholder="Service Location"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: post.start,
-                end: post.end,
-                location: e.target.value,
-                tags: post.tags,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText> service tags </FormLabelText>
-        <FormInput>
-          <input
-            type="text"
-            placeholder="Service Tags"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: post.start,
-                end: post.end,
-                location: post.location,
-                tags: e.target.value,
-                description: post.description,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>service description </FormLabelText>
-        <FormInput>
-          <input
-            type="text"
-            placeholder="Service Description"
-            style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-            onChange={e =>
-              editPost({
-                name: post.name,
-                price: post.price,
-                start: post.start,
-                end: post.end,
-                location: post.location,
-                tags: post.tags,
-                description: e.target.value,
-              })
-            }
-          />
-        </FormInput>
-        <FormLabelText>upload image(s) </FormLabelText>
-        <input style={{ marginTop: '10px' }} accept="image" type="file" />
-        <br />
-        <SubmitButton
-          type="submit"
-          onClick={() => {
-            handleSubmit('julia', post.price, post.name)
-          }}
-        >
-          <LabelText>SUBMIT</LabelText>
-        </SubmitButton>
-      </form>
-      <h2>{post.name}</h2>
-      <h2>{post.price}</h2>
-      <h2>{post.start} </h2>
-      <h2>{post.end} </h2>
-      <h2>{post.tags} </h2>
-      <h2>{post.location} </h2>
-      <h2>{post.description}</h2>
     </>
   )
 }
