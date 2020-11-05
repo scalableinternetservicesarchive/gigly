@@ -24,6 +24,26 @@ export interface FetchUserContext {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: FetchComments
+// ====================================================
+
+export interface FetchComments_comments {
+  __typename: "Comment";
+  listingId: number;
+  username: string;
+  commentContents: string;
+}
+
+export interface FetchComments {
+  comments: FetchComments_comments[] | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchListings
 // ====================================================
 
