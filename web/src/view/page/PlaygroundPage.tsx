@@ -1,15 +1,21 @@
+import { useQuery } from '@apollo/client';
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { getApolloClient } from '../../graphql/apolloClient';
+import { FetchComments } from '../../graphql/query.gen';
 import { style } from '../../style/styled';
-// import hello from '../../../../../public/assets/julia.jpg';
 import { NavBar } from '../nav/NavBar';
 import { AppRouteParams } from '../nav/route';
+import { toast } from '../toast/toast';
 import { AvailabilityChart } from './components/AvailabilityChart';
+import { fetchComments } from './fetchComments';
+import { addComment } from './mutateComments';
 
 interface PlaygroundPageProps extends RouteComponentProps, AppRouteParams { }
 
 interface User {
+  name: string;
   profPic: string;
 }
 
@@ -17,14 +23,11 @@ interface ListingPoster {
   name: string;
   email: string;
   phone: string;
+  profPic: string;
 }
 
 interface ListingInfo {
-  title: string;
-  numPics: number;
-}
-
-interface ListingInfo {
+  listingId: number;
   title: string;
   numPics: number;
 }
@@ -43,27 +46,56 @@ function getCommenterPhoto(l: string) {
   )
 }
 
-function getNewCommentArea(userProfPic: string) {
-  return (
-    <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
-      <div style={{ flex: '10%' }}> {getCommenterPhoto(userProfPic)} </div>
-      <form style={{ width: "100%", flex: '90%', display: 'flex' }}>
-        <div style={{ flex: '90%', marginLeft: '5%', marginTop: '2vh', borderBottom: '1.5px solid #18A0FB', display: 'flex', paddingBottom: '5px' }}>
-         {/* <textarea rows={1} style={{ maxHeight: '500px', width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none' }} placeholder='Add a comment...' /> */}
-         <TextareaAutosize placeholder='Add a comment...' style={{ width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none' }}/>
-        </div>
-        <CommentPostButton
-          type="submit"
-          onClick={() => {
-            // handleSubmit('test', 10, 'i hope this works')
-          }}
-        >
-          POST
-        </CommentPostButton>
-      </form>
-    </div>
-  )
+function handleSubmit(listingId: number, username: string, commentContents: string) {
+  addComment(getApolloClient(), { listingId, username, commentContents })
+    .then(() => {
+      toast('submitted!')
+    })
+    .catch(err => {
+      console.log('oops')
+      console.log(err)
+    })
 }
+
+// function getNewCommentArea(userProfPic: string) {
+//   const [comment, editComment] = React.useState<Comment>({
+//     commenter: 'uMMMMM plcholder',
+//     date: '11/4/2020',
+//     commenterPic: userProfPic,
+//     comment: '',
+//   })
+
+//   return (
+//     <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
+//       <div style={{ flex: '10%' }}> {getCommenterPhoto(userProfPic)} </div>
+//       <form style={{ width: "100%", flex: '90%', display: 'flex' }}>
+//         <div style={{ flex: '90%', marginLeft: '5%', marginTop: '2vh', borderBottom: '1.5px solid #18A0FB', display: 'flex', paddingBottom: '5px' }}>
+//          {/* <textarea rows={1} style={{ maxHeight: '500px', width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none' }} placeholder='Add a comment...' /> */}
+//          <TextareaAutosize
+//          placeholder='Add a comment...'
+//          style={{ width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none' }}
+//          onChange={e =>
+//           editComment({
+//             commenter: comment.commenter,
+//             date: comment.date,
+//             commenterPic: comment.commenterPic,
+//             comment: e.target.value,
+//           })
+//          }
+//          />
+//         </div>
+//         <CommentPostButton
+//           type="submit"
+//           onClick={() => {
+//              handleSubmit(679, comment.commenter, comment.comment);
+//           }}
+//         >
+//           POST
+//         </CommentPostButton>
+//       </form>
+//     </div>
+//   )
+// }
 
 function getComment(c: Comment) {
   return (
@@ -79,42 +111,23 @@ function getComment(c: Comment) {
 }
 
 export function PlaygroundPage(props: PlaygroundPageProps) {
-  const [listingPoster] = React.useState<ListingPoster>({ name: 'Julia B.', email: 'julia@gmail.com', phone: '(123) 456 - 7890' });
-  const [listing] = React.useState<ListingInfo>({ title: 'Tutoring Near UCLA', numPics: 3 });
+  const [listingPoster] = React.useState<ListingPoster>({ name: 'Julia B.', email: 'julia@gmail.com', phone: '(123) 456 - 7890', profPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' });
+  const [listing] = React.useState<ListingInfo>({ listingId: 42, title: 'Tutoring Near UCLA', numPics: 3 });
   const [showing, setShowing] = React.useState('Images');
   const [curPic, setCurPic] = React.useState(0);
-  const [user] = React.useState<User>({ profPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' });
+  const [user] = React.useState<User>({ name: 'Flip McVicker', profPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' });
   const [selling] = React.useState(true);
 
-  const comments: Comment[] = [
-    {
-      commenter: 'Majid Sarrafzadeh',
-      date: '10/30/2020',
-      commenterPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-      comment: `Hey, I've been looking for a CS 32 tutor. This class is really giving me a hard time. Would you be free for a tutoring session next week? If so, please text me.`
-    },
-    {
-      commenter: 'Glennifer',
-      date: '10/30/2020',
-      commenterPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-      comment: `Just texted you. Can you help me with my bomb lab for CS 33? I'm stuck at level 3. The lab is due next Monday.`
-    },
-    {
-      commenter: 'Toast Malone',
-      date: '10/30/2020',
-      commenterPic: 'https://i.imgur.com/v9M5LOE.jpg',
-      comment: `Hollywood's bleeding, vampires feedin'
-      Darkness turns to dust
-      Everyone's gone, but no one's leavin'
-      Nobody left but us 😉`,
-    },
-    {
-      commenter: 'Ralph de la Baguettois',
-      date: '10/30/2020',
-      commenterPic: 'https://pbs.twimg.com/profile_images/572961680591867905/4RGfve1i_400x400.jpeg',
-      comment: `hmmMMMfdsbn mdfm HRRGGGGGGGGGGGGGGGGG ESSCCCHHHHHHHHHHHeee.... ahhh. GRANDSON, HOW DO I TURN OFF THE VOICE TO TEXT FEATURE ON MY COMPUTER`,
-    },
-  ]
+  const { loading, data } = useQuery<FetchComments>(fetchComments)
+  let comments: Comment[] = []
+  data?.comments?.map(comment => {
+      comments.push({
+        commenter: comment.username,
+        date: '11/5/2020',
+        commenterPic: '',
+        comment: comment.commentContents
+      })
+  })
 
   var pics = ['https://images.unsplash.com/photo-1547567667-1aa64e6f58dc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
     'https://images.unsplash.com/photo-1598647401237-a9387d7ae2da?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1748&q=80',
@@ -133,12 +146,16 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
   [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0]];
 
-  var edit = false;
+  var availabilityEdit = false;
+
+  const [comment, editComment] = React.useState<Comment>({
+    commenter: user.name,
+    date: '11/4/2020',
+    commenterPic: user.profPic,
+    comment: '',
+  })
 
   return <>
-    {/* <head>
-      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet"> </link>
-    </head> */}
     <div style={{ backgroundColor: 'rgb(88,98,111)', display: 'flex', justifyContent: 'center', height: '100vh', width: '100%', padding: '6%' }}>
       <NavBar />
       <div style={{ backgroundColor: 'white', display: 'flex', width: '67.5%', height: '85vh', minWidth: '400px', borderRadius: '3%', padding: '4.5%' }}>
@@ -240,8 +257,46 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
             <>
               {(showing == 'Availability') ?
                 <div style={{ width: '100%', marginRight: '10%', marginTop: '5%' }}>
-                  <div style={{ width: '99%', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
-                </div> : <div style={{ width: '99%' }}> {getNewCommentArea(user.profPic)}
+                  <div style={{ width: '99%', display: 'flex' }}> {AvailabilityChart(bools, availabilityEdit)} </div>
+                </div> :
+                <div style={{ width: '99%' }}>
+                  <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
+                    <div style={{ flex: '10%' }}> {getCommenterPhoto(user.profPic)} </div>
+                    <form style={{ width: "100%", flex: '90%', display: 'flex' }}>
+                      <div style={{ flex: '90%', marginLeft: '5%', marginTop: '2vh', borderBottom: '1.5px solid #18A0FB', display: 'flex', paddingBottom: '5px' }}>
+                      <TextareaAutosize
+                      placeholder='Add a comment...'
+                      style={{ width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none' }}
+                      onChange={e =>
+                        editComment({
+                          commenter: comment.commenter,
+                          date: comment.date,
+                          commenterPic: comment.commenterPic,
+                          comment: e.target.value,
+                        })
+                      }
+                      />
+                      </div>
+                      {comment.comment != '' ?
+                      <CommentPostButtonDark
+                        type="submit"
+                        onClick={() => {
+                          handleSubmit(679, comment.commenter, comment.comment);
+                        }}
+                      >
+                        POST
+                      </CommentPostButtonDark>
+                      : <CommentPostButton
+                      type="submit"
+                      onClick={() => {
+                        handleSubmit(679, comment.commenter, comment.comment);
+                      }}
+                    >
+                      POST
+                    </CommentPostButton>
+                      }
+                    </form>
+                  </div>
                 {comments.map(c => getComment(c))}
                 </div>} </>
           }
@@ -260,19 +315,11 @@ const CommentPostButton = style('button', {
   fontSize: '0.9em'
 })
 
-// function getPlaygroundApp(app?: PlaygroundApp) {
-//   if (!app) {
-//     return <div>choose an app</div>
-//   }
-//   switch (app) {
-//     case PlaygroundApp.SURVEYS:
-//       return <div style={{display: 'flex', height: '100vh', width: '100%'}}>
-//           <div style={{flex: '50%', backgroundColor: 'blue'}}>pressure</div>
-//           <div style={{flex: '50%', backgroundColor: 'blue'}}>pressure</div>
-//       </div>
-//     case PlaygroundApp.LOGIN:
-//       return <Login />
-//     default:
-//       throw new Error('no app found')
-//   }
-// }
+const CommentPostButtonDark = style('button', {
+  flex: '10%',
+  display: 'block',
+  borderRadius: '20px',
+  color: 'rgba(24, 160, 251, 1)',
+  padding: '10px',
+  fontSize: '0.9em'
+})
