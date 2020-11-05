@@ -286,12 +286,7 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
                       >
                         POST
                       </CommentPostButtonDark>
-                      : <CommentPostButton
-                      type="submit"
-                      onClick={() => {
-                        handleSubmit(679, comment.commenter, comment.comment);
-                      }}
-                    >
+                      : <CommentPostButton>
                       POST
                     </CommentPostButton>
                       }
@@ -306,7 +301,7 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
   </>
 }
 
-const CommentPostButton = style('button', {
+const CommentPostButton = style('div', {
   flex: '10%',
   display: 'block',
   borderRadius: '20px',
