@@ -49,6 +49,7 @@ export interface FetchComments {
 
 export interface FetchListings_listings {
   __typename: "Listing";
+  id: number | null;
   username: string;
   price: number | null;
   sellingName: string;
