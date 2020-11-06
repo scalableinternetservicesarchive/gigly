@@ -21,6 +21,10 @@ export interface Query {
   comments?: Maybe<Array<Comment>>
 }
 
+export interface QuerySelfArgs {
+  email: Scalars['String']
+}
+
 export interface QuerySurveyArgs {
   surveyId: Scalars['Int']
 }
@@ -64,6 +68,7 @@ export interface User {
   userType: UserType
   email: Scalars['String']
   name: Scalars['String']
+  password: Scalars['String']
 }
 
 export enum UserType {
@@ -206,12 +211,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>
+  String: ResolverTypeWrapper<Scalars['String']>
   Int: ResolverTypeWrapper<Scalars['Int']>
   Mutation: ResolverTypeWrapper<{}>
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   Subscription: ResolverTypeWrapper<{}>
   User: ResolverTypeWrapper<User>
-  String: ResolverTypeWrapper<Scalars['String']>
   UserType: UserType
   Survey: ResolverTypeWrapper<Survey>
   SurveyQuestion: ResolverTypeWrapper<SurveyQuestion>
@@ -226,12 +231,12 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {}
+  String: Scalars['String']
   Int: Scalars['Int']
   Mutation: {}
   Boolean: Scalars['Boolean']
   Subscription: {}
   User: User
-  String: Scalars['String']
   Survey: Survey
   SurveyQuestion: SurveyQuestion
   SurveyAnswer: SurveyAnswer
@@ -246,7 +251,7 @@ export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
-  self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerySelfArgs, 'email'>>
   surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
   survey?: Resolver<
     Maybe<ResolversTypes['Survey']>,
@@ -309,6 +314,7 @@ export type UserResolvers<
   userType?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 

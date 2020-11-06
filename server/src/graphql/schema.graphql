@@ -16,7 +16,8 @@ schema {
 
 type Query {
   # Returns the logged-in user making the query, or null if anonymous.
-  self: User
+  self (email: String!): User
+
 
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
@@ -51,6 +52,8 @@ type User {
   userType: UserType!
   email: String!
   name: String!
+  password: String!
+  # authToken
 }
 
 enum UserType { ADMIN, USER }

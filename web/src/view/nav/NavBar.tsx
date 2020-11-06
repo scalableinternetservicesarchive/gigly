@@ -32,7 +32,15 @@ const otherTabs = [
   {
     name: 'Post Form',
     path: getPath(Route.POSTFORM),
-  }
+  },
+  {
+    name: 'Signup',
+    path: getPath(Route.SIGNUP),
+  },
+  {
+    name: 'Login',
+    path: getPath(Route.LOGIN),
+  },
 ]
 
 export function NavBar() {

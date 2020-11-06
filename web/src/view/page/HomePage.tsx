@@ -1,10 +1,12 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
 import { Page } from './Page'
+import { check } from '../../../../common/src/util'
 import { Spacer } from '../../style/spacer'
+import { toastErr } from '../toast/toast'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams {}
 
@@ -21,7 +23,7 @@ interface LoginForm {
 }
 
 export function HomePage(props: HomePageProps) {
-  const [signup, setsignup] = useState(false)
+  const [signup, setsignup] = useState(true)
   const [signupUser, setSignup] = React.useState<SignupForm>({
     name: '',
     email: '',
@@ -33,7 +35,37 @@ export function HomePage(props: HomePageProps) {
     password: '',
   })
   const [success, setSuccess] = useState<boolean>(false) //check status for login or signup
+  const [err, setError] = useState({ email: false, name: false, password: false })
 
+  // reset error when email/name change
+  useEffect(() => setError({ ...err, email: !validateEmail(signupUser.email) }), [signupUser.email])
+  useEffect(() => setError({ ...err, name: false }), [signupUser.name])
+  useEffect(() => setError({ ...err, password: false }), [signupUser.password])
+
+  function login() {
+    if (!validate(signupUser.email, signupUser.name, signupUser.password, setError)) {
+      toastErr('invalid email/name')
+      return
+    }
+    const signup_email = signupUser.email
+    const signup_username = signupUser.name
+    const signup_password = signupUser.password
+
+    fetch('/auth/createUser', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ signup_email, signup_username, signup_password }),
+    })
+      .then(res => {
+        check(res.ok, 'response status ' + res.status)
+        return res.text()
+      })
+      .then(() => window.location.replace('/'))
+      .catch(err => {
+        toastErr(err.toString())
+        setError({ email: true, name: true, password: true })
+      })
+  }
   return (
     <Home>
       <Page>
@@ -44,7 +76,7 @@ export function HomePage(props: HomePageProps) {
           <div>
             {signup ? (
               <>
-                <form onSubmit={() => createUser(signupUser)}>
+                <form onSubmit={() => login()}>
                   <FormInput>
                     <input
                       type="text"
@@ -179,6 +211,25 @@ function createUser(props: SignupForm) {
 function validateUser(props: LoginForm) {
   //dummy function for validating user
   return true
+}
+
+function validateEmail(email: string) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
+}
+
+function validate(
+  email: string,
+  name: string,
+  password: string,
+  setError: React.Dispatch<React.SetStateAction<{ email: boolean; name: boolean; password: boolean }>>
+) {
+  const validEmail = validateEmail(email)
+  const validName = Boolean(name)
+  const validPassword = true
+  console.log('valid', validEmail, validName)
+  setError({ email: !validEmail, name: !validName, password: !validPassword })
+  return validEmail && validName
 }
 
 const Home = style('div', 'flex', {

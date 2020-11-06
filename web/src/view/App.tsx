@@ -15,13 +15,8 @@ import { LecturesPage } from './page/LecturesPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { PostFormPage } from './page/PostFormPage'
 import { ProjectsPage } from './page/ProjectsPage'
-// import WebFont from 'webfontloader';
-
-// WebFont.load({
-//   google: {
-//     families: ['Ribeye Marrow', 'sans-serif']
-//   }
-// })
+import { Signup } from '../view/auth/Signup'
+import { Login } from '../view/auth/Login'
 
 const Styletron = require('styletron-engine-monolithic')
 
@@ -66,6 +61,8 @@ export function AppBody() {
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
         <PostFormPage path={Route.POSTFORM} />
+        <Signup path={Route.SIGNUP} />
+        <Login path={Route.LOGIN} />
       </Router>
       <Footer>
         <FooterText>© 2020 GiGly</FooterText>
