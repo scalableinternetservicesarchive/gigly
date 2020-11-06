@@ -104,6 +104,7 @@ export interface SurveyInput {
 
 export interface Listing {
   __typename?: 'Listing'
+  id?: Maybe<Scalars['Int']>
   username: Scalars['String']
   price?: Maybe<Scalars['Int']>
   sellingName: Scalars['String']
@@ -351,6 +352,7 @@ export type ListingResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Listing'] = ResolversParentTypes['Listing']
 > = {
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   sellingName?: Resolver<ResolversTypes['String'], ParentType, ContextType>

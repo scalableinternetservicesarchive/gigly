@@ -103,6 +103,8 @@ input SurveyInput {
 
 
 type Listing {
+  id: Int
+
   # username of user who posted this listing
   username: String!
 

@@ -10,6 +10,7 @@ import { Page } from './Page'
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
 
 interface CardData {
+  id: number
   serviceName: string
   username: string
   profPic: string
@@ -23,7 +24,7 @@ enum HeaderItems {
 
 function getCard(c: CardData) {
   return (
-    <Card key={c.serviceName + c.price}>
+    <Card key={c.id}>
       <CardInfo>
         <div
           style={{
@@ -71,12 +72,11 @@ export function LecturesPage(props: LecturesPageProps) {
   let cards: CardData[] = []
   if (data) {
     const cards: CardData[] = []
-    data?.listings?.map(listing => {
+    data?.listings?.map((listing, index) => {
       cards.push({
+        id: listing.id ?? index,
         serviceName: listing.sellingName,
-
         username: listing.username,
-
         price: listing.price ?? 0,
 
         profPic:
@@ -168,6 +168,7 @@ export function LecturesPage(props: LecturesPageProps) {
     // Failed GraphQL query :(( fall back on this dummy data
     cards = [
       {
+        id: 1,
         serviceName: 'Personalized Guitar Lessons',
         username: 'Dolphin123',
         price: 30,
@@ -175,6 +176,7 @@ export function LecturesPage(props: LecturesPageProps) {
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
       },
       {
+        id: 2,
         serviceName: 'Spanish Translation',
         username: 'Fox456',
         price: 18,
@@ -182,6 +184,7 @@ export function LecturesPage(props: LecturesPageProps) {
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
       },
       {
+        id: 3,
         serviceName: ':))))))))))',
         username: 'lol',
         price: 9000,
