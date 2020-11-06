@@ -24,8 +24,8 @@ import { Session } from './entities/Session'
 import { User } from './entities/User'
 import { getSchema, graphqlRoot, pubsub } from './graphql/api'
 import { ConnectionManager } from './graphql/ConnectionManager'
-import { expressLambdaProxy } from './lambda/handler'
 import { UserType } from './graphql/schema.types'
+import { expressLambdaProxy } from './lambda/handler'
 import { renderApp } from './render'
 
 const server = new GraphQLServer({
@@ -59,6 +59,7 @@ server.express.post(
   asyncRoute(async (req, res) => {
     console.log('POST /auth/createUser')
     // create User model with data from HTTP request
+    console.log(req.body.email)
     let user = new User()
     user.email = req.body.email
     user.name = req.body.name

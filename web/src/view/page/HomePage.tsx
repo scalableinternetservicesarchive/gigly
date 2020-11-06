@@ -1,13 +1,16 @@
+import { useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
-import { useEffect, useState } from 'react'
-import { style } from '../../style/styled'
-import { AppRouteParams } from '../nav/route'
-import { Page } from './Page'
+import { useState } from 'react'
 import { check } from '../../../../common/src/util'
+import { FetchUserContext_self } from '../../graphql/query.gen'
 import { Spacer } from '../../style/spacer'
+import { style } from '../../style/styled'
+import { fetchUser } from '../auth/fetchUser'
+import { AppRouteParams } from '../nav/route'
+import { handleError } from '../toast/error'
 import { toastErr } from '../toast/toast'
-
+import { Page } from './Page'
 interface HomePageProps extends RouteComponentProps, AppRouteParams {}
 
 interface SignupForm {
@@ -35,48 +38,29 @@ export function HomePage(props: HomePageProps) {
     password: '',
   })
   const [success, setSuccess] = useState<boolean>(false) //check status for login or signup
-  const [err, setError] = useState({ email: false, name: false, password: false })
+  // const [err, setError] = useState({ email: false, name: false, password: false })
 
   // reset error when email/name change
-  useEffect(() => setError({ ...err, email: !validateEmail(signupUser.email) }), [signupUser.email])
-  useEffect(() => setError({ ...err, name: false }), [signupUser.name])
-  useEffect(() => setError({ ...err, password: false }), [signupUser.password])
+  // useEffect(() => setError({ ...err, email: !validateEmail(signupUser.email) }), [signupUser.email])
+  // useEffect(() => setError({ ...err, name: false }), [signupUser.name])
+  // useEffect(() => setError({ ...err, password: false }), [signupUser.password])
+  const { loading, data } = useQuery<FetchUserContext_self>(fetchUser)
+  const qID = data?.id
+  const qName = data?.name
 
-  function login() {
-    if (!validate(signupUser.email, signupUser.name, signupUser.password, setError)) {
-      toastErr('invalid email/name')
-      return
-    }
-    const signup_email = signupUser.email
-    const signup_username = signupUser.name
-    const signup_password = signupUser.password
-
-    fetch('/auth/createUser', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ signup_email, signup_username, signup_password }),
-    })
-      .then(res => {
-        check(res.ok, 'response status ' + res.status)
-        return res.text()
-      })
-      .then(() => window.location.replace('/'))
-      .catch(err => {
-        toastErr(err.toString())
-        setError({ email: true, name: true, password: true })
-      })
-  }
   return (
     <Home>
       <Page>
         <Subtitle> Welcome to </Subtitle>
         <Title> GiGly </Title>
         <CatchPhrase> Finding and offering services easily! </CatchPhrase>
+        <CatchPhrase>{qID}</CatchPhrase>
+        <CatchPhrase>{qName}</CatchPhrase>
         <div style={{ width: '100%' }}>
           <div>
             {signup ? (
               <>
-                <form onSubmit={() => login()}>
+                <form onSubmit={() => loginFunction(signupUser)}>
                   <FormInput>
                     <input
                       type="text"
@@ -197,6 +181,7 @@ export function HomePage(props: HomePageProps) {
               </>
             )}
           </div>
+          <button onSubmit={() => logout()}>Logout</button>
         </div>
       </Page>
     </Home>
@@ -213,6 +198,31 @@ function validateUser(props: LoginForm) {
   return true
 }
 
+function loginFunction(props: SignupForm) {
+  if (!validate(props.email, props.name, props.password)) {
+    toastErr('invalid email/name')
+    return
+  }
+  const signup_email = props.email
+  const signup_username = props.name
+  const signup_password = props.password
+
+  fetch('/auth/createUser', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: signup_email, name: signup_username, password: signup_password }),
+  })
+    .then(res => {
+      check(res.ok, 'response status ' + res.status)
+      return res.text()
+    })
+    .then(() => window.location.replace('/'))
+    .catch(err => {
+      toastErr(err.toString())
+      // setError({ email: true, name: true, password: true })
+    })
+}
+
 function validateEmail(email: string) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return re.test(String(email).toLowerCase())
@@ -221,15 +231,29 @@ function validateEmail(email: string) {
 function validate(
   email: string,
   name: string,
-  password: string,
-  setError: React.Dispatch<React.SetStateAction<{ email: boolean; name: boolean; password: boolean }>>
+  password: string
+  // setError: React.Dispatch<React.SetStateAction<{ email: boolean; name: boolean; password: boolean }>>
 ) {
   const validEmail = validateEmail(email)
   const validName = Boolean(name)
   const validPassword = true
   console.log('valid', validEmail, validName)
-  setError({ email: !validEmail, name: !validName, password: !validPassword })
-  return validEmail && validName
+  // setError({ email: !validEmail, name: !validName, password: !validPassword })
+  // const err = validEmail && validName && validPassword
+  return validEmail && validName && validPassword
+}
+
+function logout() {
+  return fetch('/auth/logout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then(res => {
+      console.log('successfully logged out')
+      check(res.ok, 'response status ' + res.status)
+      window.location.reload()
+    })
+    .catch(handleError)
 }
 
 const Home = style('div', 'flex', {

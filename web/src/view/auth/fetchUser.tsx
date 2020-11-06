@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const fetchUser = gql`
   query FetchUserContext {
-    self(email:"rothfels@cs.ucla.edu") {
+    self(email: "r@gmail.com") {
       id
       name
       userType
