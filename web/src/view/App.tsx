@@ -11,10 +11,10 @@ import { fetchUser } from './auth/fetchUser'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
 import { HomePage } from './page/HomePage'
-import { LecturesPage } from './page/LecturesPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { PostFormPage } from './page/PostFormPage'
 import { ProjectsPage } from './page/ProjectsPage'
+import { SellingPage } from './page/SellingPage'
 // import WebFont from 'webfontloader';
 
 // WebFont.load({
@@ -61,7 +61,7 @@ export function AppBody() {
         <Redirect noThrow from="app" to="index" />
         <Redirect noThrow from="app/playground" to="surveys" />
         <HomePage path={Route.HOME} />
-        <LecturesPage path={Route.LECTURES} />
+        <SellingPage path={Route.SELLING} />
         <ProjectsPage path={Route.PROJECTS} />
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
