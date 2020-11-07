@@ -24,14 +24,38 @@ interface Listing {
   phone: string;
   title: string;
   profPic: string;
-  pics: string[];
-  numPics: number;
+  pic1: string | null;
+  pic2: string | null;
+  pic3: string | null;
   price: number | null;
   location: string;
-  about: string[];
-  description: string[];
-  availability: number[][];
+  about: string;
+  description: string;
+  availability: string;
   tags: string[];
+}
+
+function strToMatrix(s: string) {
+  //array of strings
+  let strArray = s.split(' ');
+
+  //char matrix
+  let charMatrix: string[][] = [];
+  for(var i = 0; i < strArray.length; i++) {
+    charMatrix.push(strArray[i].split(''));
+  }
+
+  //number matrix
+  let numMatrix: number[][] = [];
+  for(var i = 0; i < charMatrix.length; i++) {
+    let temp: number[] = [];
+    for(var j = 0; j < charMatrix[0].length; j++) {
+      temp.push(parseInt(charMatrix[i][j]));
+    }
+    numMatrix.push(temp);
+  }
+
+  return numMatrix;
 }
 
 function getDescriptionLine(s: string) {
@@ -57,7 +81,7 @@ function getComment(c: Comment) {
       <div style={{ flex: '90%', marginLeft: '5%' }}>
         <div style={{ fontSize: '0.9em', WebkitTextStrokeWidth: '0.5px'}}> {c.commenter} </div>
         <div style={{ fontSize: '0.8em', color: 'rgba(0, 0, 0, 0.8)', marginTop: '1%', marginBottom: '1%'}}> {c.date} </div>
-        <div style={{ fontSize: '0.9em', color: '#666666'}}> {c.comment} </div>
+        <div style={{ fontSize: '0.9em', color: '#666666'}}> {c.comment.split('\n').map(line => getDescriptionLine(line))} </div>
       </div>
     </div>
   )
@@ -94,21 +118,15 @@ export function Popup(listingId: number) {
     phone: '(123) 456 - 7890',
     title: 'This will show if your listing data is empty',
     profPic: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-    pics: ['https://images.unsplash.com/photo-1547567667-1aa64e6f58dc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
-    'https://images.unsplash.com/photo-1598647401237-a9387d7ae2da?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1748&q=80',
-    'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80'],
-    numPics: 3,
+    pic1: 'https://images.unsplash.com/photo-1547567667-1aa64e6f58dc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
+    // pic2: null;
+    pic2: 'https://images.unsplash.com/photo-1598647401237-a9387d7ae2da?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1748&q=80',
+    pic3: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
     price: 42,
     location: 'Filler Location',
-    about: ['Here are some sentences about me.', 'This shows up on all of the listings I have posted.', 'I am talking about me.'],
-    description: ['This is a test to see if the description works.', 'Thsadfis should appear on the next line.'],
-    availability: [[0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0]],
+    about: 'Here are some sentences about me.\nThis shows up on all of the listings I have posted\nI am talkimg about me.',
+    description: 'This is a test to see if the description works.\nThsadfis should appear on the next line.',
+    availability: '000000111000011000000000 000000110010011000000000 000000111000011000000000 000000111000001100000000 000000111000011000000000 000000111000011000000000 000000010000011000111000',
     tags: ['filler_tag', 'random_tag', 'jones_tag']
   }
 
@@ -136,11 +154,29 @@ export function Popup(listingId: number) {
       })
   })
 
+  var pics = [listing.pic1, listing.pic2, listing.pic3];
   var picIndices = [];
-  for (var i = 0; i < listing.numPics; i++) {
-    picIndices.push(i);
+  for (var i = 0; i < 3; i++) {
+    if(pics[i]) {
+      picIndices.push(i);
+    }
   }
+
   var availabilityEdit = false;
+
+  var availability = strToMatrix(listing.availability);
+
+  //change long availability string to availability matrix
+  //input:
+  /*availability: [[0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0]],*/
+
+
   var tagsDisplay = listing.tags.join(', ');
 
   const [comment, editComment] = React.useState<Comment>({
@@ -177,13 +213,13 @@ export function Popup(listingId: number) {
             ABOUT
           </h1> : <h1></h1>}
           {listing.listingTypeSelling ? <div style={{ marginRight: '10%', marginTop: '4%' }}>
-            {listing.about.map(line => getDescriptionLine(line))}
+            {listing.about.split('\n').map(line => getDescriptionLine(line))}
           </div> : <p></p>}
           <h1 style={{ fontSize: '0.9em', letterSpacing: '1.25px', marginTop: '10%' }}>
             DESCRIPTION
           </h1>
           <div style={{ marginRight: '10%', marginTop: '4%' }}>
-            {listing.description.map(line => getDescriptionLine(line))}
+            {listing.description.split('\n').map(line => getDescriptionLine(line))}
           </div>
           <h1 style={{ fontSize: '0.9em', letterSpacing: '1.25px', marginTop: '10%' }}>
             TAGS
@@ -240,14 +276,14 @@ export function Popup(listingId: number) {
                     :
                     <div onClick={() => setCurPic(pi)} style={{ width: '1.25vh', height: '1.25vh', borderRadius: '1.25vh', marginRight: '2vh', marginBottom: '2vh', backgroundColor: '#C4C4C4' }}></div>)}
               </div>
-              <div style={{ height: '45vh', width: '100%', backgroundSize: 'cover', backgroundImage: "url(" + listing.pics[curPic] + ")" }}>
+              <div style={{ height: '45vh', width: '100%', backgroundSize: 'cover', backgroundImage: "url(" + pics[curPic] + ")" }}>
               </div>
             </div>
             :
             <>
               {(showing == 'Availability') ?
                 <div style={{ width: '100%', marginRight: '10%', marginTop: '5%' }}>
-                  <div style={{ width: '99%', display: 'flex' }}> {AvailabilityChart(listing.availability, availabilityEdit)} </div>
+                  <div style={{ width: '99%', display: 'flex' }}> {AvailabilityChart(availability, availabilityEdit)} </div>
                 </div> :
                 <div style={{ width: '99%' }}>
                   <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
@@ -256,7 +292,7 @@ export function Popup(listingId: number) {
                       <div style={{ flex: '90%', marginLeft: '5%', marginTop: '2vh', borderBottom: '1.5px solid #18A0FB', display: 'flex', paddingBottom: '5px' }}>
                       <TextareaAutosize
                       placeholder='Add a comment...'
-                      style={{ width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none' }}
+                      style={{ width: "100%", fontSize: '0.9em', color: '#808080', resize: 'none'}}
                       onChange={e =>
                         editComment({
                           commenter: comment.commenter,
