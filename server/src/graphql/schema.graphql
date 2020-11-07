@@ -113,6 +113,17 @@ type Listing {
 
   # name of service being offered
   sellingName: String!
+
+  startDate: String!
+
+  endDate: String!
+
+  location: String!
+
+  description: String!
+
+  # need to be URLs to images uploaded elsewhere
+  image: String!
 }
 
 input ListingInput {
@@ -124,6 +135,17 @@ input ListingInput {
 
   # name of service being offered
   sellingName: String!
+
+  startDate: String!
+
+  endDate: String!
+
+  location: String!
+
+  description: String!
+
+  # need to be URL to images uploaded elsewhere
+  image: String!
 }
 
 type Comment {

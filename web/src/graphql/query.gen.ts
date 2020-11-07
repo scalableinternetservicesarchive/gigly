@@ -353,6 +353,11 @@ export interface ListingInput {
   username: string;
   price?: number | null;
   sellingName: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  description: string;
+  image: string;
 }
 
 export interface SurveyInput {

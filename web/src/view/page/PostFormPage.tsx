@@ -204,7 +204,16 @@ export function PostFormPage(props: PostFormPageProps) {
           <SubmitButton
             type="submit"
             onClick={() => {
-              handleSubmit(user.name, post.price, post.name)
+              handleSubmit(
+                user.name,
+                post.price,
+                post.name,
+                post.start,
+                post.end,
+                post.location,
+                post.description,
+                'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80'
+              )
             }}
           >
             <LabelText>SUBMIT</LabelText>
@@ -242,8 +251,17 @@ function MyAccountInfo(props: TestUser) {
   )
 }
 
-function handleSubmit(username: string, price: number, sellingName: string) {
-  addListing(getApolloClient(), { username, price, sellingName })
+function handleSubmit(
+  username: string,
+  price: number,
+  sellingName: string,
+  startDate: string,
+  endDate: string,
+  location: string,
+  description: string,
+  image: string
+) {
+  addListing(getApolloClient(), { username, price, sellingName, startDate, endDate, location, description, image })
     .then(() => {
       toast('submitted!')
     })
