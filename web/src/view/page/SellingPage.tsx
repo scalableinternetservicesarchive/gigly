@@ -64,7 +64,7 @@ function getCard(c: CardData) {
 const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function LecturesPage(props: LecturesPageProps) {
+export function SellingPage(props: LecturesPageProps) {
   const [search, setSearch] = React.useState<string>('')
   const { loading, data } = useQuery<FetchListings>(fetchListings)
   const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)

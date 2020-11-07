@@ -9,9 +9,24 @@ export class Listing extends BaseEntity {
   @Column()
   username: string
 
-  @Column({type: "int", name: "price", nullable: true})
+  @Column({ type: 'int', name: 'price', nullable: true })
   price: int | null
 
   @Column()
   sellingName: string
+
+  @Column()
+  startDate: string
+
+  @Column()
+  endDate: string
+
+  @Column()
+  location: string
+
+  @Column()
+  description: string
+
+  @Column()
+  image: string
 }

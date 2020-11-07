@@ -19,7 +19,7 @@ const title = {
 const otherTabs = [
   {
     name: 'Selling',
-    path: getPath(Route.LECTURES), // Selling
+    path: getPath(Route.SELLING), // Selling
   },
   {
     name: 'Account',
@@ -32,7 +32,7 @@ const otherTabs = [
   {
     name: 'Post Form',
     path: getPath(Route.POSTFORM),
-  }
+  },
 ]
 
 export function NavBar() {
