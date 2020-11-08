@@ -24,6 +24,31 @@ export interface FetchUserContext {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: FetchUserContext2
+// ====================================================
+
+export interface FetchUserContext2_self {
+  __typename: "User";
+  id: number;
+  name: string;
+  userType: UserType;
+  password: string;
+}
+
+export interface FetchUserContext2 {
+  self: FetchUserContext2_self | null;
+}
+
+export interface FetchUserContext2Variables {
+  email: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchListings
 // ====================================================
 

@@ -9,3 +9,14 @@ export const fetchUser = gql`
     }
   }
 `
+export const fetchUser2 = gql`
+  query FetchUserContext2($email: String!) {
+    self(email: $email) {
+      id
+      name
+      userType
+      password
+    }
+  }
+`
+

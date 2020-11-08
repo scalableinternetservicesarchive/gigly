@@ -18,7 +18,6 @@ type Query {
   # Returns the logged-in user making the query, or null if anonymous.
   self (email: String!): User
 
-
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
 
