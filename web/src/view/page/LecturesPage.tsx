@@ -3,6 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { FetchListings } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
+import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { fetchListings } from './fetchListings'
 import { Page } from './Page'
@@ -56,6 +57,7 @@ function getCard(c: CardData) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export function LecturesPage(props: LecturesPageProps) {
   // Whether or not to read from the listings
   const [haveListings, setHaveListings] = React.useState<boolean>(false)
@@ -83,6 +85,8 @@ export function LecturesPage(props: LecturesPageProps) {
         card.username.toLowerCase().includes(search.toLowerCase())
       )
     })
+    const {loading: loading2, data: data2} = useQuery(fetchUser3);
+    if (loading2) return (<h1>loading...</h1>)
     return (
       <Page>
         <div style={{ paddingTop: '100px' }}>
@@ -107,6 +111,9 @@ export function LecturesPage(props: LecturesPageProps) {
               <SideBarHeader>FILTER</SideBarHeader>
               <SideBarItem>Minimum Rating</SideBarItem>
               <SideBarItem>Maximum Price</SideBarItem>
+              {data2&&<SideBarItem>{JSON.stringify(data2)}</SideBarItem>}
+              {(!data2)&&<SideBarItem>No User Detected.</SideBarItem>}
+
             </div>
           </div>
           <div>

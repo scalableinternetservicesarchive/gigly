@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { check } from '../../../../common/src/util'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
-import { fetchUser2 } from '../auth/fetchUser'
+import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { handleError } from '../toast/error'
 import { toastErr } from '../toast/toast'
@@ -51,8 +51,34 @@ export function HomePage(props: HomePageProps) {
   // console.log('this is name: ' + data?.self.name)
   // console.log('this is id: ' + data?.self.id)
   // const [getUser, { loading, data }] = useLazyQuery(fetchUser2, { variables: { email: loginUser.name }});
-  const [getUser2, { loading, data }] = useLazyQuery(fetchUser2);
-  if (loading) return (<><h1>LOADING...</h1></>);
+  function login() {
+    // if (!validate(loginUser.name, loginUser.password, )) {
+    //   toastErr('invalid email/password')
+    //   return
+    // }
+    const loginEmail = loginUser.name;
+    const loginPassword = loginUser.password;
+    fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ loginEmail, loginPassword}),
+    })
+      .then(res => {
+        check(res.ok, 'response status ' + res.status)
+        return res.text()
+      })
+      .then(()=>getUser3())
+      .then(() => window.location.replace('/app/lectures'))
+      .catch(err => {
+        toastErr(err.toString())
+        // setError({ email: true, password: true })
+      })
+  }
+
+  // const [getUser2, { loading, data }] = useLazyQuery(fetchUser2);
+  // if (loading) return (<><h1>LOADING...</h1></>);
+  const [getUser3, {loading, data}] = useLazyQuery(fetchUser3);
+  if (loading) return (<h1>loading...</h1>)
   return (
     <Home>
       <Page>
@@ -174,13 +200,15 @@ export function HomePage(props: HomePageProps) {
                     />
                   </FormInput>
                   <br />
-                  <SubmitButton type="button" onClick={() => getUser2({ variables: { email: loginUser.name } })}>
+                  {/* <SubmitButton type="button" onClick={() => getUser2({ variables: { email: loginUser.name } })}>
+                    <LabelText>Login</LabelText></SubmitButton> */}
+                  <SubmitButton type="button" onClick={login}>
                     <LabelText>Login</LabelText></SubmitButton>
-
                     <h1>{error}</h1>
-                    {data&&data.self&&(data.self.password === loginUser.password)&&popupSuccess()}
+                  {data&&<h1>{JSON.stringify(data)}</h1>}
+                    {/* {data&&data.self&&(data.self.password === loginUser.password)&&popupSuccess()}
                     {data&&data.self&&(data.self.password !== loginUser.password)&&popupReload()}
-                    {data&&!data.self&&popupReload()&&<h1>User not found.</h1>}
+                    {data&&!data.self&&popupReload()&&<h1>User not found.</h1>} */}
                 </form>
                 <LinkButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
                   <LabelText>Don't have an account? Create Now!</LabelText>
@@ -293,7 +321,7 @@ function logout() {
     .then(res => {
       console.log('successfully logged out')
       check(res.ok, 'response status ' + res.status)
-      window.location.reload()
+      window.location.replace('/app/lectures')
     })
     .catch(handleError)
 }

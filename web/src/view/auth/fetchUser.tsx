@@ -20,3 +20,14 @@ export const fetchUser2 = gql`
   }
 `
 
+export const fetchUser3 = gql`
+  query FetchUserContext3 {
+    self2 {
+      id
+      email
+      password
+      name
+    }
+  }
+`
+

@@ -82,10 +82,10 @@ server.express.post(
   '/auth/login',
   asyncRoute(async (req, res) => {
     console.log('POST /auth/login')
-    const email = req.body.email
-    const password = req.body.password
-
-    const user = await User.findOne({ where: { email } })
+    const email = req.body.loginEmail
+    const password = req.body.loginPassword
+    const user = await User.findOne({ where: { email: email } })
+    console.log(JSON.stringify(req.body))
     // if (!user || password !== Config.adminPassword) {
     if (!user || password !== user.password) {
       res.status(403).send('Forbidden')
@@ -94,8 +94,6 @@ server.express.post(
 
     await Session.delete({ user })
     const authToken = await createSession(user)
-    // user.authToken = authToken
-    // user = await user.save()
 
     res
       .status(200)

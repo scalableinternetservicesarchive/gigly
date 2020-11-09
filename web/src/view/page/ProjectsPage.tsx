@@ -1,7 +1,9 @@
+import { useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { getApolloClient } from '../../graphql/apolloClient'
 import { style } from '../../style/styled'
+import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
 import { addListing } from './mutateListings'
@@ -19,10 +21,16 @@ interface TestUser {
 }
 
 export function ProjectsPage(props: ProjectsPageProps) {
+  const {loading, data} = useQuery(fetchUser3);
+  if (loading) return (<h1>loading...</h1>)
+  if (!data)
+  {
+    window.location.replace('/app/index')
+  }
   const [editForm, showEditForm] = React.useState(false)
   const [user, editUser] = React.useState<TestUser>({
-    name: 'Julia Baylon',
-    email: 'julia@gmail.com',
+    name: data.self2.name || 'unknown',
+    email: data.self2.email || 'unkown',
     phone: '(123) 456 - 7890',
     location: 'Westwood, CA',
   })

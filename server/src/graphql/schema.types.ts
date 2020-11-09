@@ -15,6 +15,7 @@ export interface Scalars {
 export interface Query {
   __typename?: 'Query'
   self?: Maybe<User>
+  self2?: Maybe<User>
   surveys: Array<Survey>
   survey?: Maybe<Survey>
   listings?: Maybe<Array<Listing>>
@@ -252,6 +253,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerySelfArgs, 'email'>>
+  self2?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
   survey?: Resolver<
     Maybe<ResolversTypes['Survey']>,

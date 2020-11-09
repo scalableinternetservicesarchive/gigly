@@ -26,7 +26,7 @@ interface Context {
 
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
-    // self: (_, args, ctx) => ctx.user,
+    self2: (_,args, ctx) => ctx.user,
     self: async (_, { email }) => {
       const user = await User.findOne({ where: { email: email } })
       if (user) {

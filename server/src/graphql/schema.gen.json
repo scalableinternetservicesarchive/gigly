@@ -900,6 +900,18 @@
             "deprecationReason": null
           },
           {
+            "name": "self2",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "surveys",
             "description": null,
             "args": [],
