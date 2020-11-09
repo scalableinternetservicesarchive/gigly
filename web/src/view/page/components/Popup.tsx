@@ -95,6 +95,21 @@ function getCommenterPhoto(l: string) {
 }
 
 function handleSubmit(listingId: number, username: string, commentContents: string) {
+
+  let dateTime = new Date();
+  let date = dateTime.getDate();
+  let month = dateTime.getMonth() + 1;
+  let year = dateTime.getFullYear();
+  let meridiem = 'AM';
+  let hr = dateTime.getHours();
+  let min = dateTime.getMinutes();
+  if(hr > 12) {
+    meridiem = 'PM';
+    hr = hr % 12;
+  }
+
+  username = `${month<10?`0${month}`:`${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`;
+
   addComment(getApolloClient(), { listingId, username, commentContents })
     .then(() => {
       toast('submitted!')
@@ -102,7 +117,7 @@ function handleSubmit(listingId: number, username: string, commentContents: stri
     .catch(err => {
       console.log('oops')
       console.log(err)
-    })
+    });
 }
 
 export function Popup(listingId: number) {
@@ -164,18 +179,7 @@ export function Popup(listingId: number) {
 
   var availabilityEdit = false;
 
-  var availability = strToMatrix(listing.availability);
-
-  //change long availability string to availability matrix
-  //input:
-  /*availability: [[0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0]],*/
-
+  var availability = strToMatrix(listing.availability)
 
   var tagsDisplay = listing.tags.join(', ');
 
