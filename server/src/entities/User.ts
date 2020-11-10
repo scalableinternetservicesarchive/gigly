@@ -6,9 +6,10 @@ import {
   JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from 'typeorm'
 import { User as GraphqlUser, UserType } from '../graphql/schema.types'
+import { Comment } from './Comment'
 import { Listing } from './Listing'
 
 @Entity()
@@ -43,4 +44,8 @@ export class User extends BaseEntity implements GraphqlUser {
   @OneToMany(() => Listing, listing => listing.user, { eager: true })
   @JoinColumn({ name: 'listingId' })
   listings: Listing[]
+
+  @OneToMany(() => Comment, comment => comment.user, { eager: true })
+  @JoinColumn({ name: 'commentId' })
+  comments: Comment[]
 }
