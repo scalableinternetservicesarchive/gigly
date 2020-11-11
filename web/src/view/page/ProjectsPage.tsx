@@ -11,7 +11,7 @@ import { Page } from './Page'
 import { UserContext } from '../auth/user'
 import { useContext } from 'react'
 
-interface ProjectsPageProps extends RouteComponentProps, AppRouteParams { }
+interface ProjectsPageProps extends RouteComponentProps, AppRouteParams {}
 // const imageSrc = require('../../../../public/assets/julia.jpg')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
@@ -128,13 +128,13 @@ export function ProjectsPage(props: ProjectsPageProps) {
                 </SubmitButton>
               </form>
             ) : (
-                <>
-                  <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
-                  <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
-                    <LabelText>EDIT</LabelText>
-                  </SubmitButton>
-                </>
-              )}
+              <>
+                <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
+                <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
+                  <LabelText>EDIT</LabelText>
+                </SubmitButton>
+              </>
+            )}
           </div>
         </Row>
       </div>
@@ -165,8 +165,17 @@ function MyAccountInfo(props: TestUser) {
   )
 }
 
-function handleSubmit(username: string, price: number, sellingName: string) {
-  addListing(getApolloClient(), { username, price, sellingName })
+function handleSubmit(
+  username: string,
+  price: number,
+  sellingName: string,
+  startDate: string,
+  endDate: string,
+  location: string,
+  description: string,
+  image: string
+) {
+  addListing(getApolloClient(), { username, price, sellingName, startDate, endDate, location, description, image })
     .then(() => {
       toast('submitted!')
     })

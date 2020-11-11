@@ -38,7 +38,7 @@ export function HomePage(props: HomePageProps) {
     password: '',
   })
   const [success, setSuccess] = useState<boolean>(false) //check status for login or signup
-  const [error, setError] = useState("")
+  const [error, setError] = useState('')
   // const [err, setError] = useState({ email: false, name: false, password: false })
 
   // reset error when email/name change
@@ -68,7 +68,7 @@ export function HomePage(props: HomePageProps) {
         return res.text()
       })
       .then(() => getUser3())
-      .then(() => window.location.replace('/app/lectures'))
+      .then(() => window.location.replace('/app/selling'))
       .catch(err => {
         toastErr(err.toString())
         // setError({ email: true, password: true })
@@ -282,7 +282,7 @@ function popupSuccess() {
         }}
       >
         <h1>Success! </h1>
-        <SubmitButton type="button" onClick={() => window.location.replace('/app/lectures')}>
+        <SubmitButton type="button" onClick={() => window.location.replace('/app/selling')}>
           <LabelText>Continue to Site</LabelText>
         </SubmitButton>
       </div>
@@ -343,7 +343,7 @@ function logout() {
     .then(res => {
       console.log('successfully logged out')
       check(res.ok, 'response status ' + res.status)
-      window.location.replace('/app/lectures')
+      window.location.replace('/app/selling')
     })
     .catch(handleError)
 }

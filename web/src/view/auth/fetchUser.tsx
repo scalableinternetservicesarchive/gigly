@@ -27,6 +27,7 @@ export const fetchUser3 = gql`
       email
       password
       name
+      userType
     }
   }
 `

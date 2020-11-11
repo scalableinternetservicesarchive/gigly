@@ -6,7 +6,7 @@
  */
 export enum Route {
   HOME = 'app/index',
-  LECTURES = 'app/lectures',
+  SELLING = 'app/selling',
   PROJECTS = 'app/projects',
   PLAYGROUND = 'app/playground',
   PLAYGROUND_APP = 'app/playground/:app',

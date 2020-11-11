@@ -11,15 +11,21 @@ import { Page } from './Page'
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
 
 interface CardData {
+  id: number
   serviceName: string
   username: string
   profPic: string
   price: number
 }
 
+enum HeaderItems {
+  MOST_RECENT = 'Most Recent',
+  LOW_TO_HIGH = 'Low to High',
+}
+
 function getCard(c: CardData) {
   return (
-    <Card key={c.serviceName}>
+    <Card key={c.id}>
       <CardInfo>
         <div
           style={{
@@ -56,30 +62,33 @@ function getCard(c: CardData) {
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 
-export function LecturesPage(props: LecturesPageProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function SellingPage(props: LecturesPageProps) {
   // Whether or not to read from the listings
   const [haveListings, setHaveListings] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
   const { loading, data } = useQuery<FetchListings>(fetchListings)
+  const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)
 
   let cards: CardData[] = []
   if (data) {
     const cards: CardData[] = []
-    data?.listings?.map(listing => {
+    data?.listings?.map((listing, index) => {
       cards.push({
+        id: listing.id ?? index,
         serviceName: listing.sellingName,
-
         username: listing.username,
-
         price: listing.price ?? 0,
 
         profPic:
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
       })
     })
-    const filteredCards = cards.filter(card => {
+
+    // Filter from searchbar
+    let filteredCards = cards.filter(card => {
       return (
         card.serviceName.toLowerCase().includes(search.toLowerCase()) ||
         card.username.toLowerCase().includes(search.toLowerCase())
@@ -87,6 +96,15 @@ export function LecturesPage(props: LecturesPageProps) {
     })
     const {loading: loading2, data: data2} = useQuery(fetchUser3);
     if (loading2) return (<h1>loading...</h1>)
+
+    // Sort from low to high if that's selected, otherwise default to most recent
+    if (selectedSort === HeaderItems.LOW_TO_HIGH)
+      filteredCards = filteredCards.sort((a: CardData, b: CardData) => {
+        return a.price - b.price
+      })
+
+    const cardUIs = filteredCards.map(card => getCard(card))
+
     return (
       <Page>
         <div style={{ paddingTop: '100px' }}>
@@ -105,15 +123,22 @@ export function LecturesPage(props: LecturesPageProps) {
           >
             <div style={{ marginTop: '100px' }}>
               <SideBarHeader>SORT</SideBarHeader>
-              <SideBarItem>Most Recent</SideBarItem>
-              <SideBarItem>Low to High</SideBarItem>
-              <SideBarItem>Seller Rating</SideBarItem>
-              <SideBarHeader>FILTER</SideBarHeader>
-              <SideBarItem>Minimum Rating</SideBarItem>
-              <SideBarItem>Maximum Price</SideBarItem>
-              {data2&&<SideBarItem>{JSON.stringify(data2)}</SideBarItem>}
-              {(!data2)&&<SideBarItem>No User Detected.</SideBarItem>}
-
+              <SideBarItem
+                onClick={() => {
+                  setSelectedSort(HeaderItems.MOST_RECENT)
+                }}
+                $clicked={selectedSort === HeaderItems.MOST_RECENT}
+              >
+                Most Recent
+              </SideBarItem>
+              <SideBarItem
+                onClick={() => {
+                  setSelectedSort(HeaderItems.LOW_TO_HIGH)
+                }}
+                $clicked={selectedSort === HeaderItems.LOW_TO_HIGH}
+              >
+                Low to High
+              </SideBarItem>
             </div>
           </div>
           <div>
@@ -135,8 +160,11 @@ export function LecturesPage(props: LecturesPageProps) {
               }}
             />
           </div>
-          <div className="flex flex-row" style={{ paddingTop: '80px' }}>
-            {filteredCards.map(card => getCard(card))}
+          <div
+            className="flex flex-row"
+            style={{ flexDirection: 'row', flexWrap: 'wrap', paddingTop: '80px', maxWidth: '1000px' }}
+          >
+            {cardUIs}
           </div>
         </div>
       </Page>
@@ -145,6 +173,7 @@ export function LecturesPage(props: LecturesPageProps) {
     // Failed GraphQL query :(( fall back on this dummy data
     cards = [
       {
+        id: 1,
         serviceName: 'Personalized Guitar Lessons',
         username: 'Dolphin123',
         price: 30,
@@ -152,6 +181,7 @@ export function LecturesPage(props: LecturesPageProps) {
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
       },
       {
+        id: 2,
         serviceName: 'Spanish Translation',
         username: 'Fox456',
         price: 18,
@@ -159,6 +189,7 @@ export function LecturesPage(props: LecturesPageProps) {
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
       },
       {
+        id: 3,
         serviceName: ':))))))))))',
         username: 'lol',
         price: 9000,
@@ -166,12 +197,19 @@ export function LecturesPage(props: LecturesPageProps) {
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
       },
     ]
-    const filteredCards = cards.filter(card => {
+    // Filter from searchbar
+    let filteredCards = cards.filter(card => {
       return (
         card.serviceName.toLowerCase().includes(search.toLowerCase()) ||
         card.username.toLowerCase().includes(search.toLowerCase())
       )
     })
+
+    // Sort from low to high if that's selected, otherwise default to most recent
+    if (selectedSort === HeaderItems.LOW_TO_HIGH)
+      filteredCards = filteredCards.sort((a: CardData, b: CardData) => {
+        return a.price - b.price
+      })
     return (
       <Page>
         <div style={{ paddingTop: '100px' }}>
@@ -190,12 +228,23 @@ export function LecturesPage(props: LecturesPageProps) {
           >
             <div style={{ marginTop: '100px' }}>
               <SideBarHeader>SORT</SideBarHeader>
-              <SideBarItem>Most Recent</SideBarItem>
-              <SideBarItem>Low to High</SideBarItem>
-              <SideBarItem>Seller Rating</SideBarItem>
-              <SideBarHeader>FILTER</SideBarHeader>
-              <SideBarItem>Minimum Rating</SideBarItem>
-              <SideBarItem>Maximum Price</SideBarItem>
+
+              <SideBarItem
+                onClick={() => {
+                  setSelectedSort(HeaderItems.MOST_RECENT)
+                }}
+                $clicked={selectedSort === HeaderItems.MOST_RECENT}
+              >
+                Most Recent
+              </SideBarItem>
+              <SideBarItem
+                onClick={() => {
+                  setSelectedSort(HeaderItems.LOW_TO_HIGH)
+                }}
+                $clicked={selectedSort === HeaderItems.LOW_TO_HIGH}
+              >
+                Low to High
+              </SideBarItem>
             </div>
           </div>
           <div>
@@ -235,6 +284,8 @@ const Card = style('div', 'flex white items-center list pa6 ph2 ', {
     ')',
   paddingTop: '20px',
   paddingBottom: '10px',
+
+  marginBottom: '8px',
   justifyContent: 'flex-start',
   minHeight: '200px',
   minWidth: '250px',
@@ -262,10 +313,12 @@ const UserPic = style('div', (c: { $img?: string }) => ({
         ')',
 }))
 
-const SideBarItem = style('div', {
+const SideBarItem = style('div', (c: { $clicked?: boolean }) => ({
   paddingLeft: '15px',
   paddingTop: '10px',
-})
+  fontWeight: c.$clicked ? 'bold' : 'initial',
+  cursor: 'pointer',
+}))
 
 const SideBarHeader = style('div', {
   paddingLeft: '15px',

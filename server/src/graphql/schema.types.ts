@@ -110,15 +110,26 @@ export interface SurveyInput {
 
 export interface Listing {
   __typename?: 'Listing'
+  id?: Maybe<Scalars['Int']>
   username: Scalars['String']
   price?: Maybe<Scalars['Int']>
   sellingName: Scalars['String']
+  startDate: Scalars['String']
+  endDate: Scalars['String']
+  location: Scalars['String']
+  description: Scalars['String']
+  image: Scalars['String']
 }
 
 export interface ListingInput {
   username: Scalars['String']
   price?: Maybe<Scalars['Int']>
   sellingName: Scalars['String']
+  startDate: Scalars['String']
+  endDate: Scalars['String']
+  location: Scalars['String']
+  description: Scalars['String']
+  image: Scalars['String']
 }
 
 export interface Comment {
@@ -359,9 +370,15 @@ export type ListingResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Listing'] = ResolversParentTypes['Listing']
 > = {
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   sellingName?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  startDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  endDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  location?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  image?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 

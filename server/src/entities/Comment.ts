@@ -1,4 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Listing } from './Listing'
+import { User } from './User'
 
 @Entity()
 export class Comment extends BaseEntity {
@@ -13,4 +15,12 @@ export class Comment extends BaseEntity {
 
   @Column()
   commentContents: string
+
+  @ManyToOne(() => Listing, listing => listing.comments)
+  @JoinColumn({ name: 'listingId_ref' })
+  listing: Listing
+
+  @ManyToOne(() => User, user => user.comments)
+  @JoinColumn({ name: 'userId' })
+  user: User
 }

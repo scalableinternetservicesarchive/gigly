@@ -58,10 +58,31 @@ export interface FetchUserContext3_self2 {
   email: string;
   password: string;
   name: string;
+  userType: UserType;
 }
 
 export interface FetchUserContext3 {
   self2: FetchUserContext3_self2 | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: FetchComments
+// ====================================================
+
+export interface FetchComments_comments {
+  __typename: "Comment";
+  listingId: number;
+  username: string;
+  commentContents: string;
+}
+
+export interface FetchComments {
+  comments: FetchComments_comments[] | null;
 }
 
 /* tslint:disable */
@@ -75,6 +96,7 @@ export interface FetchUserContext3 {
 
 export interface FetchListings_listings {
   __typename: "Listing";
+  id: number | null;
   username: string;
   price: number | null;
   sellingName: string;
@@ -378,6 +400,11 @@ export interface ListingInput {
   username: string;
   price?: number | null;
   sellingName: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  description: string;
+  image: string;
 }
 
 export interface SurveyInput {
