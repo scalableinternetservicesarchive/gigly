@@ -1,5 +1,6 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import { useContext } from 'react'
 import { getApolloClient } from '../../graphql/apolloClient'
 import { style } from '../../style/styled'
 import { AppRouteParams } from '../nav/route'
@@ -7,6 +8,7 @@ import { toast } from '../toast/toast'
 import { AvailabilityChart } from './components/AvailabilityChart'
 import { addListing } from './mutateListings'
 import { Page } from './Page'
+import { UserContext } from '../auth/user'
 
 interface PostFormPageProps extends RouteComponentProps, AppRouteParams {}
 // const imageSrc = require('../../../../public/assets/julia.jpg')
@@ -31,14 +33,14 @@ interface Post {
 
 export function PostFormPage(props: PostFormPageProps) {
   const [editForm, showEditForm] = React.useState(false)
-  const [user, editUser] = React.useState<TestUser>({
+  const [testuser, editUser] = React.useState<TestUser>({
     name: 'Julia Baylon',
     email: 'julia@gmail.com',
     phone: '(123) 456 - 7890',
     location: 'Westwood, CA',
   })
 
-  var bools = [
+  const bools = [
     [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -60,11 +62,26 @@ export function PostFormPage(props: PostFormPageProps) {
     description: '',
   })
 
+  const { user } = useContext(UserContext)
+
+  if (user == null) {
+    return (
+      <Home>
+        <Page>
+          <CatchPhrase style={{ paddingTop: '38%' }}>We are so glad you're here!</CatchPhrase>
+          <CatchPhrase>Make sure to login before making a post ;)</CatchPhrase>
+        </Page>
+      </Home>
+    )
+  }
+
+  console.log('at post form page: ' + user.name)
   return (
     <Page>
       <div style={{ paddingTop: '80px' }}>
         <form>
           <HeaderLabelText>NEW POST: </HeaderLabelText>
+          {/* <p>{user === null ? 'no user' : user.name}</p> */}
           <FormLabelText>service name </FormLabelText>
           <FormInput>
             <input
@@ -204,7 +221,7 @@ export function PostFormPage(props: PostFormPageProps) {
           <SubmitButton
             type="submit"
             onClick={() => {
-              handleSubmit(user.name, post.price, post.name)
+              handleSubmit(testuser.name, post.price, post.name)
             }}
           >
             <LabelText>SUBMIT</LabelText>
@@ -274,6 +291,25 @@ const SubmitButton = style('button', {
   marginLeft: 'auto',
   marginRight: 'auto',
 })
+
+const Home = style('div', 'flex', {
+  backgroundColor: '#B0C4DE',
+  width: '100vw',
+  height: '100vh',
+  margin: 'none',
+  border: 'none',
+  display: 'flex',
+  justifyContent: 'center',
+})
+
+const CatchPhrase = style('div', 'flex-l', {
+  fontSize: '1.5rem',
+  fontFamily: "'Risque', sans-serif",
+  justifyContent: 'center',
+  padding: '0.7rem',
+  color: '#FFF',
+})
+
 const FormLabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '8px' })
 const LabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px' })
 const HeaderLabelText = style('h1', { fontSize: '1.2em', letterSpacing: '1.25px' })

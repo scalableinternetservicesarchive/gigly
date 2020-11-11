@@ -71,6 +71,7 @@ export const graphqlRoot: Resolvers<Context> = {
           newListing.price = price
           newListing.sellingName = sellingName
           await newListing.save()
+          // update user's listing
           return newListing
         }
       }

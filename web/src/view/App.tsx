@@ -5,9 +5,9 @@ import { hydrate, render } from 'react-dom'
 import { Provider as StyletronProvider } from 'styletron-react'
 import { appContext } from '../../../common/src/context'
 import { getApolloClient } from '../graphql/apolloClient'
-import { FetchUserContext } from '../graphql/query.gen'
+import { FetchUserContext3 } from '../graphql/query.gen'
 import { style } from '../style/styled'
-import { fetchUser } from './auth/fetchUser'
+import { fetchUser3 } from './auth/fetchUser'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
 import { HomePage } from './page/HomePage'
@@ -15,8 +15,6 @@ import { LecturesPage } from './page/LecturesPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { PostFormPage } from './page/PostFormPage'
 import { ProjectsPage } from './page/ProjectsPage'
-import { Signup } from '../view/auth/Signup'
-import { Login } from '../view/auth/Login'
 
 const Styletron = require('styletron-engine-monolithic')
 
@@ -37,13 +35,13 @@ export function init() {
 }
 
 export function App() {
-  const { loading, data } = useQuery<FetchUserContext>(fetchUser)
+  const { loading, data } = useQuery<FetchUserContext3>(fetchUser3)
   if (loading || data == null) {
     return null
   }
 
   return (
-    <UserContext.Provider value={new UserCtx(data.self)}>
+    <UserContext.Provider value={new UserCtx(data.self2)}>
       <AppBody />
     </UserContext.Provider>
   )
@@ -61,8 +59,6 @@ export function AppBody() {
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
         <PostFormPage path={Route.POSTFORM} />
-        <Signup path={Route.SIGNUP} />
-        <Login path={Route.LOGIN} />
       </Router>
       <Footer>
         <FooterText>© 2020 GiGly</FooterText>

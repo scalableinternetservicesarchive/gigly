@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { FetchUserContext_self, UserType } from '../../graphql/query.gen'
+import { FetchUserContext3_self2, UserType } from '../../graphql/query.gen'
 
 export class UserCtx {
-  constructor(public user: FetchUserContext_self | null) {}
+  constructor(public user: FetchUserContext3_self2 | null) {}
   isAdmin() {
     return this.user && this.user?.userType === UserType.ADMIN
   }

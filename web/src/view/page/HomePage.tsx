@@ -56,18 +56,18 @@ export function HomePage(props: HomePageProps) {
     //   toastErr('invalid email/password')
     //   return
     // }
-    const loginEmail = loginUser.name;
-    const loginPassword = loginUser.password;
+    const loginEmail = loginUser.name
+    const loginPassword = loginUser.password
     fetch('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ loginEmail, loginPassword}),
+      body: JSON.stringify({ loginEmail, loginPassword }),
     })
       .then(res => {
         check(res.ok, 'response status ' + res.status)
         return res.text()
       })
-      .then(()=>getUser3())
+      .then(() => getUser3())
       .then(() => window.location.replace('/app/lectures'))
       .catch(err => {
         toastErr(err.toString())
@@ -77,8 +77,9 @@ export function HomePage(props: HomePageProps) {
 
   // const [getUser2, { loading, data }] = useLazyQuery(fetchUser2);
   // if (loading) return (<><h1>LOADING...</h1></>);
-  const [getUser3, {loading, data}] = useLazyQuery(fetchUser3);
-  if (loading) return (<h1>loading...</h1>)
+  const [getUser3, { loading, data }] = useLazyQuery(fetchUser3)
+  console.log('at home page: ' + data)
+  if (loading) return <h1>loading...</h1>
   return (
     <Home>
       <Page>
@@ -89,7 +90,7 @@ export function HomePage(props: HomePageProps) {
           <div>
             {signup ? (
               <>
-                <form onSubmit={() => loginFunction(signupUser)}>
+                <form onSubmit={() => signupFunction(signupUser)}>
                   <FormInput>
                     <input
                       type="text"
@@ -173,7 +174,7 @@ export function HomePage(props: HomePageProps) {
                   <FormInput style={{ backgroundColor: 'E3E3E3', borderRadius: '20px' }}>
                     <input
                       type="text"
-                      placeholder="Username"
+                      placeholder="Email"
                       style={{ fontSize: '0.9em', resize: 'none', width: '100%' }}
                       onChange={e =>
                         setLogin({
@@ -203,10 +204,10 @@ export function HomePage(props: HomePageProps) {
                   {/* <SubmitButton type="button" onClick={() => getUser2({ variables: { email: loginUser.name } })}>
                     <LabelText>Login</LabelText></SubmitButton> */}
                   <SubmitButton type="button" onClick={login}>
-                    <LabelText>Login</LabelText></SubmitButton>
-                    <h1>{error}</h1>
-                  {data&&<h1>{JSON.stringify(data)}</h1>}
-                    {/* {data&&data.self&&(data.self.password === loginUser.password)&&popupSuccess()}
+                    <LabelText>Login</LabelText>
+                  </SubmitButton>
+                  {/* {data && <h1>{JSON.stringify(data)} this is data</h1>} */}
+                  {/* {data&&data.self&&(data.self.password === loginUser.password)&&popupSuccess()}
                     {data&&data.self&&(data.self.password !== loginUser.password)&&popupReload()}
                     {data&&!data.self&&popupReload()&&<h1>User not found.</h1>} */}
                 </form>
@@ -236,7 +237,6 @@ function createUser(props: SignupForm) {
   return true
 }
 
-
 // function validateUser(props: LoginForm) {
 //   //dummy function for validating user
 //   console.log("clicked")
@@ -245,30 +245,52 @@ function createUser(props: SignupForm) {
 //   console.log(data)
 //   return true
 // }
-function popupReload(){
-  return(
+function popupReload() {
+  return (
     <>
-    <div style={{position: 'fixed', top: '50%', left: '50%', transform: "translate(-50%, -50%)", width: '500px', height: '300px', backgroundColor: 'grey'}}>
-    <h1>Password incorrect. Please try again. </h1>
-    <SubmitButton type="button" onClick={()=>window.location.reload()}>
-    <LabelText>Login</LabelText></SubmitButton>
-    </div>
+      <div
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '500px',
+          height: '300px',
+          backgroundColor: 'grey',
+        }}
+      >
+        <h1>Password incorrect. Please try again. </h1>
+        <SubmitButton type="button" onClick={() => window.location.reload()}>
+          <LabelText>Login</LabelText>
+        </SubmitButton>
+      </div>
     </>
   )
 }
-function popupSuccess(){
-  return(
+function popupSuccess() {
+  return (
     <>
-    <div style={{position: 'fixed', top: '50%', left: '50%', transform: "translate(-50%, -50%)", width: '500px', height: '300px', backgroundColor: 'grey'}}>
-    <h1>Success! </h1>
-    <SubmitButton type="button" onClick={()=>window.location.replace("/app/lectures")}>
-    <LabelText>Continue to Site</LabelText></SubmitButton>
-    </div>
+      <div
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '500px',
+          height: '300px',
+          backgroundColor: 'grey',
+        }}
+      >
+        <h1>Success! </h1>
+        <SubmitButton type="button" onClick={() => window.location.replace('/app/lectures')}>
+          <LabelText>Continue to Site</LabelText>
+        </SubmitButton>
+      </div>
     </>
   )
 }
 
-function loginFunction(props: SignupForm) {
+function signupFunction(props: SignupForm) {
   if (!validate(props.email, props.name, props.password)) {
     toastErr('invalid email/name')
     return
