@@ -7,8 +7,12 @@ import { Spacer } from '../../style/spacer'
 import { handleError } from '../toast/error'
 import { toastErr } from '../toast/toast'
 import { UserContext } from './user'
+import { RouteComponentProps } from '@reach/router'
+import { AppRouteParams } from '../nav/route'
 
-export function Login() {
+interface LoginProps extends RouteComponentProps, AppRouteParams {}
+
+export function Login(props: LoginProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [err, setError] = useState({ email: false, password: false })
@@ -59,7 +63,7 @@ export function Login() {
         <Input $hasError={err.password} $onChange={setPassword} $onSubmit={login} name="password" type="password" />
       </div>
       <div className="mt3">
-        <Button onClick={login}>Sign Up</Button>
+        <Button onClick={login}>Sign In</Button>
       </div>
     </>
   )
@@ -72,6 +76,7 @@ function Logout() {
       headers: { 'Content-Type': 'application/json' },
     })
       .then(res => {
+        console.log('successfully logged out')
         check(res.ok, 'response status ' + res.status)
         window.location.reload()
       })

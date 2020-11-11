@@ -23,6 +23,9 @@ export class User extends BaseEntity implements GraphqlUser {
   @UpdateDateColumn()
   timeUpdated: Date
 
+  @Column()
+  password: string
+
   @Column({
     length: 100,
   })

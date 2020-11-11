@@ -1,11 +1,15 @@
+import { useLazyQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { useState } from 'react'
-import { style } from '../../style/styled'
-import { AppRouteParams } from '../nav/route'
-import { Page } from './Page'
+import { check } from '../../../../common/src/util'
 import { Spacer } from '../../style/spacer'
-
+import { style } from '../../style/styled'
+import { fetchUser3 } from '../auth/fetchUser'
+import { AppRouteParams } from '../nav/route'
+import { handleError } from '../toast/error'
+import { toastErr } from '../toast/toast'
+import { Page } from './Page'
 interface HomePageProps extends RouteComponentProps, AppRouteParams {}
 
 interface SignupForm {
@@ -21,7 +25,8 @@ interface LoginForm {
 }
 
 export function HomePage(props: HomePageProps) {
-  const [signup, setsignup] = useState(false)
+  const [qID, setQID] = useState('no qID')
+  const [signup, setsignup] = useState(false) // toggle between signup and login
   const [signupUser, setSignup] = React.useState<SignupForm>({
     name: '',
     email: '',
@@ -33,7 +38,48 @@ export function HomePage(props: HomePageProps) {
     password: '',
   })
   const [success, setSuccess] = useState<boolean>(false) //check status for login or signup
+  const [error, setError] = useState('')
+  // const [err, setError] = useState({ email: false, name: false, password: false })
 
+  // reset error when email/name change
+  // useEffect(() => setError({ ...err, email: !validateEmail(signupUser.email) }), [signupUser.email])
+  // useEffect(() => setError({ ...err, name: false }), [signupUser.name])
+  // useEffect(() => setError({ ...err, password: false }), [signupUser.password])
+  // const { loading, data } = useQuery(fetchUser2, { variables: { email: 'r@gmail.com' }, pollInterval: 5000 })
+  // const qName = data?.name
+  // console.log('this is data: ' + JSON.stringify(data))
+  // console.log('this is name: ' + data?.self.name)
+  // console.log('this is id: ' + data?.self.id)
+  // const [getUser, { loading, data }] = useLazyQuery(fetchUser2, { variables: { email: loginUser.name }});
+  function login() {
+    // if (!validate(loginUser.name, loginUser.password, )) {
+    //   toastErr('invalid email/password')
+    //   return
+    // }
+    const loginEmail = loginUser.name
+    const loginPassword = loginUser.password
+    fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ loginEmail, loginPassword }),
+    })
+      .then(res => {
+        check(res.ok, 'response status ' + res.status)
+        return res.text()
+      })
+      .then(() => getUser3())
+      .then(() => window.location.replace('/app/selling'))
+      .catch(err => {
+        toastErr(err.toString())
+        // setError({ email: true, password: true })
+      })
+  }
+
+  // const [getUser2, { loading, data }] = useLazyQuery(fetchUser2);
+  // if (loading) return (<><h1>LOADING...</h1></>);
+  const [getUser3, { loading, data }] = useLazyQuery(fetchUser3)
+  console.log('at home page: ' + data)
+  if (loading) return <h1>loading...</h1>
   return (
     <Home>
       <Page>
@@ -44,7 +90,7 @@ export function HomePage(props: HomePageProps) {
           <div>
             {signup ? (
               <>
-                <form onSubmit={() => createUser(signupUser)}>
+                <form onSubmit={() => signupFunction(signupUser)}>
                   <FormInput>
                     <input
                       type="text"
@@ -123,12 +169,12 @@ export function HomePage(props: HomePageProps) {
               </>
             ) : (
               <>
-                <form onSubmit={() => validateUser(loginUser)}>
+                <form>
                   <Spacer $h2 />
                   <FormInput style={{ backgroundColor: 'E3E3E3', borderRadius: '20px' }}>
                     <input
                       type="text"
-                      placeholder="Username"
+                      placeholder="Email"
                       style={{ fontSize: '0.9em', resize: 'none', width: '100%' }}
                       onChange={e =>
                         setLogin({
@@ -155,15 +201,30 @@ export function HomePage(props: HomePageProps) {
                     />
                   </FormInput>
                   <br />
-                  <SubmitButton type="submit">
+                  {/* <SubmitButton type="button" onClick={() => getUser2({ variables: { email: loginUser.name } })}>
+                    <LabelText>Login</LabelText></SubmitButton> */}
+                  <SubmitButton type="button" onClick={login}>
                     <LabelText>Login</LabelText>
                   </SubmitButton>
+                  {/* {data && <h1>{JSON.stringify(data)} this is data</h1>} */}
+                  {/* {data&&data.self&&(data.self.password === loginUser.password)&&popupSuccess()}
+                    {data&&data.self&&(data.self.password !== loginUser.password)&&popupReload()}
+                    {data&&!data.self&&popupReload()&&<h1>User not found.</h1>} */}
                 </form>
                 <LinkButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
                   <LabelText>Don't have an account? Create Now!</LabelText>
                 </LinkButton>
               </>
             )}
+            <LinkButton
+              onClick={() => {
+                console.log('logout clicked')
+                logout()
+              }}
+              style={{ marginBottom: '16px' }}
+            >
+              <LabelText>Logout</LabelText>
+            </LinkButton>
           </div>
         </div>
       </Page>
@@ -176,9 +237,115 @@ function createUser(props: SignupForm) {
   return true
 }
 
-function validateUser(props: LoginForm) {
-  //dummy function for validating user
-  return true
+// function validateUser(props: LoginForm) {
+//   //dummy function for validating user
+//   console.log("clicked")
+//   const { loading, data } = useQuery(fetchUser2, { variables: { email: props.name }, pollInterval: 5000 })
+//   console.log("this is login: ")
+//   console.log(data)
+//   return true
+// }
+function popupReload() {
+  return (
+    <>
+      <div
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '500px',
+          height: '300px',
+          backgroundColor: 'grey',
+        }}
+      >
+        <h1>Password incorrect. Please try again. </h1>
+        <SubmitButton type="button" onClick={() => window.location.reload()}>
+          <LabelText>Login</LabelText>
+        </SubmitButton>
+      </div>
+    </>
+  )
+}
+function popupSuccess() {
+  return (
+    <>
+      <div
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '500px',
+          height: '300px',
+          backgroundColor: 'grey',
+        }}
+      >
+        <h1>Success! </h1>
+        <SubmitButton type="button" onClick={() => window.location.replace('/app/selling')}>
+          <LabelText>Continue to Site</LabelText>
+        </SubmitButton>
+      </div>
+    </>
+  )
+}
+
+function signupFunction(props: SignupForm) {
+  if (!validate(props.email, props.name, props.password)) {
+    toastErr('invalid email/name')
+    return
+  }
+  const signup_email = props.email
+  const signup_username = props.name
+  const signup_password = props.password
+
+  fetch('/auth/createUser', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: signup_email, name: signup_username, password: signup_password }),
+  })
+    .then(res => {
+      check(res.ok, 'response status ' + res.status)
+      return res.text()
+    })
+    .then(() => window.location.replace('/'))
+    .catch(err => {
+      toastErr(err.toString())
+      // setError({ email: true, name: true, password: true })
+    })
+}
+
+function validateEmail(email: string) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
+}
+
+function validate(
+  email: string,
+  name: string,
+  password: string
+  // setError: React.Dispatch<React.SetStateAction<{ email: boolean; name: boolean; password: boolean }>>
+) {
+  const validEmail = validateEmail(email)
+  const validName = Boolean(name)
+  const validPassword = true
+  console.log('valid', validEmail, validName)
+  // setError({ email: !validEmail, name: !validName, password: !validPassword })
+  // const err = validEmail && validName && validPassword
+  return validEmail && validName && validPassword
+}
+
+function logout() {
+  return fetch('/auth/logout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then(res => {
+      console.log('successfully logged out')
+      check(res.ok, 'response status ' + res.status)
+      window.location.replace('/app/selling')
+    })
+    .catch(handleError)
 }
 
 const Home = style('div', 'flex', {

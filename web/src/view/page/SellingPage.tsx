@@ -3,6 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { FetchListings } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
+import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { fetchListings } from './fetchListings'
 import { Page } from './Page'
@@ -65,6 +66,8 @@ const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function SellingPage(props: LecturesPageProps) {
+  // Whether or not to read from the listings
+  const [haveListings, setHaveListings] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
   const { loading, data } = useQuery<FetchListings>(fetchListings)
   const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)
@@ -91,6 +94,8 @@ export function SellingPage(props: LecturesPageProps) {
         card.username.toLowerCase().includes(search.toLowerCase())
       )
     })
+    const {loading: loading2, data: data2} = useQuery(fetchUser3);
+    if (loading2) return (<h1>loading...</h1>)
 
     // Sort from low to high if that's selected, otherwise default to most recent
     if (selectedSort === HeaderItems.LOW_TO_HIGH)
