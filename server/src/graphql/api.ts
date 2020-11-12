@@ -26,7 +26,7 @@ interface Context {
 
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
-    self2: (_,args, ctx) => ctx.user,
+    self2: (_, args, ctx) => ctx.user,
     self: async (_, { email }) => {
       const user = await User.findOne({ where: { email: email } })
       if (user) {
@@ -88,6 +88,41 @@ export const graphqlRoot: Resolvers<Context> = {
           await newListing.save()
           // update user's listing
           return newListing
+        }
+      }
+      return null
+    },
+    editListing: async (_, { editInfo }, ctx) => {
+      if (editInfo !== undefined && editInfo !== null) {
+        const { id, username, price, sellingName, startDate, endDate, location, description, image } = editInfo
+        let listing = await Listing.findOne({ where: { id: id } })
+        if (listing !== undefined) {
+          if (username) {
+            listing.username = username
+          }
+          if (price) {
+            listing.price = price
+          }
+          if (sellingName) {
+            listing.sellingName = sellingName
+          }
+          if (startDate) {
+            listing.startDate = startDate
+          }
+          if (endDate) {
+            listing.endDate = endDate
+          }
+          if (location) {
+            listing.location = location
+          }
+          if (description) {
+            listing.description = description
+          }
+          if (image) {
+            listing.image = image
+          }
+          listing.save()
+          return listing
         }
       }
       return null

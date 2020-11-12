@@ -40,6 +40,9 @@ type Mutation {
 
   # Create a new comment on a listing in the database
   addComment(comment: CommentInput): Comment
+
+  # Edit an existing listing in the database
+  editListing(editInfo: EditListingInput): Listing
 }
 
 type Subscription {
@@ -148,6 +151,31 @@ input ListingInput {
 
   # need to be URL to images uploaded elsewhere
   image: String!
+}
+
+input EditListingInput {
+  # listing to edit
+  id: Int!
+
+  # username of user who posted this listing
+  username: String
+
+  # price. Null if user is requesting a service
+  price: Int
+
+  # name of service being offered
+  sellingName: String
+
+  startDate: String
+
+  endDate: String
+
+  location: String
+
+  description: String
+
+  # need to be URL to images uploaded elsewhere
+  image: String
 }
 
 type Comment {

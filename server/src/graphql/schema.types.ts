@@ -36,6 +36,7 @@ export interface Mutation {
   nextSurveyQuestion?: Maybe<Survey>
   addListing?: Maybe<Listing>
   addComment?: Maybe<Comment>
+  editListing?: Maybe<Listing>
 }
 
 export interface MutationAnswerSurveyArgs {
@@ -52,6 +53,10 @@ export interface MutationAddListingArgs {
 
 export interface MutationAddCommentArgs {
   comment?: Maybe<CommentInput>
+}
+
+export interface MutationEditListingArgs {
+  editInfo?: Maybe<EditListingInput>
 }
 
 export interface Subscription {
@@ -130,6 +135,18 @@ export interface ListingInput {
   location: Scalars['String']
   description: Scalars['String']
   image: Scalars['String']
+}
+
+export interface EditListingInput {
+  id: Scalars['Int']
+  username?: Maybe<Scalars['String']>
+  price?: Maybe<Scalars['Int']>
+  sellingName?: Maybe<Scalars['String']>
+  startDate?: Maybe<Scalars['String']>
+  endDate?: Maybe<Scalars['String']>
+  location?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  image?: Maybe<Scalars['String']>
 }
 
 export interface Comment {
@@ -236,6 +253,7 @@ export type ResolversTypes = {
   SurveyInput: SurveyInput
   Listing: ResolverTypeWrapper<Listing>
   ListingInput: ListingInput
+  EditListingInput: EditListingInput
   Comment: ResolverTypeWrapper<Comment>
   CommentInput: CommentInput
 }
@@ -255,6 +273,7 @@ export type ResolversParentTypes = {
   SurveyInput: SurveyInput
   Listing: Listing
   ListingInput: ListingInput
+  EditListingInput: EditListingInput
   Comment: Comment
   CommentInput: CommentInput
 }
@@ -303,6 +322,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationAddCommentArgs, never>
+  >
+  editListing?: Resolver<
+    Maybe<ResolversTypes['Listing']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditListingArgs, never>
   >
 }
 
