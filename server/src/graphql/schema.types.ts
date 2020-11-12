@@ -37,6 +37,7 @@ export interface Mutation {
   addListing?: Maybe<Listing>
   addComment?: Maybe<Comment>
   editListing?: Maybe<Listing>
+  editUser?: Maybe<User>
 }
 
 export interface MutationAnswerSurveyArgs {
@@ -59,6 +60,10 @@ export interface MutationEditListingArgs {
   editInfo?: Maybe<EditListingInput>
 }
 
+export interface MutationEditUserArgs {
+  editInfo?: Maybe<EditUserInput>
+}
+
 export interface Subscription {
   __typename?: 'Subscription'
   surveyUpdates?: Maybe<Survey>
@@ -75,11 +80,22 @@ export interface User {
   email: Scalars['String']
   name: Scalars['String']
   password: Scalars['String']
+  number: Scalars['String']
+  location: Scalars['String']
 }
 
 export enum UserType {
   Admin = 'ADMIN',
   User = 'USER',
+}
+
+export interface EditUserInput {
+  id?: Maybe<Scalars['Int']>
+  email: Scalars['String']
+  name?: Maybe<Scalars['String']>
+  password?: Maybe<Scalars['String']>
+  number?: Maybe<Scalars['String']>
+  location?: Maybe<Scalars['String']>
 }
 
 export interface Survey {
@@ -247,6 +263,7 @@ export type ResolversTypes = {
   Subscription: ResolverTypeWrapper<{}>
   User: ResolverTypeWrapper<User>
   UserType: UserType
+  EditUserInput: EditUserInput
   Survey: ResolverTypeWrapper<Survey>
   SurveyQuestion: ResolverTypeWrapper<SurveyQuestion>
   SurveyAnswer: ResolverTypeWrapper<SurveyAnswer>
@@ -267,6 +284,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']
   Subscription: {}
   User: User
+  EditUserInput: EditUserInput
   Survey: Survey
   SurveyQuestion: SurveyQuestion
   SurveyAnswer: SurveyAnswer
@@ -329,6 +347,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationEditListingArgs, never>
   >
+  editUser?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditUserArgs, never>
+  >
 }
 
 export type SubscriptionResolvers<
@@ -353,6 +377,8 @@ export type UserResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  number?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  location?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 

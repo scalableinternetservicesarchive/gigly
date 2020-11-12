@@ -28,6 +28,8 @@ export const fetchUser3 = gql`
       password
       name
       userType
+      number
+      location
     }
   }
 `

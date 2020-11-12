@@ -43,6 +43,9 @@ type Mutation {
 
   # Edit an existing listing in the database
   editListing(editInfo: EditListingInput): Listing
+
+  # Edit an existing user in the database
+  editUser(editInfo: EditUserInput): User
 }
 
 type Subscription {
@@ -55,10 +58,32 @@ type User {
   email: String!
   name: String!
   password: String!
+  number: String!
+  location: String!
   # authToken
 }
 
 enum UserType { ADMIN, USER }
+
+input EditUserInput {
+  # user id
+  id: Int
+
+  # email of user
+  email: String!
+
+  # name of user
+  name: String
+
+  # user's password
+  password: String
+
+  # user's number
+  number: String
+
+  # user's location
+  location: String
+}
 
 type Survey {
   id: Int!

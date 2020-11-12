@@ -141,6 +141,29 @@ export const graphqlRoot: Resolvers<Context> = {
       }
       return null
     },
+    editUser: async (_, { editInfo }, ctx) => {
+      if (editInfo !== undefined && editInfo !== null) {
+        const { id, email, name, password, number, location } = editInfo
+        let user = await User.findOne({ where: { email: email } })
+        if (user !== undefined) {
+          if (email) {
+            user.email = email
+          }
+          if (name) {
+            user.name = name
+          }
+          if (number) {
+            user.number = number
+          }
+          if (location) {
+            user.location = location
+          }
+          user.save()
+          return user
+        }
+      }
+      return null
+    },
   },
   Subscription: {
     surveyUpdates: {

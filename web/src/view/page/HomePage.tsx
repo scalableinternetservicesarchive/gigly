@@ -1,11 +1,12 @@
 import { useLazyQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { check } from '../../../../common/src/util'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
 import { fetchUser3 } from '../auth/fetchUser'
+import { UserContext } from '../auth/user'
 import { AppRouteParams } from '../nav/route'
 import { handleError } from '../toast/error'
 import { toastErr } from '../toast/toast'
@@ -15,6 +16,8 @@ interface HomePageProps extends RouteComponentProps, AppRouteParams {}
 interface SignupForm {
   name: string
   email: string
+  number: string
+  location: string
   password: string
   comfirmPassword: string
 }
@@ -30,6 +33,8 @@ export function HomePage(props: HomePageProps) {
   const [signupUser, setSignup] = React.useState<SignupForm>({
     name: '',
     email: '',
+    number: '',
+    location: '',
     password: '',
     comfirmPassword: '',
   })
@@ -77,6 +82,7 @@ export function HomePage(props: HomePageProps) {
 
   // const [getUser2, { loading, data }] = useLazyQuery(fetchUser2);
   // if (loading) return (<><h1>LOADING...</h1></>);
+  const { user: curUser } = useContext(UserContext)
   const [getUser3, { loading, data }] = useLazyQuery(fetchUser3)
   console.log('at home page: ' + data)
   if (loading) return <h1>loading...</h1>
@@ -94,12 +100,14 @@ export function HomePage(props: HomePageProps) {
                   <FormInput>
                     <input
                       type="text"
-                      placeholder="Username"
+                      placeholder="Name"
                       style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
                       onChange={e =>
                         setSignup({
                           name: e.target.value,
                           email: signupUser.email,
+                          number: signupUser.number,
+                          location: signupUser.location,
                           password: signupUser.password,
                           comfirmPassword: signupUser.comfirmPassword,
                         })
@@ -117,11 +125,51 @@ export function HomePage(props: HomePageProps) {
                         setSignup({
                           name: signupUser.name,
                           email: e.target.value,
+                          number: signupUser.number,
+                          location: signupUser.location,
                           password: signupUser.password,
                           comfirmPassword: signupUser.comfirmPassword,
                         })
                       }
                       value={signupUser.email}
+                    />
+                  </FormInput>
+                  <Spacer $h1 />
+                  <FormInput>
+                    <input
+                      type="text"
+                      placeholder="Number"
+                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      onChange={e =>
+                        setSignup({
+                          name: signupUser.name,
+                          email: signupUser.email,
+                          number: e.target.value,
+                          location: signupUser.location,
+                          password: signupUser.password,
+                          comfirmPassword: signupUser.comfirmPassword,
+                        })
+                      }
+                      value={signupUser.number}
+                    />
+                  </FormInput>
+                  <Spacer $h1 />
+                  <FormInput>
+                    <input
+                      type="text"
+                      placeholder="Location"
+                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                      onChange={e =>
+                        setSignup({
+                          name: signupUser.name,
+                          email: signupUser.email,
+                          number: signupUser.number,
+                          location: e.target.value,
+                          password: signupUser.password,
+                          comfirmPassword: signupUser.comfirmPassword,
+                        })
+                      }
+                      value={signupUser.location}
                     />
                   </FormInput>
                   <Spacer $h1 />
@@ -134,6 +182,8 @@ export function HomePage(props: HomePageProps) {
                         setSignup({
                           name: signupUser.name,
                           email: signupUser.email,
+                          number: signupUser.number,
+                          location: signupUser.location,
                           password: e.target.value,
                           comfirmPassword: signupUser.comfirmPassword,
                         })
@@ -151,6 +201,8 @@ export function HomePage(props: HomePageProps) {
                         setSignup({
                           name: signupUser.name,
                           email: signupUser.email,
+                          number: signupUser.number,
+                          location: signupUser.location,
                           password: signupUser.password,
                           comfirmPassword: e.target.value,
                         })
@@ -169,6 +221,7 @@ export function HomePage(props: HomePageProps) {
               </>
             ) : (
               <>
+                {!curUser &&
                 <form>
                   <Spacer $h2 />
                   <FormInput style={{ backgroundColor: 'E3E3E3', borderRadius: '20px' }}>
@@ -210,13 +263,14 @@ export function HomePage(props: HomePageProps) {
                   {/* {data&&data.self&&(data.self.password === loginUser.password)&&popupSuccess()}
                     {data&&data.self&&(data.self.password !== loginUser.password)&&popupReload()}
                     {data&&!data.self&&popupReload()&&<h1>User not found.</h1>} */}
-                </form>
+                </form>}
+
                 <LinkButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
                   <LabelText>Don't have an account? Create Now!</LabelText>
                 </LinkButton>
               </>
             )}
-            <LinkButton
+            {curUser && <LinkButton
               onClick={() => {
                 console.log('logout clicked')
                 logout()
@@ -224,7 +278,7 @@ export function HomePage(props: HomePageProps) {
               style={{ marginBottom: '16px' }}
             >
               <LabelText>Logout</LabelText>
-            </LinkButton>
+            </LinkButton>}
           </div>
         </div>
       </Page>
@@ -298,17 +352,19 @@ function signupFunction(props: SignupForm) {
   const signup_email = props.email
   const signup_username = props.name
   const signup_password = props.password
+  const signup_number = props.number
+  const signup_location = props.location
 
   fetch('/auth/createUser', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: signup_email, name: signup_username, password: signup_password }),
+    body: JSON.stringify({ email: signup_email, name: signup_username, password: signup_password, number: signup_number, location: signup_location }),
   })
     .then(res => {
       check(res.ok, 'response status ' + res.status)
       return res.text()
     })
-    .then(() => window.location.replace('/'))
+    .then(() => window.location.replace('/app/selling'))
     .catch(err => {
       toastErr(err.toString())
       // setError({ email: true, name: true, password: true })

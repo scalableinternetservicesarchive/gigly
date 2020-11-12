@@ -1,15 +1,13 @@
-import { useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import { useContext } from 'react'
 import { getApolloClient } from '../../graphql/apolloClient'
 import { style } from '../../style/styled'
-import { fetchUser3 } from '../auth/fetchUser'
+import { UserContext } from '../auth/user'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
 import { addListing } from './mutateListings'
 import { Page } from './Page'
-import { UserContext } from '../auth/user'
-import { useContext } from 'react'
 
 interface ProjectsPageProps extends RouteComponentProps, AppRouteParams {}
 // const imageSrc = require('../../../../public/assets/julia.jpg')
@@ -36,7 +34,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
       <Home>
         <Page>
           <CatchPhrase style={{ paddingTop: '38%' }}>We are so glad you're here!</CatchPhrase>
-          <CatchPhrase>Make sure to login to view your account :)</CatchPhrase>
+          <CatchPhrase>Make sure to <button style={{color: "white", textDecorationLine: "underline"}} onClick={()=>{window.location.replace('/')}}>login</button> to view your account :)</CatchPhrase>
         </Page>
       </Home>
     )
@@ -44,17 +42,16 @@ export function ProjectsPage(props: ProjectsPageProps) {
 
   const [editForm, showEditForm] = React.useState(false)
   const [user, editUser] = React.useState<TestUser>({
-    // name: data.self2.name || 'unknown',
-    // email: data.self2.email || 'unkown',
-    name: 'chelsey',
-    email: 'c@gmail.com',
-    phone: '(123) 456 - 7890',
-    location: 'Westwood, CA',
+    name: curUser.name ||'not available',
+    email: curUser.email || 'not available',
+    phone: curUser.number || '(123) 456 - 7890',
+    location: curUser.location || 'Westwood, CA',
   })
 
   return (
     <Page>
       <div style={{ marginTop: '80px' }}>
+      {/* <h1> {JSON.stringify(curUser)} </h1> */}
         <Row>
           <div style={{ flex: 1 }}>
             <div
@@ -94,7 +91,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
                     placeholder="email"
                     style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
                     onChange={e =>
-                      editUser({ name: user.name, email: e.target.value, phone: user.phone, location: user.location })
+                      editUser({ name: user.name, email: user.email, phone: user.phone, location: user.location })
                     }
                     value={user.email}
                   />

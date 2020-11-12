@@ -3,12 +3,12 @@ import * as React from 'react'
 import { useContext } from 'react'
 import { getApolloClient } from '../../graphql/apolloClient'
 import { style } from '../../style/styled'
+import { UserContext } from '../auth/user'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
 import { AvailabilityChart } from './components/AvailabilityChart'
 import { addListing } from './mutateListings'
 import { Page } from './Page'
-import { UserContext } from '../auth/user'
 
 interface PostFormPageProps extends RouteComponentProps, AppRouteParams {}
 // const imageSrc = require('../../../../public/assets/julia.jpg')
@@ -69,7 +69,7 @@ export function PostFormPage(props: PostFormPageProps) {
       <Home>
         <Page>
           <CatchPhrase style={{ paddingTop: '38%' }}>We are so glad you're here!</CatchPhrase>
-          <CatchPhrase>Make sure to login before making a post ;)</CatchPhrase>
+          <CatchPhrase>Make sure to <button style={{color: "white", textDecorationLine: "underline"}} onClick={()=>{window.location.replace('/')}}>login</button> before making a post ;)</CatchPhrase>
         </Page>
       </Home>
     )
