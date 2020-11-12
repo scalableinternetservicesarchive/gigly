@@ -1,11 +1,11 @@
+import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { check } from '../../../../common/src/util'
 import { Button } from '../../style/button'
 import { Input } from '../../style/input'
-import { toastErr } from '../toast/toast'
-import { RouteComponentProps } from '@reach/router'
 import { AppRouteParams } from '../nav/route'
+import { toastErr } from '../toast/toast'
 
 interface SignupProps extends RouteComponentProps, AppRouteParams {}
 

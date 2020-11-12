@@ -64,6 +64,8 @@ server.express.post(
     user.email = req.body.email
     user.name = req.body.name
     user.password = req.body.password
+    user.number = req.body.number
+    user.location = req.body.location
     // password
     user.userType = UserType.User
 

@@ -3,7 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { FetchListings } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
-import { fetchUser3 } from '../auth/fetchUser'
+// import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { fetchListings } from './fetchListings'
 import { Page } from './Page'
@@ -94,8 +94,8 @@ export function SellingPage(props: LecturesPageProps) {
         card.username.toLowerCase().includes(search.toLowerCase())
       )
     })
-    const {loading: loading2, data: data2} = useQuery(fetchUser3);
-    if (loading2) return (<h1>loading...</h1>)
+    // const {loading: loading2, data: data2} = useQuery(fetchUser3);
+    // if (loading2) return (<h1>loading...</h1>)
 
     // Sort from low to high if that's selected, otherwise default to most recent
     if (selectedSort === HeaderItems.LOW_TO_HIGH)

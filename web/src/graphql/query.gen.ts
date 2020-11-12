@@ -59,6 +59,8 @@ export interface FetchUserContext3_self2 {
   password: string;
   name: string;
   userType: UserType;
+  number: string;
+  location: string;
 }
 
 export interface FetchUserContext3 {

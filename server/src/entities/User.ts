@@ -26,6 +26,12 @@ export class User extends BaseEntity implements GraphqlUser {
   @Column()
   password: string
 
+  @Column()
+  number: string
+
+  @Column()
+  location: string
+
   @Column({
     length: 100,
   })
