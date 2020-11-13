@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import Modal from 'react-modal'
 import { FetchListings } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
@@ -23,9 +24,14 @@ enum HeaderItems {
   LOW_TO_HIGH = 'Low to High',
 }
 
-function getCard(c: CardData) {
+function getCard(c: CardData, setCardToEdit: (id: number) => void) {
   return (
-    <Card key={c.id}>
+    <Card
+      key={c.id}
+      onClick={() => {
+        setCardToEdit(c.id)
+      }}
+    >
       <CardInfo>
         <div
           style={{
@@ -71,6 +77,13 @@ export function SellingPage(props: LecturesPageProps) {
   const [search, setSearch] = React.useState<string>('')
   const { loading, data } = useQuery<FetchListings>(fetchListings)
   const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)
+  const [listingToEdit, setListingToEdit] = React.useState<number | null>(null) // Null means don't show the editing window!
+  const [serviceNameEdited, setServiceNameEdited] = React.useState<string>('')
+
+  // Function passed to each card to set the state to the listing to be edited
+  const setCardToEdit = (id: number) => {
+    setListingToEdit(id)
+  }
 
   let cards: CardData[] = []
   if (data) {
@@ -103,71 +116,112 @@ export function SellingPage(props: LecturesPageProps) {
         return a.price - b.price
       })
 
-    const cardUIs = filteredCards.map(card => getCard(card))
+    const cardUIs = filteredCards.map(card => getCard(card, setCardToEdit))
 
     return (
-      <Page>
-        <div style={{ paddingTop: '100px' }}>
-          <div
-            style={{
-              height: '100%',
-              width: '225px',
-              position: 'fixed',
-              zIndex: 1,
-              top: 0,
-              left: 0,
-              backgroundColor: '#696969',
-              overflowX: 'hidden',
-              fontFamily: 'Roboto',
-            }}
-          >
-            <div style={{ marginTop: '100px' }}>
-              <SideBarHeader>SORT</SideBarHeader>
-              <SideBarItem
-                onClick={() => {
-                  setSelectedSort(HeaderItems.MOST_RECENT)
-                }}
-                $clicked={selectedSort === HeaderItems.MOST_RECENT}
-              >
-                Most Recent
-              </SideBarItem>
-              <SideBarItem
-                onClick={() => {
-                  setSelectedSort(HeaderItems.LOW_TO_HIGH)
-                }}
-                $clicked={selectedSort === HeaderItems.LOW_TO_HIGH}
-              >
-                Low to High
-              </SideBarItem>
-            </div>
-          </div>
-          <div>
-            <input
-              className="input"
-              type="text"
+      <>
+        <Page>
+          <div style={{ paddingTop: '100px' }}>
+            <div
               style={{
-                backgroundColor: 'E3E3E3',
-                borderRadius: '20px',
-                height: '5vh',
-                width: '50vw',
-                padding: '1.5rem',
+                height: '100%',
+                width: '225px',
+                position: 'fixed',
+                zIndex: 1,
+                top: 0,
+                left: 0,
+                backgroundColor: '#696969',
+                overflowX: 'hidden',
                 fontFamily: 'Roboto',
               }}
-              placeholder="Search"
-              value={search}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setSearch(e.target.value)
-              }}
-            />
+            >
+              <div style={{ marginTop: '100px' }}>
+                <SideBarHeader>SORT</SideBarHeader>
+                <SideBarItem
+                  onClick={() => {
+                    setSelectedSort(HeaderItems.MOST_RECENT)
+                  }}
+                  $clicked={selectedSort === HeaderItems.MOST_RECENT}
+                >
+                  Most Recent
+                </SideBarItem>
+                <SideBarItem
+                  onClick={() => {
+                    setSelectedSort(HeaderItems.LOW_TO_HIGH)
+                  }}
+                  $clicked={selectedSort === HeaderItems.LOW_TO_HIGH}
+                >
+                  Low to High
+                </SideBarItem>
+              </div>
+            </div>
+            <div>
+              <input
+                className="input"
+                type="text"
+                style={{
+                  backgroundColor: 'E3E3E3',
+                  borderRadius: '20px',
+                  height: '5vh',
+                  width: '50vw',
+                  padding: '1.5rem',
+                  fontFamily: 'Roboto',
+                }}
+                placeholder="Search"
+                value={search}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setSearch(e.target.value)
+                }}
+              />
+            </div>
+            <div
+              className="flex flex-row"
+              style={{ flexDirection: 'row', flexWrap: 'wrap', paddingTop: '80px', maxWidth: '1000px' }}
+            >
+              {cardUIs}
+            </div>
           </div>
-          <div
-            className="flex flex-row"
-            style={{ flexDirection: 'row', flexWrap: 'wrap', paddingTop: '80px', maxWidth: '1000px' }}
-          >
-            {cardUIs}
-          </div>
-        </div>
-      </Page>
+        </Page>
+        <Modal isOpen={listingToEdit !== null}>
+          <form>
+            <div style={{ paddingTop: '100px', marginLeft: '200px' }}>
+              <div style={{ fontFamily: 'sans-serif', fontSize: '36px' }}>Edit Listing ID: {listingToEdit}</div>
+              <input
+                type="text"
+                placeholder="Service Name"
+                style={{
+                  border: '1px solid #808080',
+                  display: 'flex',
+                  borderRadius: '20px',
+                  padding: '5px',
+                  paddingLeft: '10px',
+                  margin: '5px',
+                  minHeight: '13px',
+                  fontSize: '0.9em',
+                  color: '#303030',
+                  resize: 'none',
+                  width: '100%',
+                }}
+                onChange={e => setServiceNameEdited(e.target.value)}
+              />
+              <button
+                onClick={() => {
+                  setListingToEdit(null)
+                }}
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  setListingToEdit(null)
+                }}
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </Modal>
+      </>
     )
   } else {
     // Failed GraphQL query :(( fall back on this dummy data
@@ -267,7 +321,7 @@ export function SellingPage(props: LecturesPageProps) {
             />
           </div>
           <div className="flex flex-row" style={{ paddingTop: '80px' }}>
-            {filteredCards.map(card => getCard(card))}
+            {filteredCards.map(card => getCard(card, setCardToEdit))}
           </div>
         </div>
       </Page>
