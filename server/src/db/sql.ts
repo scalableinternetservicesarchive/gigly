@@ -6,6 +6,7 @@ import { Session } from '../entities/Session'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
+import { Tag } from '../entities/Tag'
 import { User } from '../entities/User'
 
 const baseConfig = {
@@ -22,7 +23,7 @@ export async function initORM() {
     username: process.env.MYSQL_USER || 'root',
     synchronize: true,
     logging: false,
-    entities: [User, Session, Survey, SurveyQuestion, SurveyAnswer, Listing, Comment],
+    entities: [User, Session, Survey, SurveyQuestion, SurveyAnswer, Listing, Comment, Tag],
     extra: {
       connectionLimit: 5,
     },

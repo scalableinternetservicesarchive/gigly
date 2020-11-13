@@ -1,6 +1,7 @@
 import { int } from 'aws-sdk/clients/datapipeline'
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Comment } from './Comment'
+import { Tag } from './Tag'
 import { User } from './User'
 
 @Entity()
@@ -39,4 +40,8 @@ export class Listing extends BaseEntity {
   @OneToMany(() => Comment, comment => comment.listing, { eager: true })
   @JoinColumn({ name: 'commentId' })
   comments: Comment[]
+
+  @OneToMany(() => Tag, tag => tag.listing)
+  @JoinColumn({ name: 'tagId' })
+  tags: Tag[]
 }
