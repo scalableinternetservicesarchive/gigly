@@ -3,14 +3,17 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { useContext, useState } from 'react'
 import { check } from '../../../../common/src/util'
+import { getApolloClient } from '../../graphql/apolloClient'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
 import { fetchUser3 } from '../auth/fetchUser'
 import { UserContext } from '../auth/user'
 import { AppRouteParams } from '../nav/route'
 import { handleError } from '../toast/error'
-import { toastErr } from '../toast/toast'
+import { toast, toastErr } from '../toast/toast'
+import { editListing } from './mutateListings'
 import { Page } from './Page'
+
 interface HomePageProps extends RouteComponentProps, AppRouteParams {}
 
 interface SignupForm {
@@ -299,6 +302,26 @@ function createUser(props: SignupForm) {
 //   console.log(data)
 //   return true
 // }
+function handleSubmit(id: number, sellingName: string) {
+  editListing(getApolloClient(), {
+    id,
+    username: null,
+    price: null,
+    sellingName,
+    startDate: null,
+    endDate: null,
+    location: null,
+    description: null,
+    image: null,
+  })
+    .then(() => {
+      toast('submitted!')
+    })
+    .catch(err => {
+      console.log('oops')
+      console.log(err)
+    })
+}
 function popupReload() {
   return (
     <>
