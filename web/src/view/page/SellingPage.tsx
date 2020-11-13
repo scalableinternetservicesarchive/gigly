@@ -193,8 +193,8 @@ export function SellingPage(props: LecturesPageProps) {
         </Page>
         <Modal isOpen={listingToEdit !== null}>
           <form>
-            <div style={{ paddingTop: '100px', marginLeft: '200px' }}>
-              <div style={{ fontFamily: 'sans-serif', fontSize: '36px' }}>Edit Listing ID: {listingToEdit}</div>
+            <div style={{ paddingTop: '100px', marginLeft: '250px' }}>
+              <div style={{ fontFamily: 'Roboto', fontSize: '28px' }}>Edit Listing (ID: {listingToEdit})</div>
               <input
                 type="text"
                 placeholder="Service Name"
@@ -325,12 +325,29 @@ export function SellingPage(props: LecturesPageProps) {
                 onClick={() => {
                   setListingToEdit(null)
                 }}
+                style={{ fontFamily: 'Roboto', cursor: 'pointer', backgroundColor: '#E3E3E3', borderRadius: '15px' }}
               >
-                Close
+                Cancel
               </button>
               <button
                 onClick={() => {
-                  handleSubmit(listingToEdit as number, serviceNameEdited)
+                  handleSubmit(
+                    listingToEdit as number,
+                    serviceNameEdited,
+                    servicePriceEdited,
+                    serviceStartDateEdited,
+                    serviceEndDateEdited,
+                    serviceLocationEdited,
+                    serviceDescriptionEdited,
+                    serviceImageEdited
+                  )
+                }}
+                style={{
+                  fontFamily: 'Roboto',
+                  cursor: 'pointer',
+                  backgroundColor: '#3C82DC',
+                  borderRadius: '15px',
+                  marginLeft: '50px',
                 }}
               >
                 Save
@@ -346,17 +363,28 @@ export function SellingPage(props: LecturesPageProps) {
   }
 }
 
-function handleSubmit(id: number, sellingName: string) {
+function handleSubmit(
+  id: number,
+  sellingName: string | null,
+  price: number | null,
+  startDate: string | null,
+  endDate: string | null,
+  location: string | null,
+  description: string | null,
+  image: string | null
+) {
+  // Note that a null in the backend mutation doesn't overwrite anything! so this is safe :)
+  // i.e. it only updates nonnull values, and doesn't clear out anything
   editListing(getApolloClient(), {
     id,
     username: null,
-    price: null,
+    price,
     sellingName,
-    startDate: null,
-    endDate: null,
-    location: null,
-    description: null,
-    image: null,
+    startDate,
+    endDate,
+    location,
+    description,
+    image,
   })
     .then(() => {
       toast('submitted!')
@@ -384,6 +412,7 @@ const Card = style('div', 'flex white items-center list pa6 ph2 ', {
   marginRight: '10px',
   borderRadius: '25px',
   fontFamily: 'Roboto',
+  cursor: 'pointer',
 })
 
 const CardInfo = style('div', 'flex flex-column', {
