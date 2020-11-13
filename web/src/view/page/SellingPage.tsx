@@ -82,6 +82,12 @@ export function SellingPage(props: LecturesPageProps) {
   const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)
   const [listingToEdit, setListingToEdit] = React.useState<number | null>(null) // Null means don't show the editing window!
   const [serviceNameEdited, setServiceNameEdited] = React.useState<string>('')
+  const [servicePriceEdited, setServicePriceEdited] = React.useState<number | null>(null)
+  const [serviceStartDateEdited, setServiceStartDateEdited] = React.useState<string>('')
+  const [serviceEndDateEdited, setServiceEndDateEdited] = React.useState<string>('')
+  const [serviceLocationEdited, setServiceLocationEdited] = React.useState<string>('')
+  const [serviceDescriptionEdited, setServiceDescriptionEdited] = React.useState<string>('')
+  const [serviceImageEdited, setServiceImageEdited] = React.useState<string>('')
 
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
@@ -206,6 +212,114 @@ export function SellingPage(props: LecturesPageProps) {
                   width: '100%',
                 }}
                 onChange={e => setServiceNameEdited(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Service Price"
+                style={{
+                  border: '1px solid #808080',
+                  display: 'flex',
+                  borderRadius: '20px',
+                  padding: '5px',
+                  paddingLeft: '10px',
+                  margin: '5px',
+                  minHeight: '13px',
+                  fontSize: '0.9em',
+                  color: '#303030',
+                  resize: 'none',
+                  width: '100%',
+                }}
+                onChange={e => setServicePriceEdited(parseInt(e.target.value))}
+              />
+              <input
+                type="text"
+                placeholder="Availability: Start Date"
+                style={{
+                  border: '1px solid #808080',
+                  display: 'flex',
+                  borderRadius: '20px',
+                  padding: '5px',
+                  paddingLeft: '10px',
+                  margin: '5px',
+                  minHeight: '13px',
+                  fontSize: '0.9em',
+                  color: '#303030',
+                  resize: 'none',
+                  width: '100%',
+                }}
+                onChange={e => setServiceStartDateEdited(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Availability: End Date"
+                style={{
+                  border: '1px solid #808080',
+                  display: 'flex',
+                  borderRadius: '20px',
+                  padding: '5px',
+                  paddingLeft: '10px',
+                  margin: '5px',
+                  minHeight: '13px',
+                  fontSize: '0.9em',
+                  color: '#303030',
+                  resize: 'none',
+                  width: '100%',
+                }}
+                onChange={e => setServiceEndDateEdited(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Location"
+                style={{
+                  border: '1px solid #808080',
+                  display: 'flex',
+                  borderRadius: '20px',
+                  padding: '5px',
+                  paddingLeft: '10px',
+                  margin: '5px',
+                  minHeight: '13px',
+                  fontSize: '0.9em',
+                  color: '#303030',
+                  resize: 'none',
+                  width: '100%',
+                }}
+                onChange={e => setServiceLocationEdited(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Description"
+                style={{
+                  border: '1px solid #808080',
+                  display: 'flex',
+                  borderRadius: '20px',
+                  padding: '5px',
+                  paddingLeft: '10px',
+                  margin: '5px',
+                  minHeight: '13px',
+                  fontSize: '0.9em',
+                  color: '#303030',
+                  resize: 'none',
+                  width: '100%',
+                }}
+                onChange={e => setServiceDescriptionEdited(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Image URL"
+                style={{
+                  border: '1px solid #808080',
+                  display: 'flex',
+                  borderRadius: '20px',
+                  padding: '5px',
+                  paddingLeft: '10px',
+                  margin: '5px',
+                  minHeight: '13px',
+                  fontSize: '0.9em',
+                  color: '#303030',
+                  resize: 'none',
+                  width: '100%',
+                }}
+                onChange={e => setServiceImageEdited(e.target.value)}
               />
               <button
                 onClick={() => {
