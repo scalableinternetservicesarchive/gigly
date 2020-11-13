@@ -162,6 +162,29 @@ export interface AddListingVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: EditListing
+// ====================================================
+
+export interface EditListing_editListing {
+  __typename: "Listing";
+  id: number | null;
+  sellingName: string;
+}
+
+export interface EditListing {
+  editListing: EditListing_editListing | null;
+}
+
+export interface EditListingVariables {
+  input: EditListingInput;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchSurveys
 // ====================================================
 
@@ -396,6 +419,18 @@ export interface CommentInput {
   listingId: number;
   username: string;
   commentContents: string;
+}
+
+export interface EditListingInput {
+  id: number;
+  username?: string | null;
+  price?: number | null;
+  sellingName?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  location?: string | null;
+  description?: string | null;
+  image?: string | null;
 }
 
 export interface ListingInput {

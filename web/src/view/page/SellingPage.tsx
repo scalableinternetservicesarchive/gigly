@@ -2,11 +2,14 @@ import { useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import Modal from 'react-modal'
+import { getApolloClient } from '../../graphql/apolloClient'
 import { FetchListings } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
+import { toast } from '../toast/toast'
 import { fetchListings } from './fetchListings'
+import { editListing } from './mutateListings'
 import { Page } from './Page'
 
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
@@ -213,7 +216,7 @@ export function SellingPage(props: LecturesPageProps) {
               </button>
               <button
                 onClick={() => {
-                  setListingToEdit(null)
+                  handleSubmit(listingToEdit as number, serviceNameEdited)
                 }}
               >
                 Save
@@ -327,6 +330,27 @@ export function SellingPage(props: LecturesPageProps) {
       </Page>
     )
   }
+}
+
+function handleSubmit(id: number, sellingName: string) {
+  editListing(getApolloClient(), {
+    id,
+    username: null,
+    price: null,
+    sellingName,
+    startDate: null,
+    endDate: null,
+    location: null,
+    description: null,
+    image: null,
+  })
+    .then(() => {
+      toast('submitted!')
+    })
+    .catch(err => {
+      console.log('oops')
+      console.log(err)
+    })
 }
 
 const Card = style('div', 'flex white items-center list pa6 ph2 ', {
