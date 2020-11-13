@@ -22,15 +22,11 @@ interface TestUser {
 }
 
 export function ProjectsPage(props: ProjectsPageProps) {
-  // const {loading, data} = useQuery(fetchUser3);
-  // if (loading) return (<h1>loading...</h1>)
-  // if (!data)
-  // {
-  //   window.location.replace('/app/index')
-  // }
 
   const { user: curUser } = useContext(UserContext)
-
+  // React.useEffect(() => {
+  //   editUserState({ name: user.name, email: user.email, phone: user.phone, location: user.location })
+  // }, [curUser])
   if (curUser == null) {
     return (
       <Home>
@@ -70,8 +66,8 @@ export function ProjectsPage(props: ProjectsPageProps) {
       location: location,
     })
       .then(() => {
+        showEditForm(false)
         toast('submitted!')
-        window.location.replace('/app/selling')
       })
       .catch(err => {
         console.log('oops')
@@ -102,24 +98,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
         </div>
         <div style={{ flex: 2, flexDirection: 'column' }}>
           {editForm ? (
-            <form
-              onSubmit={
-                () => {
-                  // handleSubmit(curUser.id, user.email, user.name, user.phone, user.location)
-                  // window.location.reload()
-                  editUser(getApolloClient(), {
-                    id: curUser.id,
-                    email: user.email,
-                    name: user.name,
-                    number: user.number,
-                    location: user.location,
-                  })
-                  console.log(user.name)
-                  window.location.replace('/app/selling')
-                }
-                // e => {handleSubmit( id: curUser.id, email: curUser.email, name: user.name, number: user.phone, location: user.location )}
-              }
-            >
+            <form>
               <HeaderLabelText> EDIT MY INFORMATION: </HeaderLabelText>
               <FormInput>
                 <input
@@ -177,30 +156,20 @@ export function ProjectsPage(props: ProjectsPageProps) {
               </FormInput>
               <input accept="image" type="file" />
               <br />
-              <SubmitButton type="submit">
-                <LabelText>SUBMIT</LabelText>
-              </SubmitButton>
               <SubmitButton
                 type="button"
                 onClick={() => {
-                  editUser(getApolloClient(), {
-                    id: curUser.id,
-                    email: user.email,
-                    name: user.name,
-                    number: user.number,
-                    location: user.location,
-                  })
+                  handleSubmit(curUser.id, user.email, user.name, user.phone, user.location)
                 }}
               >
-                <LabelText>SUBMIT2</LabelText>
-              </SubmitButton>
-              <SubmitButton type="button" onClick={() => showEditForm(false)}>
-                <LabelText>changeState</LabelText>
+                <LabelText>SUBMIT</LabelText>
               </SubmitButton>
             </form>
           ) : (
             <>
               <MyAccountInfo name={user.name} email={user.email} phone={user.phone} location={user.location} />
+              {console.log('USER: ')}
+              {console.log(JSON.stringify(user))}
               <SubmitButton onClick={() => showEditForm(true)} style={{ marginBottom: '16px' }}>
                 <LabelText>EDIT</LabelText>
               </SubmitButton>
@@ -235,23 +204,6 @@ function MyAccountInfo(props: TestUser) {
     </>
   )
 }
-
-// function handleSubmit(id: number, email: string, name: string, number: string, location: string) {
-//   editUser(getApolloClient(), {
-//     id: id,
-//     email: email,
-//     name: name,
-//     number: number,
-//     location: location,
-//   })
-//     .then(() => {
-//       toast('submitted!')
-//     })
-//     .catch(err => {
-//       console.log('oops')
-//       console.log(err)
-//     })
-// }
 
 const Row = style('div', { display: 'flex', flexDirection: 'row' })
 const FormInput = style('div', {
