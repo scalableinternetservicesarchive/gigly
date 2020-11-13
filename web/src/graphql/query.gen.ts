@@ -73,6 +73,32 @@ export interface FetchUserContext3 {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: EditUser
+// ====================================================
+
+export interface EditUser_editUser {
+  __typename: "User";
+  id: number;
+  name: string;
+  number: string;
+  email: string;
+  location: string;
+}
+
+export interface EditUser {
+  editUser: EditUser_editUser | null;
+}
+
+export interface EditUserVariables {
+  input?: EditUserInput | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchComments
 // ====================================================
 
@@ -431,6 +457,15 @@ export interface EditListingInput {
   location?: string | null;
   description?: string | null;
   image?: string | null;
+}
+
+export interface EditUserInput {
+  id?: number | null;
+  email: string;
+  name?: string | null;
+  password?: string | null;
+  number?: string | null;
+  location?: string | null;
 }
 
 export interface ListingInput {
