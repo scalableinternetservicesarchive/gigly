@@ -84,7 +84,6 @@ export const graphqlRoot: Resolvers<Context> = {
           newListing.location = location
           newListing.description = description
           newListing.image = image
-
           await newListing.save()
           // update user's listing
           return newListing
@@ -129,14 +128,18 @@ export const graphqlRoot: Resolvers<Context> = {
     },
     addComment: async (_, { comment }, ctx) => {
       if (comment !== undefined && comment !== null) {
-        const { listingId, username, commentContents } = comment
+        const { listingId, username, commentContents, userId} = comment
         const newComment = new Comment()
-        if (listingId !== undefined && username !== undefined && commentContents !== undefined) {
+        if (listingId !== undefined && username !== undefined && commentContents !== undefined && userId !== undefined) {
           newComment.listingId = listingId
           newComment.username = username
           newComment.commentContents = commentContents
-          await newComment.save()
-          return newComment
+          let user = await User.findOne({ where: { id: userId} })
+          if (user !== undefined && user !== null) {
+            newComment.user = user
+            await newComment.save()
+            return newComment
+          }
         }
       }
       return null

@@ -94,9 +94,9 @@ function getCommenterPhoto(l: string) {
   )
 }
 
-function handleSubmit(listingId: number, username: string, commentContents: string) {
+function handleSubmit(listingId: number, username: string, commentContents: string, userId: number) {
 
-  let dateTime = new Date();
+  /*let dateTime = new Date();
   let date = dateTime.getDate();
   let month = dateTime.getMonth() + 1;
   let year = dateTime.getFullYear();
@@ -108,9 +108,9 @@ function handleSubmit(listingId: number, username: string, commentContents: stri
     hr = hr % 12;
   }
 
-  username = `${month<10?`0${month}`:`${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`;
+  username = `${month<10?`0${month}`:`${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`;*/
 
-  addComment(getApolloClient(), { listingId, username, commentContents })
+  addComment(getApolloClient(), { listingId, username, commentContents, userId })
     .then(() => {
       toast('submitted!')
     })
@@ -161,12 +161,13 @@ export function Popup(listingId: number) {
  let { loading, data } = useQuery<FetchComments>(fetchComments)
   let comments: Comment[] = []
   data?.comments?.map(comment => {
+      //query for the username corresponding to the user
       comments.push({
         commenter: comment.username,
         date: '11/5/2020',
         commenterPic: '',
         comment: comment.commentContents
-      })
+      });
   })
 
   var pics = [listing.pic1, listing.pic2, listing.pic3];
@@ -311,7 +312,7 @@ export function Popup(listingId: number) {
                       <CommentPostButtonDark
                         type="submit"
                         onClick={() => {
-                          handleSubmit(679, comment.commenter, comment.comment);
+                          handleSubmit(679, comment.commenter, comment.comment, 1);
                         }}
                       >
                         POST

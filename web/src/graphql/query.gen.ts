@@ -143,11 +143,17 @@ export interface FetchListings {
 // GraphQL mutation operation: AddComment
 // ====================================================
 
+export interface AddComment_addComment_user {
+  __typename: "User";
+  id: number;
+}
+
 export interface AddComment_addComment {
   __typename: "Comment";
   listingId: number;
   username: string;
   commentContents: string;
+  user: AddComment_addComment_user | null;
 }
 
 export interface AddComment {
@@ -445,6 +451,7 @@ export interface CommentInput {
   listingId: number;
   username: string;
   commentContents: string;
+  userId?: number | null;
 }
 
 export interface EditListingInput {

@@ -7,6 +7,9 @@ const addCommentMutation = gql`
       listingId
       username
       commentContents
+      user {
+        id
+      }
     }
   }
 `

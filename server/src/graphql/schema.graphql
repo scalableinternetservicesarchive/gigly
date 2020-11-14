@@ -212,6 +212,9 @@ type Comment {
 
   # contents of this comment
   commentContents: String!
+
+  #ACTUAL user who posted this comment
+  user: User
 }
 
 input CommentInput {
@@ -223,4 +226,7 @@ input CommentInput {
 
   # contents of this comment
   commentContents: String!
+
+  #ACTUAL user id corresponding to this comment
+  userId: Int
 }
