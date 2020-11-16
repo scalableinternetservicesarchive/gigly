@@ -221,6 +221,7 @@ export function Popup(listingId: number) {
           height: '100vh',
           width: '100%',
           padding: '6%',
+          overflow: 'hidden',
         }}
       >
         <div
@@ -334,9 +335,21 @@ export function Popup(listingId: number) {
             {listing.listingTypeSelling ? (
               <div style={{ display: 'flex', marginTop: '10%' }}>
                 {showing == 'Images' ? (
-                  <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px', WebkitTextStrokeWidth: '1px' }}>IMAGES </h2>
+                  <h2
+                    style={{
+                      cursor: 'pointer',
+                      fontSize: '0.9em',
+                      letterSpacing: '1.25px',
+                      WebkitTextStrokeWidth: '1px',
+                    }}
+                  >
+                    IMAGES{' '}
+                  </h2>
                 ) : (
-                  <h2 onClick={() => setShowing('Images')} style={{ fontSize: '0.9em', letterSpacing: '1.25px' }}>
+                  <h2
+                    onClick={() => setShowing('Images')}
+                    style={{ cursor: 'pointer', fontSize: '0.9em', letterSpacing: '1.25px' }}
+                  >
                     IMAGES{' '}
                   </h2>
                 )}
@@ -347,6 +360,7 @@ export function Popup(listingId: number) {
                       WebkitTextStrokeWidth: '1px',
                       letterSpacing: '1.25px',
                       marginLeft: '10%',
+                      cursor: 'pointer',
                     }}
                   >
                     AVAILABILITY{' '}
@@ -354,7 +368,7 @@ export function Popup(listingId: number) {
                 ) : (
                   <h2
                     onClick={() => setShowing('Availability')}
-                    style={{ fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '10%' }}
+                    style={{ cursor: 'pointer', fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '10%' }}
                   >
                     AVAILABILITY{' '}
                   </h2>
@@ -366,6 +380,7 @@ export function Popup(listingId: number) {
                       WebkitTextStrokeWidth: '1px',
                       letterSpacing: '1.25px',
                       marginLeft: '10%',
+                      cursor: 'pointer',
                     }}
                   >
                     COMMENTS{' '}
@@ -373,7 +388,7 @@ export function Popup(listingId: number) {
                 ) : (
                   <h2
                     onClick={() => setShowing('Comments')}
-                    style={{ fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '10%' }}
+                    style={{ cursor: 'pointer', fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '10%' }}
                   >
                     COMMENTS{' '}
                   </h2>
@@ -381,7 +396,14 @@ export function Popup(listingId: number) {
               </div>
             ) : (
               <div style={{ display: 'flex', marginTop: '10%' }}>
-                <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px', WebkitTextStrokeWidth: '1px' }}>
+                <h2
+                  style={{
+                    cursor: 'pointer',
+                    fontSize: '0.9em',
+                    letterSpacing: '1.25px',
+                    WebkitTextStrokeWidth: '1px',
+                  }}
+                >
                   AVAILABILITY{' '}
                 </h2>
               </div>

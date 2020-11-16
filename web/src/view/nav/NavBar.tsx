@@ -26,10 +26,6 @@ const otherTabs = [
     path: getPath(Route.PROJECTS), // Account/form
   },
   {
-    name: 'Popup',
-    path: getPath(Route.PLAYGROUND), // Popup for now
-  },
-  {
     name: 'Post Form',
     path: getPath(Route.POSTFORM),
   },
