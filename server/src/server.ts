@@ -69,6 +69,12 @@ server.express.post(
     // password
     user.userType = UserType.User
 
+    const userExist = await User.findOne({ where: { email: user.email } })
+    if (userExist) {
+      res.status(403).send('User Already Exist')
+      return
+    }
+
     // save the User model to the database, refresh `user` to get ID
     user = await user.save()
 
