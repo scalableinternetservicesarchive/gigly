@@ -8,6 +8,7 @@ import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
+import { Popup } from './components/Popup'
 import { fetchListings } from './fetchListings'
 import { editListing } from './mutateListings'
 import { Page } from './Page'
@@ -80,7 +81,7 @@ export function SellingPage(props: LecturesPageProps) {
   const [search, setSearch] = React.useState<string>('')
   const { loading, data } = useQuery<FetchListings>(fetchListings)
   const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)
-  const [listingToEdit, setListingToEdit] = React.useState<number | null>(null) // Null means don't show the editing window!
+  const [listingToEdit, setListingToEdit] = React.useState<number>(0) // 0 means don't show the editing window!
   const [serviceNameEdited, setServiceNameEdited] = React.useState<string>('')
   const [servicePriceEdited, setServicePriceEdited] = React.useState<number | null>(null)
   const [serviceStartDateEdited, setServiceStartDateEdited] = React.useState<string>('')
@@ -88,10 +89,12 @@ export function SellingPage(props: LecturesPageProps) {
   const [serviceLocationEdited, setServiceLocationEdited] = React.useState<string>('')
   const [serviceDescriptionEdited, setServiceDescriptionEdited] = React.useState<string>('')
   const [serviceImageEdited, setServiceImageEdited] = React.useState<string>('')
+  const [showPopup, setShowPopup] = React.useState<boolean>(false)
 
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
     setListingToEdit(id)
+    setShowPopup(true)
   }
 
   let cards: CardData[] = []
@@ -191,7 +194,44 @@ export function SellingPage(props: LecturesPageProps) {
             </div>
           </div>
         </Page>
-        <Modal isOpen={listingToEdit !== null}>
+        <Modal isOpen={showPopup && listingToEdit !== 0}>
+          <form>
+            <button
+              onClick={() => {
+                setListingToEdit(0)
+                setShowPopup(false)
+              }}
+              style={{
+                marginTop: '20px',
+                marginLeft: '300px',
+                fontFamily: 'Roboto',
+                cursor: 'pointer',
+                backgroundColor: '#E3E3E3',
+                borderRadius: '15px',
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                setListingToEdit(listingToEdit)
+                setShowPopup(false)
+              }}
+              style={{
+                marginTop: '20px',
+                marginLeft: '50px',
+                fontFamily: 'Roboto',
+                cursor: 'pointer',
+                backgroundColor: '#3C82DC',
+                borderRadius: '15px',
+              }}
+            >
+              Edit
+            </button>
+          </form>
+          {Popup(listingToEdit)}
+        </Modal>
+        <Modal isOpen={listingToEdit !== 0 && !showPopup}>
           <form>
             <div style={{ paddingTop: '100px', marginLeft: '250px' }}>
               <div style={{ fontFamily: 'Roboto', fontSize: '28px' }}>Edit Listing (ID: {listingToEdit})</div>
@@ -323,7 +363,7 @@ export function SellingPage(props: LecturesPageProps) {
               />
               <button
                 onClick={() => {
-                  setListingToEdit(null)
+                  setListingToEdit(0)
                 }}
                 style={{ fontFamily: 'Roboto', cursor: 'pointer', backgroundColor: '#E3E3E3', borderRadius: '15px' }}
               >
