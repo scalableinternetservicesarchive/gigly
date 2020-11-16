@@ -77,7 +77,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
 
   return (
     <Page>
-      <div style={{ marginTop: '80px' }}></div>
+      <div style={{ marginTop: '120px' }}></div>
       <Row>
         <div style={{ flex: 1 }}>
           <div

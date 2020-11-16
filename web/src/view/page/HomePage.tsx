@@ -82,8 +82,11 @@ export function HomePage(props: HomePageProps) {
   return (
     <Home>
       <Page>
+        {!signup && <Spacer $h4 /> }
         <Subtitle> Welcome to </Subtitle>
+        {!signup && <Spacer $h2 /> }
         <Title> GiGly </Title>
+        {!signup && <Spacer $h2 /> }
         <CatchPhrase> Finding and offering services easily! </CatchPhrase>
         <div style={{ width: '100%' }}>
           <div>
@@ -203,10 +206,20 @@ export function HomePage(props: HomePageProps) {
                       value={signupUser.comfirmPassword}
                     />
                   </FormInput>
-                  <br />
-                  <SubmitButton type="submit">
-                    <LabelText>Signup</LabelText>
-                  </SubmitButton>
+                  {/* {signupUser.password != signupUser.comfirmPassword && <Warning> Warning: passwords don't match</Warning>}
+                  {signupUser.password.length < 4 && <Warning> Warning: passwords must have length of at least 4</Warning>} */}
+                  {signupUser.password.length < 4 ? <Warning> Warning: passwords must have length of at least 4</Warning>
+                   : signupUser.password != signupUser.comfirmPassword ? <Warning> Warning: passwords don't match</Warning>
+                   :
+                    <div>
+                     <br/>
+                      <SubmitButton type="submit">
+                        <LabelText>Signup</LabelText>
+                      </SubmitButton>
+                    </div>
+                  }
+
+
                 </form>
                 <LinkButton onClick={() => setsignup(false)} style={{ marginBottom: '16px' }}>
                   <LabelText>Already have an account? Login here!</LabelText>
@@ -216,7 +229,7 @@ export function HomePage(props: HomePageProps) {
               <>
                 {!curUser &&
                 <form>
-                  <Spacer $h2 />
+                  <Spacer $h4 />
                   <FormInput style={{ backgroundColor: 'E3E3E3', borderRadius: '20px' }}>
                     <input
                       type="text"
@@ -231,7 +244,7 @@ export function HomePage(props: HomePageProps) {
                       value={loginUser.name}
                     />
                   </FormInput>
-                  <Spacer $h2 />
+                  <Spacer $h4 />
                   <FormInput>
                     <input
                       type="text"
@@ -246,6 +259,7 @@ export function HomePage(props: HomePageProps) {
                       value={loginUser.password}
                     />
                   </FormInput>
+                  <Spacer $h4 />
                   <br />
                   {/* <SubmitButton type="button" onClick={() => getUser2({ variables: { email: loginUser.name } })}>
                     <LabelText>Login</LabelText></SubmitButton> */}
@@ -257,7 +271,7 @@ export function HomePage(props: HomePageProps) {
                     {data&&data.self&&(data.self.password !== loginUser.password)&&popupReload()}
                     {data&&!data.self&&popupReload()&&<h1>User not found.</h1>} */}
                 </form>}
-
+                <Spacer $h4 />
                 <LinkButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
                   <LabelText>Don't have an account? Create Now!</LabelText>
                 </LinkButton>
@@ -369,6 +383,7 @@ function signupFunction(props: SignupForm) {
     body: JSON.stringify({ email: signup_email, name: signup_username, password: signup_password, number: signup_number, location: signup_location }),
   })
     .then(res => {
+      console.log('after calling create user')
       check(res.ok, 'response status ' + res.status)
       if (res.status == 403) {
         toast('Email already registered')
@@ -418,7 +433,7 @@ function logout() {
 const Home = style('div', 'flex', {
   backgroundColor: '#B0C4DE',
   width: '100vw',
-  height: '100vh',
+  height: '100%',
   margin: 'none',
   border: 'none',
   display: 'flex',
@@ -472,6 +487,11 @@ const SubmitButton = style('button', {
   marginLeft: 'auto',
   marginRight: 'auto',
   width: '15vw',
+})
+
+const Warning = style('p', {
+  color: 'red',
+  padding: '10px',
 })
 
 const LinkButton = style('button', {
