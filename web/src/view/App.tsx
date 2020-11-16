@@ -15,13 +15,6 @@ import { PlaygroundPage } from './page/PlaygroundPage'
 import { PostFormPage } from './page/PostFormPage'
 import { ProjectsPage } from './page/ProjectsPage'
 import { SellingPage } from './page/SellingPage'
-// import WebFont from 'webfontloader';
-
-// WebFont.load({
-//   google: {
-//     families: ['Ribeye Marrow', 'sans-serif']
-//   }
-// })
 
 const Styletron = require('styletron-engine-monolithic')
 

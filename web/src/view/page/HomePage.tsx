@@ -49,16 +49,6 @@ export function HomePage(props: HomePageProps) {
   const [error, setError] = useState('')
   // const [err, setError] = useState({ email: false, name: false, password: false })
 
-  // reset error when email/name change
-  // useEffect(() => setError({ ...err, email: !validateEmail(signupUser.email) }), [signupUser.email])
-  // useEffect(() => setError({ ...err, name: false }), [signupUser.name])
-  // useEffect(() => setError({ ...err, password: false }), [signupUser.password])
-  // const { loading, data } = useQuery(fetchUser2, { variables: { email: 'r@gmail.com' }, pollInterval: 5000 })
-  // const qName = data?.name
-  // console.log('this is data: ' + JSON.stringify(data))
-  // console.log('this is name: ' + data?.self.name)
-  // console.log('this is id: ' + data?.self.id)
-  // const [getUser, { loading, data }] = useLazyQuery(fetchUser2, { variables: { email: loginUser.name }});
   function login() {
     // if (!validate(loginUser.name, loginUser.password, )) {
     //   toastErr('invalid email/password')
@@ -289,11 +279,6 @@ export function HomePage(props: HomePageProps) {
   )
 }
 
-function createUser(props: SignupForm) {
-  //dummy function for creating user
-  return true
-}
-
 // function validateUser(props: LoginForm) {
 //   //dummy function for validating user
 //   console.log("clicked")
@@ -385,6 +370,9 @@ function signupFunction(props: SignupForm) {
   })
     .then(res => {
       check(res.ok, 'response status ' + res.status)
+      if (res.status == 403) {
+        toast('Email already registered')
+      }
       return res.text()
     })
     .then(() => window.location.replace('/app/selling'))
