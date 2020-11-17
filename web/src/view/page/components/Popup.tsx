@@ -7,6 +7,7 @@ import { style } from '../../../style/styled'
 import { toast } from '../../toast/toast'
 import { fetchComments } from '../fetchComments'
 import { fetchListings } from '../fetchListings'
+import { fetchUser } from '../fetchUser'
 import { addComment } from '../mutateComments'
 import { AvailabilityChart } from './AvailabilityChart'
 
@@ -106,7 +107,7 @@ function getCommenterPhoto(l: string) {
   )
 }
 
-function handleSubmit(listingId: number, username: string, commentContents: string, userId: number) {
+function handleSubmit(commentContents: string, userId: number) {
 
   /*let dateTime = new Date();
   let date = dateTime.getDate();
@@ -122,7 +123,7 @@ function handleSubmit(listingId: number, username: string, commentContents: stri
 
   username = `${month<10?`0${month}`:`${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`;*/
 
-  addComment(getApolloClient(), { listingId, username, commentContents, userId })
+  addComment(getApolloClient(), { commentContents, userId })
     .then(() => {
       toast('submitted!')
     })
@@ -183,9 +184,14 @@ export function Popup(listingId: number) {
   let { loading, data } = useQuery<FetchComments>(fetchComments)
   let comments: Comment[] = []
   data?.comments?.map(comment => {
-      //query for the username corresponding to the user
+      //query for the username corresponding to the user ID
+      let { loading: userLoading, data: userData } = useQuery(fetchUser, {variables: {userId: comment.userId}});
+      let username = 'Filler name';
+      if (userData && userData?.user) {
+        username = userData?.user.name;
+      }
       comments.push({
-        commenter: comment.username,
+        commenter: username,
         date: '11/5/2020',
         commenterPic: '',
         comment: comment.commentContents
@@ -491,7 +497,7 @@ export function Popup(listingId: number) {
                           <CommentPostButtonDark
                             type="submit"
                             onClick={() => {
-                              handleSubmit(679, comment.commenter, comment.comment)
+                              handleSubmit(comment.comment, 1)
                             }}
                           >
                             POST

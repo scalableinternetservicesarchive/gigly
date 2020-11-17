@@ -16,6 +16,7 @@ export interface Query {
   __typename?: 'Query'
   self?: Maybe<User>
   self2?: Maybe<User>
+  user?: Maybe<User>
   surveys: Array<Survey>
   survey?: Maybe<Survey>
   listings?: Maybe<Array<Listing>>
@@ -24,6 +25,10 @@ export interface Query {
 
 export interface QuerySelfArgs {
   email: Scalars['String']
+}
+
+export interface QueryUserArgs {
+  userId: Scalars['Int']
 }
 
 export interface QuerySurveyArgs {
@@ -167,17 +172,13 @@ export interface EditListingInput {
 
 export interface Comment {
   __typename?: 'Comment'
-  listingId: Scalars['Int']
-  username: Scalars['String']
   commentContents: Scalars['String']
-  user?: Maybe<User>
+  userId: Scalars['Int']
 }
 
 export interface CommentInput {
-  listingId: Scalars['Int']
-  username: Scalars['String']
   commentContents: Scalars['String']
-  userId?: Maybe<Scalars['Int']>
+  userId: Scalars['Int']
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -304,6 +305,7 @@ export type QueryResolvers<
 > = {
   self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerySelfArgs, 'email'>>
   self2?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'userId'>>
   surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
   survey?: Resolver<
     Maybe<ResolversTypes['Survey']>,
@@ -439,10 +441,8 @@ export type CommentResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']
 > = {
-  listingId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   commentContents?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  userId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 

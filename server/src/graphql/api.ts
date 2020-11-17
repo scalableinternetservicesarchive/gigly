@@ -34,6 +34,7 @@ export const graphqlRoot: Resolvers<Context> = {
       }
       return null
     },
+    user: async (_, { userId }) => (await User.findOne({ where: { id: userId } })) || null,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
     listings: () => Listing.find(),
@@ -128,18 +129,17 @@ export const graphqlRoot: Resolvers<Context> = {
     },
     addComment: async (_, { comment }, ctx) => {
       if (comment !== undefined && comment !== null) {
-        const { listingId, username, commentContents, userId} = comment
+        const { commentContents, userId} = comment
         const newComment = new Comment()
-        if (listingId !== undefined && username !== undefined && commentContents !== undefined && userId !== undefined) {
-          newComment.listingId = listingId
-          newComment.username = username
+        if (commentContents !== undefined && commentContents !== null && userId !== undefined && userId !== null) {
           newComment.commentContents = commentContents
-          let user = await User.findOne({ where: { id: userId} })
-          if (user !== undefined && user !== null) {
-            newComment.user = user
-            await newComment.save()
-            return newComment
-          }
+          // let user = await User.findOne({ where: { id: userId} })
+          // if (user !== undefined && user !== null) {
+            // newComment.user = user
+          newComment.userId = userId
+          await newComment.save()
+          return newComment
+          // }
         }
       }
       return null

@@ -18,6 +18,10 @@ type Query {
   # Returns the logged-in user making the query, or null if anonymous.
   self (email: String!): User
   self2: User
+
+  # Returns user based on user ID, or null if no user with that user ID exists
+  user (userId: Int!): User
+
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
 
@@ -204,29 +208,17 @@ input EditListingInput {
 }
 
 type Comment {
-  # ID of the listing that this comment is on
-  listingId: Int!
-
-  # username of the person who posted this comment
-  username: String!
-
   # contents of this comment
   commentContents: String!
 
-  #ACTUAL user who posted this comment
-  user: User
+  #user ID associated w/this comment
+  userId: Int!
 }
 
 input CommentInput {
-  # ID of the listing that this comment is on
-  listingId: Int!
-
-  # username of the person who posted this comment
-  username: String!
-
   # contents of this comment
   commentContents: String!
 
-  #ACTUAL user id corresponding to this comment
-  userId: Int
+  #user ID associated w/this comment
+  userId: Int!
 }

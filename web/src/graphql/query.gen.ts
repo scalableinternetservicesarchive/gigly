@@ -104,9 +104,8 @@ export interface EditUserVariables {
 
 export interface FetchComments_comments {
   __typename: "Comment";
-  listingId: number;
-  username: string;
   commentContents: string;
+  userId: number;
 }
 
 export interface FetchComments {
@@ -143,17 +142,10 @@ export interface FetchListings {
 // GraphQL mutation operation: AddComment
 // ====================================================
 
-export interface AddComment_addComment_user {
-  __typename: "User";
-  id: number;
-}
-
 export interface AddComment_addComment {
   __typename: "Comment";
-  listingId: number;
-  username: string;
   commentContents: string;
-  user: AddComment_addComment_user | null;
+  userId: number;
 }
 
 export interface AddComment {
@@ -448,10 +440,8 @@ export enum UserType {
 }
 
 export interface CommentInput {
-  listingId: number;
-  username: string;
   commentContents: string;
-  userId?: number | null;
+  userId: number;
 }
 
 export interface EditListingInput {
