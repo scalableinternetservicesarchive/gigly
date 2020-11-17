@@ -2,10 +2,11 @@ import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { NavBar } from '../nav/NavBar';
 import { AppRouteParams } from '../nav/route';
+// import { AppRouteParams } from '../nav/route';
 // import { toast } from '../toast/toast';
 // import { AvailabilityChart } from './components/AvailabilityChart';
 import { Popup } from './components/Popup';
-// import { fetchComments } from './fetchComments';
+
 // import { addComment } from './mutateComments';
 
 interface PlaygroundPageProps extends RouteComponentProps, AppRouteParams { }
@@ -58,6 +59,6 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
   return <>
     <NavBar />
     {Popup(listingId)}
-    {/* <div style={{ backgroundColor: 'rgb(88,98,111)', display: 'flex', justifyContent: 'center', height: '100vh', width: '100%', padding: '6%' }}>*/}
+     <div style={{ backgroundColor: 'rgb(88,98,111)', display: 'flex', justifyContent: 'center', height: '100vh', width: '100%', padding: '6%' }}></div>
   </>
 }

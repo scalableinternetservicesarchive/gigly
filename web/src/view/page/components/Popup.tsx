@@ -106,22 +106,23 @@ function getCommenterPhoto(l: string) {
   )
 }
 
-function handleSubmit(listingId: number, username: string, commentContents: string) {
-  let dateTime = new Date()
-  let date = dateTime.getDate()
-  let month = dateTime.getMonth() + 1
-  let year = dateTime.getFullYear()
-  let meridiem = 'AM'
-  let hr = dateTime.getHours()
-  let min = dateTime.getMinutes()
-  if (hr > 12) {
-    meridiem = 'PM'
-    hr = hr % 12
+function handleSubmit(listingId: number, username: string, commentContents: string, userId: number) {
+
+  /*let dateTime = new Date();
+  let date = dateTime.getDate();
+  let month = dateTime.getMonth() + 1;
+  let year = dateTime.getFullYear();
+  let meridiem = 'AM';
+  let hr = dateTime.getHours();
+  let min = dateTime.getMinutes();
+  if(hr > 12) {
+    meridiem = 'PM';
+    hr = hr % 12;
   }
 
-  username = `${month < 10 ? `0${month}` : `${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`
+  username = `${month<10?`0${month}`:`${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`;*/
 
-  addComment(getApolloClient(), { listingId, username, commentContents })
+  addComment(getApolloClient(), { listingId, username, commentContents, userId })
     .then(() => {
       toast('submitted!')
     })
@@ -182,12 +183,13 @@ export function Popup(listingId: number) {
   let { loading, data } = useQuery<FetchComments>(fetchComments)
   let comments: Comment[] = []
   data?.comments?.map(comment => {
-    comments.push({
-      commenter: comment.username,
-      date: '11/5/2020',
-      commenterPic: '',
-      comment: comment.commentContents,
-    })
+      //query for the username corresponding to the user
+      comments.push({
+        commenter: comment.username,
+        date: '11/5/2020',
+        commenterPic: '',
+        comment: comment.commentContents
+      });
   })
 
   var pics = [listing.pic1, listing.pic2, listing.pic3]

@@ -170,12 +170,14 @@ export interface Comment {
   listingId: Scalars['Int']
   username: Scalars['String']
   commentContents: Scalars['String']
+  user?: Maybe<User>
 }
 
 export interface CommentInput {
   listingId: Scalars['Int']
   username: Scalars['String']
   commentContents: Scalars['String']
+  userId?: Maybe<Scalars['Int']>
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -440,6 +442,7 @@ export type CommentResolvers<
   listingId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   commentContents?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
