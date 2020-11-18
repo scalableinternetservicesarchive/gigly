@@ -17,11 +17,19 @@ export const fetchListings = gql`
 export const fetchListing = gql`
   query FetchListing($listingId: Int!) {
     listing(listingId: $listingId) {
+      username
       price
       sellingName
+      startDate
+      endDate
+      location
+      description
       comments {
+        date
         commentContents
         userId
+        username
+        userPic
       }
     }
   }

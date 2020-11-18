@@ -104,8 +104,11 @@ export interface EditUserVariables {
 
 export interface FetchComments_comments {
   __typename: "Comment";
+  date: string;
   commentContents: string;
   userId: number;
+  username: string;
+  userPic: string;
 }
 
 export interface FetchComments {
@@ -151,14 +154,22 @@ export interface FetchListings {
 
 export interface FetchListing_listing_comments {
   __typename: "Comment";
+  date: string;
   commentContents: string;
   userId: number;
+  username: string;
+  userPic: string;
 }
 
 export interface FetchListing_listing {
   __typename: "Listing";
+  username: string;
   price: number | null;
   sellingName: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  description: string;
   comments: (FetchListing_listing_comments | null)[];
 }
 
@@ -168,28 +179,6 @@ export interface FetchListing {
 
 export interface FetchListingVariables {
   listingId: number;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: FetchUser
-// ====================================================
-
-export interface FetchUser_user {
-  __typename: "User";
-  name: string;
-}
-
-export interface FetchUser {
-  user: FetchUser_user | null;
-}
-
-export interface FetchUserVariables {
-  userId: number;
 }
 
 /* tslint:disable */
@@ -208,9 +197,12 @@ export interface AddComment_addComment_listing {
 
 export interface AddComment_addComment {
   __typename: "Comment";
+  date: string;
   commentContents: string;
   listing: AddComment_addComment_listing;
   userId: number;
+  username: string;
+  userPic: string;
 }
 
 export interface AddComment {
@@ -505,9 +497,12 @@ export enum UserType {
 }
 
 export interface CommentInput {
+  date: string;
   commentContents: string;
   listingId_ref: number;
   userId: number;
+  username: string;
+  userPic: string;
 }
 
 export interface EditListingInput {

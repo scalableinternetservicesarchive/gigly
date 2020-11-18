@@ -4,11 +4,14 @@ import { AddComment, AddCommentVariables, CommentInput } from '../../graphql/que
 const addCommentMutation = gql`
   mutation AddComment($input: CommentInput!) {
     addComment(comment: $input) {
+      date
       commentContents
       listing {
         id
       }
       userId
+      username
+      userPic
     }
   }
 `

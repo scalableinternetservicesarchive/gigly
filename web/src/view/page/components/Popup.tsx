@@ -1,19 +1,21 @@
 import { useQuery } from '@apollo/client'
 import * as React from 'react'
+import { useContext } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { getApolloClient } from '../../../graphql/apolloClient'
 import { FetchListing /*, FetchUser*/ } from '../../../graphql/query.gen'
 import { style } from '../../../style/styled'
+import { UserContext } from '../../auth/user'
 import { toast } from '../../toast/toast'
 import { fetchListing } from '../fetchListings'
 // import { fetchUser } from '../fetchUser'
 import { addComment } from '../mutateComments'
 import { AvailabilityChart } from './AvailabilityChart'
 
-interface User {
-  name: string
-  profPic: string
-}
+// interface User {
+//   name: string
+//   profPic: string
+// }
 
 //Will get rid of email, phone, profpic later
 interface Listing {
@@ -28,6 +30,8 @@ interface Listing {
   pic2: string | null
   pic3: string | null
   price: number | null
+  startDate: string
+  endDate: string
   location: string
   about: string
   description: string
@@ -106,10 +110,10 @@ function getCommenterPhoto(l: string) {
   )
 }
 
-function handleSubmit(commentContents: string, listingId_ref: number, userId: number) {
+function handleSubmit(commentContents: string, listingId_ref: number, userId: number, username: string, userPic: string) {
 
-  /*let dateTime = new Date();
-  let date = dateTime.getDate();
+  let dateTime = new Date();
+  let d = dateTime.getDate();
   let month = dateTime.getMonth() + 1;
   let year = dateTime.getFullYear();
   let meridiem = 'AM';
@@ -120,9 +124,9 @@ function handleSubmit(commentContents: string, listingId_ref: number, userId: nu
     hr = hr % 12;
   }
 
-  username = `${month<10?`0${month}`:`${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`;*/
+  let date = `${month<10?`0${month}`:`${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`;
 
-  addComment(getApolloClient(), { commentContents, listingId_ref, userId })
+  addComment(getApolloClient(), { date, commentContents, listingId_ref, userId, username, userPic })
     .then(() => {
       toast('submitted!')
     })
@@ -135,11 +139,13 @@ function handleSubmit(commentContents: string, listingId_ref: number, userId: nu
 export function Popup(listingId: number) {
   const [showing, setShowing] = React.useState('Images')
   const [curPic, setCurPic] = React.useState(0)
-  const [user] = React.useState<User>({
-    name: 'Flip McVicker',
-    profPic:
-      'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-  })
+  const { user: curUser } = useContext(UserContext)
+  let name = ''
+  if(curUser) {
+    name = curUser.name
+  }
+  let profPic = 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80'
+
 
   let listing: Listing = {
     listingId: listingId,
@@ -158,6 +164,8 @@ export function Popup(listingId: number) {
     pic3:
       'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
     price: 42,
+    startDate: '',
+    endDate: '',
     location: 'Filler Location',
     about:
       'Here are some sentences about me.\nThis shows up on all of the listings I have posted\nI am talkimg about me.',
@@ -171,14 +179,18 @@ export function Popup(listingId: number) {
   //find the listing
   let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {variables: {listingId }});
 
-
   let comments: Comment[] = []
   if (listingData && listingData.listing !== null) {
+    listing.name = listingData.listing.username
     listing.title = listingData.listing.sellingName
     listing.price = listingData.listing.price
+    listing.startDate = listingData.listing.startDate
+    listing.endDate = listingData.listing.endDate
+    listing.location = listingData.listing.location
+    listing.description = listingData.listing.description
     if (listingData.listing.comments) {
       listingData.listing.comments.map(comment => {
-          //query for the username corresponding to the user ID
+          //No longer queries for the username corresponding to the user ID
           if (comment !== null ) {
             // let userId = comment.userId
             // let { loading: userLoading, data: userData } = useQuery<FetchUser>(fetchUser, {variables: { userId }});
@@ -187,9 +199,9 @@ export function Popup(listingId: number) {
             //   username = userData?.user.name;
             // }
             comments.push({
-              commenter: username,
-              date: '11/5/2020',
-              commenterPic: '',
+              commenter: comment.username,
+              date: comment.date,
+              commenterPic: comment.userPic,
               comment: comment.commentContents
             });
         }
@@ -212,9 +224,9 @@ export function Popup(listingId: number) {
   var tagsDisplay = listing.tags.join(', ')
 
   const [comment, editComment] = React.useState<Comment>({
-    commenter: user.name,
-    date: '11/4/2020',
-    commenterPic: user.profPic,
+    commenter: '',
+    date: '',
+    commenterPic: '',
     comment: '',
   })
 
@@ -313,34 +325,35 @@ export function Popup(listingId: number) {
               <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px' }}>LOOKING FOR</h2>
             )}
             <h1 style={{ fontSize: '1.5em', marginTop: '1.5%' }}>{listing.title}</h1>
-            <div style={{ display: 'flex', marginTop: '2.5%' }}>
-              <div style={{ flex: '40%', display: 'flex', alignItems: 'center' }}>
+            <p style={{ fontSize: '0.9em', marginTop: '2.5%', color: 'rgb(0, 0, 0, 0.75)'  }}>from {listing.startDate} to {listing.endDate}</p>
+            <div style={{ display: 'flex', marginTop: '3.5%' }}>
+              <div style={{ flex: '30%', display: 'flex', alignItems: 'center' }}>
                 <div
                   style={{
                     width: '25px',
                     height: '25px',
-                    marginRight: '5%',
+                    // marginRight: '5%',
                     backgroundSize: 'cover',
                     backgroundImage: 'url(' + 'https://i.ibb.co/r2jKJkQ/price-tag.png' + ')',
                   }}
                 ></div>
-                <p style={{ marginLeft: '3%' }}>${listing.price}/hr</p>
+                <p style={{ marginLeft: '10px' }}>${listing.price}/hr</p>
               </div>
-              <div style={{ flex: '60%', display: 'flex', alignItems: 'center' }}>
+              <div style={{ marginLeft: '25px', flex: '70%', display: 'flex', alignItems: 'center' }}>
                 <div
                   style={{
                     width: '25px',
                     height: '25px',
-                    marginRight: '5%',
+                    // marginRight: '5%',
                     backgroundSize: 'cover',
                     backgroundImage: 'url(' + 'https://i.ibb.co/4jjpzFb/navigation.png' + ')',
                   }}
                 ></div>
-                <p style={{ marginLeft: '3%' }}>{listing.location}</p>
+                <p style={{ marginLeft: '10px' }}>{listing.location}</p>
               </div>
             </div>
             {listing.listingTypeSelling ? (
-              <div style={{ display: 'flex', marginTop: '10%' }}>
+              <div style={{ display: 'flex', marginTop: '7%' }}>
                 {showing == 'Images' ? (
                   <h2
                     style={{
@@ -467,7 +480,7 @@ export function Popup(listingId: number) {
                 ) : (
                   <div style={{ width: '99%' }}>
                     <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
-                      <div style={{ flex: '10%' }}> {getCommenterPhoto(user.profPic)} </div>
+                      <div style={{ flex: '10%' }}> {getCommenterPhoto(profPic)} </div>
                       <form style={{ width: '100%', flex: '90%', display: 'flex' }}>
                         <div
                           style={{
@@ -496,7 +509,7 @@ export function Popup(listingId: number) {
                           <CommentPostButtonDark
                             type="submit"
                             onClick={() => {
-                              handleSubmit(comment.comment, listingId, 2)
+                              handleSubmit(comment.comment, listingId, 2, name, profPic)
                             }}
                           >
                             POST

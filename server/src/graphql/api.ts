@@ -132,14 +132,17 @@ export const graphqlRoot: Resolvers<Context> = {
     },
     addComment: async (_, { comment }, ctx) => {
       if (comment !== undefined && comment !== null) {
-        const { commentContents, listingId_ref, userId} = comment
+        const { date, commentContents, listingId_ref, userId, username, userPic} = comment
         const newComment = new Comment()
-        if (commentContents !== undefined && commentContents !== null && userId !== undefined && userId !== null) {
+        if (date != undefined && date != null && commentContents !== undefined && commentContents !== null && userId !== undefined && userId !== null) {
+          newComment.date = date
           newComment.commentContents = commentContents
           // let user = await User.findOne({ where: { id: userId} })
           // if (user !== undefined && user !== null) {
             // newComment.user = user
           newComment.userId = userId
+          newComment.username = username
+          newComment.userPic = userPic
           let listing = await Listing.findOne({ where: { id: listingId_ref} })
           if (listing !== undefined && listing !== null) {
             newComment.listing = listing //we have found that we cannot query this because not eager

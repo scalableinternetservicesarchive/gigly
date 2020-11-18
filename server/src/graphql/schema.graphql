@@ -214,17 +214,29 @@ input EditListingInput {
 }
 
 type Comment {
+  # date/time this comment was posted (in string form)
+  date: String!
+
   # contents of this comment
   commentContents: String!
 
   # listing this comment is on
   listing: Listing!
 
-  #user ID associated w/this comment
+  # user ID associated w/this comment
   userId: Int!
+
+  # user name associated w/this comment
+  username: String!
+
+  # user profile photo associated w/this comment
+  userPic: String!
 }
 
 input CommentInput {
+  # date/time this comment was posted (in string form)
+  date: String!
+
   # contents of this comment
   commentContents: String!
 
@@ -233,4 +245,10 @@ input CommentInput {
 
   # user ID associated w/this comment
   userId: Int!
+
+  # user name associated w/this comment
+  username: String!
+
+  # user profile photo associated w/this comment
+  userPic: String!
 }
