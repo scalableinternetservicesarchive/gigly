@@ -1,19 +1,21 @@
 import { useQuery } from '@apollo/client'
 import * as React from 'react'
+import { useContext } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { getApolloClient } from '../../../graphql/apolloClient'
 import { FetchListing /*, FetchUser*/ } from '../../../graphql/query.gen'
 import { style } from '../../../style/styled'
+import { UserContext } from '../../auth/user'
 import { toast } from '../../toast/toast'
 import { fetchListing } from '../fetchListings'
 // import { fetchUser } from '../fetchUser'
 import { addComment } from '../mutateComments'
 import { AvailabilityChart } from './AvailabilityChart'
 
-interface User {
-  name: string
-  profPic: string
-}
+// interface User {
+//   name: string
+//   profPic: string
+// }
 
 //Will get rid of email, phone, profpic later
 interface Listing {
@@ -135,11 +137,13 @@ function handleSubmit(commentContents: string, listingId_ref: number, userId: nu
 export function Popup(listingId: number) {
   const [showing, setShowing] = React.useState('Images')
   const [curPic, setCurPic] = React.useState(0)
-  const [user] = React.useState<User>({
-    name: 'Flip McVicker',
-    profPic:
-      'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
-  })
+  const { user: curUser } = useContext(UserContext)
+  let name = ''
+  if(curUser) {
+    name = curUser.name
+  }
+  let profPic = 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80'
+
 
   let listing: Listing = {
     listingId: listingId,
@@ -171,14 +175,16 @@ export function Popup(listingId: number) {
   //find the listing
   let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {variables: {listingId }});
 
-
   let comments: Comment[] = []
   if (listingData && listingData.listing !== null) {
+    listing.name = listingData.listing.username
     listing.title = listingData.listing.sellingName
     listing.price = listingData.listing.price
+    listing.location = listingData.listing.location
+    listing.description = listingData.listing.description
     if (listingData.listing.comments) {
       listingData.listing.comments.map(comment => {
-          //query for the username corresponding to the user ID
+          //No longer queries for the username corresponding to the user ID
           if (comment !== null ) {
             // let userId = comment.userId
             // let { loading: userLoading, data: userData } = useQuery<FetchUser>(fetchUser, {variables: { userId }});
@@ -212,9 +218,9 @@ export function Popup(listingId: number) {
   var tagsDisplay = listing.tags.join(', ')
 
   const [comment, editComment] = React.useState<Comment>({
-    commenter: user.name,
-    date: '11/4/2020',
-    commenterPic: user.profPic,
+    commenter: '',
+    date: '',
+    commenterPic: '',
     comment: '',
   })
 
@@ -467,7 +473,7 @@ export function Popup(listingId: number) {
                 ) : (
                   <div style={{ width: '99%' }}>
                     <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
-                      <div style={{ flex: '10%' }}> {getCommenterPhoto(user.profPic)} </div>
+                      <div style={{ flex: '10%' }}> {getCommenterPhoto(profPic)} </div>
                       <form style={{ width: '100%', flex: '90%', display: 'flex' }}>
                         <div
                           style={{
@@ -496,7 +502,7 @@ export function Popup(listingId: number) {
                           <CommentPostButtonDark
                             type="submit"
                             onClick={() => {
-                              handleSubmit(comment.comment, listingId, 2, user.name, user.profPic)
+                              handleSubmit(comment.comment, listingId, 2, name, profPic)
                             }}
                           >
                             POST
