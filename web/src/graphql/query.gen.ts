@@ -104,8 +104,11 @@ export interface EditUserVariables {
 
 export interface FetchComments_comments {
   __typename: "Comment";
+  date: string;
   commentContents: string;
   userId: number;
+  username: string;
+  userPic: string;
 }
 
 export interface FetchComments {
@@ -151,8 +154,11 @@ export interface FetchListings {
 
 export interface FetchListing_listing_comments {
   __typename: "Comment";
+  date: string;
   commentContents: string;
   userId: number;
+  username: string;
+  userPic: string;
 }
 
 export interface FetchListing_listing {
@@ -208,9 +214,12 @@ export interface AddComment_addComment_listing {
 
 export interface AddComment_addComment {
   __typename: "Comment";
+  date: string;
   commentContents: string;
   listing: AddComment_addComment_listing;
   userId: number;
+  username: string;
+  userPic: string;
 }
 
 export interface AddComment {
@@ -505,9 +514,12 @@ export enum UserType {
 }
 
 export interface CommentInput {
+  date: string;
   commentContents: string;
   listingId_ref: number;
   userId: number;
+  username: string;
+  userPic: string;
 }
 
 export interface EditListingInput {

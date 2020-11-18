@@ -106,10 +106,10 @@ function getCommenterPhoto(l: string) {
   )
 }
 
-function handleSubmit(commentContents: string, listingId_ref: number, userId: number) {
+function handleSubmit(commentContents: string, listingId_ref: number, userId: number, username: string, userPic: string) {
 
-  /*let dateTime = new Date();
-  let date = dateTime.getDate();
+  let dateTime = new Date();
+  let d = dateTime.getDate();
   let month = dateTime.getMonth() + 1;
   let year = dateTime.getFullYear();
   let meridiem = 'AM';
@@ -120,9 +120,9 @@ function handleSubmit(commentContents: string, listingId_ref: number, userId: nu
     hr = hr % 12;
   }
 
-  username = `${month<10?`0${month}`:`${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`;*/
+  let date = `${month<10?`0${month}`:`${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`;
 
-  addComment(getApolloClient(), { commentContents, listingId_ref, userId })
+  addComment(getApolloClient(), { date, commentContents, listingId_ref, userId, username, userPic })
     .then(() => {
       toast('submitted!')
     })
@@ -187,9 +187,9 @@ export function Popup(listingId: number) {
             //   username = userData?.user.name;
             // }
             comments.push({
-              commenter: username,
-              date: '11/5/2020',
-              commenterPic: '',
+              commenter: comment.username,
+              date: comment.date,
+              commenterPic: comment.userPic,
               comment: comment.commentContents
             });
         }
@@ -496,7 +496,7 @@ export function Popup(listingId: number) {
                           <CommentPostButtonDark
                             type="submit"
                             onClick={() => {
-                              handleSubmit(comment.comment, listingId, 2)
+                              handleSubmit(comment.comment, listingId, 2, user.name, user.profPic)
                             }}
                           >
                             POST

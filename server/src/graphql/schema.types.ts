@@ -178,15 +178,21 @@ export interface EditListingInput {
 
 export interface Comment {
   __typename?: 'Comment'
+  date: Scalars['String']
   commentContents: Scalars['String']
   listing: Listing
   userId: Scalars['Int']
+  username: Scalars['String']
+  userPic: Scalars['String']
 }
 
 export interface CommentInput {
+  date: Scalars['String']
   commentContents: Scalars['String']
   listingId_ref: Scalars['Int']
   userId: Scalars['Int']
+  username: Scalars['String']
+  userPic: Scalars['String']
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -456,9 +462,12 @@ export type CommentResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']
 > = {
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   commentContents?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   listing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType>
   userId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  userPic?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
