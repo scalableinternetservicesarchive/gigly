@@ -141,8 +141,10 @@ export function Popup(listingId: number) {
   const [curPic, setCurPic] = React.useState(0)
   const { user: curUser } = useContext(UserContext)
   let name = ''
+  let id = 1
   if(curUser) {
     name = curUser.name
+    id = curUser.id
   }
   let profPic = 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80'
 
@@ -509,7 +511,7 @@ export function Popup(listingId: number) {
                           <CommentPostButtonDark
                             type="submit"
                             onClick={() => {
-                              handleSubmit(comment.comment, listingId, 2, name, profPic)
+                              handleSubmit(comment.comment, listingId, id, name, profPic)
                             }}
                           >
                             POST
