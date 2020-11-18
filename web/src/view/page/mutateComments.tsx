@@ -5,6 +5,9 @@ const addCommentMutation = gql`
   mutation AddComment($input: CommentInput!) {
     addComment(comment: $input) {
       commentContents
+      listing {
+        id
+      }
       userId
     }
   }

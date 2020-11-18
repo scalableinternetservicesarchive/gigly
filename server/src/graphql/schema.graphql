@@ -25,6 +25,9 @@ type Query {
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
 
+  # Returns listing based on listing ID, or null if no listing with that listing ID exists
+  listing (listingId: Int!): Listing
+
   # Returns a list of all the listings in the database
   listings: [Listing!]
 
@@ -137,7 +140,7 @@ input SurveyInput {
 
 
 type Listing {
-  id: Int
+  id: Int!
 
   # username of user who posted this listing
   username: String!
@@ -158,6 +161,9 @@ type Listing {
 
   # need to be URLs to images uploaded elsewhere
   image: String!
+
+  #comments on this listing
+  comments: [Comment]!
 }
 
 input ListingInput {
@@ -211,6 +217,9 @@ type Comment {
   # contents of this comment
   commentContents: String!
 
+  # listing this comment is on
+  listing: Listing!
+
   #user ID associated w/this comment
   userId: Int!
 }
@@ -219,6 +228,9 @@ input CommentInput {
   # contents of this comment
   commentContents: String!
 
-  #user ID associated w/this comment
+  # listing ID associated w/this comment
+  listingId_ref: Int!
+
+  # user ID associated w/this comment
   userId: Int!
 }
