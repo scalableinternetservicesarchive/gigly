@@ -30,6 +30,8 @@ interface Listing {
   pic2: string | null
   pic3: string | null
   price: number | null
+  startDate: string
+  endDate: string
   location: string
   about: string
   description: string
@@ -162,6 +164,8 @@ export function Popup(listingId: number) {
     pic3:
       'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
     price: 42,
+    startDate: '',
+    endDate: '',
     location: 'Filler Location',
     about:
       'Here are some sentences about me.\nThis shows up on all of the listings I have posted\nI am talkimg about me.',
@@ -180,6 +184,8 @@ export function Popup(listingId: number) {
     listing.name = listingData.listing.username
     listing.title = listingData.listing.sellingName
     listing.price = listingData.listing.price
+    listing.startDate = listingData.listing.startDate
+    listing.endDate = listingData.listing.endDate
     listing.location = listingData.listing.location
     listing.description = listingData.listing.description
     if (listingData.listing.comments) {
@@ -319,34 +325,35 @@ export function Popup(listingId: number) {
               <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px' }}>LOOKING FOR</h2>
             )}
             <h1 style={{ fontSize: '1.5em', marginTop: '1.5%' }}>{listing.title}</h1>
-            <div style={{ display: 'flex', marginTop: '2.5%' }}>
-              <div style={{ flex: '40%', display: 'flex', alignItems: 'center' }}>
+            <p style={{ fontSize: '0.9em', marginTop: '2.5%', color: 'rgb(0, 0, 0, 0.75)'  }}>from {listing.startDate} to {listing.endDate}</p>
+            <div style={{ display: 'flex', marginTop: '3.5%' }}>
+              <div style={{ flex: '30%', display: 'flex', alignItems: 'center' }}>
                 <div
                   style={{
                     width: '25px',
                     height: '25px',
-                    marginRight: '5%',
+                    // marginRight: '5%',
                     backgroundSize: 'cover',
                     backgroundImage: 'url(' + 'https://i.ibb.co/r2jKJkQ/price-tag.png' + ')',
                   }}
                 ></div>
-                <p style={{ marginLeft: '3%' }}>${listing.price}/hr</p>
+                <p style={{ marginLeft: '10px' }}>${listing.price}/hr</p>
               </div>
-              <div style={{ flex: '60%', display: 'flex', alignItems: 'center' }}>
+              <div style={{ marginLeft: '25px', flex: '70%', display: 'flex', alignItems: 'center' }}>
                 <div
                   style={{
                     width: '25px',
                     height: '25px',
-                    marginRight: '5%',
+                    // marginRight: '5%',
                     backgroundSize: 'cover',
                     backgroundImage: 'url(' + 'https://i.ibb.co/4jjpzFb/navigation.png' + ')',
                   }}
                 ></div>
-                <p style={{ marginLeft: '3%' }}>{listing.location}</p>
+                <p style={{ marginLeft: '10px' }}>{listing.location}</p>
               </div>
             </div>
             {listing.listingTypeSelling ? (
-              <div style={{ display: 'flex', marginTop: '10%' }}>
+              <div style={{ display: 'flex', marginTop: '7%' }}>
                 {showing == 'Images' ? (
                   <h2
                     style={{

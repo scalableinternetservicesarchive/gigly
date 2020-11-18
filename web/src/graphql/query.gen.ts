@@ -163,8 +163,13 @@ export interface FetchListing_listing_comments {
 
 export interface FetchListing_listing {
   __typename: "Listing";
+  username: string;
   price: number | null;
   sellingName: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  description: string;
   comments: (FetchListing_listing_comments | null)[];
 }
 
@@ -174,28 +179,6 @@ export interface FetchListing {
 
 export interface FetchListingVariables {
   listingId: number;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: FetchUser
-// ====================================================
-
-export interface FetchUser_user {
-  __typename: "User";
-  name: string;
-}
-
-export interface FetchUser {
-  user: FetchUser_user | null;
-}
-
-export interface FetchUserVariables {
-  userId: number;
 }
 
 /* tslint:disable */
