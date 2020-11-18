@@ -2,12 +2,11 @@ import { useQuery } from '@apollo/client'
 import * as React from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { getApolloClient } from '../../../graphql/apolloClient'
-import { FetchComments, FetchListings } from '../../../graphql/query.gen'
+import { FetchListing /*, FetchUser*/ } from '../../../graphql/query.gen'
 import { style } from '../../../style/styled'
 import { toast } from '../../toast/toast'
-import { fetchComments } from '../fetchComments'
-import { fetchListings } from '../fetchListings'
-import { fetchUser } from '../fetchUser'
+import { fetchListing } from '../fetchListings'
+// import { fetchUser } from '../fetchUser'
 import { addComment } from '../mutateComments'
 import { AvailabilityChart } from './AvailabilityChart'
 
@@ -107,7 +106,7 @@ function getCommenterPhoto(l: string) {
   )
 }
 
-function handleSubmit(commentContents: string, userId: number) {
+function handleSubmit(commentContents: string, listingId_ref: number, userId: number) {
 
   /*let dateTime = new Date();
   let date = dateTime.getDate();
@@ -123,7 +122,7 @@ function handleSubmit(commentContents: string, userId: number) {
 
   username = `${month<10?`0${month}`:`${month}`}/${date}/${year} at ${hr}:${min} ${meridiem}`;*/
 
-  addComment(getApolloClient(), { commentContents, userId })
+  addComment(getApolloClient(), { commentContents, listingId_ref, userId })
     .then(() => {
       toast('submitted!')
     })
@@ -165,38 +164,38 @@ export function Popup(listingId: number) {
     description: 'This is a test to see if the description works.\nThsadfis should appear on the next line.',
     availability:
       '000000111000011000000000 000000110010011000000000 000000111000011000000000 000000111000001100000000 000000111000011000000000 000000111000011000000000 000000010000011000111000',
-    tags: ['filler_tag', 'random_tag', 'jones_tag'],
+    tags: ['filler_tag', 'random_tag'],
   }
 
-  //for now it gets all the listings and then filters but that will change lol
-  let { loading: listingLoading, data: listingData } = useQuery<FetchListings>(fetchListings)
-  if (listingData && listingData?.listings) {
-    for (var i = 0; i < listingData.listings.length; i++) {
-      if (listingData.listings[i].id == listingId) {
-        listing.name = listingData.listings[i].username
-        listing.title = listingData.listings[i].sellingName
-        listing.price = listingData.listings[i].price
-        break
-      }
+  // listingId = 4
+  //find the listing
+  let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {variables: {listingId }});
+
+
+  let comments: Comment[] = []
+  if (listingData && listingData.listing !== null) {
+    listing.title = listingData.listing.sellingName
+    listing.price = listingData.listing.price
+    if (listingData.listing.comments) {
+      listingData.listing.comments.map(comment => {
+          //query for the username corresponding to the user ID
+          if (comment !== null ) {
+            // let userId = comment.userId
+            // let { loading: userLoading, data: userData } = useQuery<FetchUser>(fetchUser, {variables: { userId }});
+            let username = 'Filler name';
+            // if (userData && userData?.user) {
+            //   username = userData?.user.name;
+            // }
+            comments.push({
+              commenter: username,
+              date: '11/5/2020',
+              commenterPic: '',
+              comment: comment.commentContents
+            });
+        }
+      })
     }
   }
-
-  let { loading, data } = useQuery<FetchComments>(fetchComments)
-  let comments: Comment[] = []
-  data?.comments?.map(comment => {
-      //query for the username corresponding to the user ID
-      let { loading: userLoading, data: userData } = useQuery(fetchUser, {variables: {userId: comment.userId}});
-      let username = 'Filler name';
-      if (userData && userData?.user) {
-        username = userData?.user.name;
-      }
-      comments.push({
-        commenter: username,
-        date: '11/5/2020',
-        commenterPic: '',
-        comment: comment.commentContents
-      });
-  })
 
   var pics = [listing.pic1, listing.pic2, listing.pic3]
   var picIndices = []
@@ -497,7 +496,7 @@ export function Popup(listingId: number) {
                           <CommentPostButtonDark
                             type="submit"
                             onClick={() => {
-                              handleSubmit(comment.comment, 1)
+                              handleSubmit(comment.comment, listingId, 2)
                             }}
                           >
                             POST
@@ -536,3 +535,5 @@ const CommentPostButtonDark = style('button', {
   padding: '10px',
   fontSize: '0.9em',
 })
+
+

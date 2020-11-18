@@ -37,6 +37,7 @@ export const graphqlRoot: Resolvers<Context> = {
     user: async (_, { userId }) => (await User.findOne({ where: { id: userId } })) || null,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
+    listing: async (_, { listingId }) => (await Listing.findOne({ where: { id: listingId } })) || null,
     listings: () => Listing.find(),
     comments: () => Comment.find(),
   },
@@ -85,6 +86,8 @@ export const graphqlRoot: Resolvers<Context> = {
           newListing.location = location
           newListing.description = description
           newListing.image = image
+          let newComments: Comment[] = []
+          newListing.comments = newComments
           await newListing.save()
           // update user's listing
           return newListing
@@ -129,7 +132,7 @@ export const graphqlRoot: Resolvers<Context> = {
     },
     addComment: async (_, { comment }, ctx) => {
       if (comment !== undefined && comment !== null) {
-        const { commentContents, userId} = comment
+        const { commentContents, listingId_ref, userId} = comment
         const newComment = new Comment()
         if (commentContents !== undefined && commentContents !== null && userId !== undefined && userId !== null) {
           newComment.commentContents = commentContents
@@ -137,6 +140,13 @@ export const graphqlRoot: Resolvers<Context> = {
           // if (user !== undefined && user !== null) {
             // newComment.user = user
           newComment.userId = userId
+          let listing = await Listing.findOne({ where: { id: listingId_ref} })
+          if (listing !== undefined && listing !== null) {
+            newComment.listing = listing //we have found that we cannot query this because not eager
+            //add this comment to the given listing's comments
+            listing.comments.push(newComment)
+            await listing.save()
+          }
           await newComment.save()
           return newComment
           // }

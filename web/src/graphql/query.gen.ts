@@ -121,12 +121,19 @@ export interface FetchComments {
 // GraphQL query operation: FetchListings
 // ====================================================
 
+export interface FetchListings_listings_comments {
+  __typename: "Comment";
+  commentContents: string;
+  userId: number;
+}
+
 export interface FetchListings_listings {
   __typename: "Listing";
-  id: number | null;
+  id: number;
   username: string;
   price: number | null;
   sellingName: string;
+  comments: (FetchListings_listings_comments | null)[];
 }
 
 export interface FetchListings {
@@ -139,12 +146,70 @@ export interface FetchListings {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: FetchListing
+// ====================================================
+
+export interface FetchListing_listing_comments {
+  __typename: "Comment";
+  commentContents: string;
+  userId: number;
+}
+
+export interface FetchListing_listing {
+  __typename: "Listing";
+  price: number | null;
+  sellingName: string;
+  comments: (FetchListing_listing_comments | null)[];
+}
+
+export interface FetchListing {
+  listing: FetchListing_listing | null;
+}
+
+export interface FetchListingVariables {
+  listingId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: FetchUser
+// ====================================================
+
+export interface FetchUser_user {
+  __typename: "User";
+  name: string;
+}
+
+export interface FetchUser {
+  user: FetchUser_user | null;
+}
+
+export interface FetchUserVariables {
+  userId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: AddComment
 // ====================================================
+
+export interface AddComment_addComment_listing {
+  __typename: "Listing";
+  id: number;
+}
 
 export interface AddComment_addComment {
   __typename: "Comment";
   commentContents: string;
+  listing: AddComment_addComment_listing;
   userId: number;
 }
 
@@ -191,7 +256,7 @@ export interface AddListingVariables {
 
 export interface EditListing_editListing {
   __typename: "Listing";
-  id: number | null;
+  id: number;
   sellingName: string;
 }
 
@@ -441,6 +506,7 @@ export enum UserType {
 
 export interface CommentInput {
   commentContents: string;
+  listingId_ref: number;
   userId: number;
 }
 

@@ -19,6 +19,7 @@ export interface Query {
   user?: Maybe<User>
   surveys: Array<Survey>
   survey?: Maybe<Survey>
+  listing?: Maybe<Listing>
   listings?: Maybe<Array<Listing>>
   comments?: Maybe<Array<Comment>>
 }
@@ -33,6 +34,10 @@ export interface QueryUserArgs {
 
 export interface QuerySurveyArgs {
   surveyId: Scalars['Int']
+}
+
+export interface QueryListingArgs {
+  listingId: Scalars['Int']
 }
 
 export interface Mutation {
@@ -136,7 +141,7 @@ export interface SurveyInput {
 
 export interface Listing {
   __typename?: 'Listing'
-  id?: Maybe<Scalars['Int']>
+  id: Scalars['Int']
   username: Scalars['String']
   price?: Maybe<Scalars['Int']>
   sellingName: Scalars['String']
@@ -145,6 +150,7 @@ export interface Listing {
   location: Scalars['String']
   description: Scalars['String']
   image: Scalars['String']
+  comments: Array<Maybe<Comment>>
 }
 
 export interface ListingInput {
@@ -173,11 +179,13 @@ export interface EditListingInput {
 export interface Comment {
   __typename?: 'Comment'
   commentContents: Scalars['String']
+  listing: Listing
   userId: Scalars['Int']
 }
 
 export interface CommentInput {
   commentContents: Scalars['String']
+  listingId_ref: Scalars['Int']
   userId: Scalars['Int']
 }
 
@@ -313,6 +321,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QuerySurveyArgs, 'surveyId'>
   >
+  listing?: Resolver<
+    Maybe<ResolversTypes['Listing']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryListingArgs, 'listingId'>
+  >
   listings?: Resolver<Maybe<Array<ResolversTypes['Listing']>>, ParentType, ContextType>
   comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>
 }
@@ -425,7 +439,7 @@ export type ListingResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Listing'] = ResolversParentTypes['Listing']
 > = {
-  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   sellingName?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -434,6 +448,7 @@ export type ListingResolvers<
   location?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   image?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  comments?: Resolver<Array<Maybe<ResolversTypes['Comment']>>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
@@ -442,6 +457,7 @@ export type CommentResolvers<
   ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']
 > = {
   commentContents?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  listing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType>
   userId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
