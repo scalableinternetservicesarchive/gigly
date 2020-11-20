@@ -61,6 +61,7 @@ export function PostFormPage(props: PostFormPageProps) {
     tags: '',
     description: '',
   })
+  const [imageURL, editImageURL] = React.useState<string>('')
 
   const { user } = useContext(UserContext)
 
@@ -69,7 +70,18 @@ export function PostFormPage(props: PostFormPageProps) {
       <Home>
         <Page>
           <CatchPhrase style={{ paddingTop: '38%' }}>We are so glad you're here!</CatchPhrase>
-          <CatchPhrase>Make sure to <button style={{color: "white", textDecorationLine: "underline"}} onClick={()=>{window.location.replace('/')}}>login</button> before making a post ;)</CatchPhrase>
+          <CatchPhrase>
+            Make sure to{' '}
+            <button
+              style={{ color: 'white', textDecorationLine: 'underline' }}
+              onClick={() => {
+                window.location.replace('/')
+              }}
+            >
+              login
+            </button>{' '}
+            before making a post ;)
+          </CatchPhrase>
         </Page>
       </Home>
     )
@@ -215,9 +227,15 @@ export function PostFormPage(props: PostFormPageProps) {
               }
             />
           </FormInput>
-          <FormLabelText>upload image(s) </FormLabelText>
-          <input style={{ marginTop: '10px' }} accept="image" type="file" />
-          <br />
+          <FormLabelText>link image </FormLabelText>
+          <FormInput>
+            <input
+              type="text"
+              placeholder="Image URL"
+              style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+              onChange={e => editImageURL(e.target.value)}
+            />
+          </FormInput>
           <SubmitButton
             type="submit"
             onClick={() => {
@@ -229,7 +247,7 @@ export function PostFormPage(props: PostFormPageProps) {
                 post.end,
                 post.location,
                 post.description,
-                'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80'
+                imageURL
               )
             }}
           >

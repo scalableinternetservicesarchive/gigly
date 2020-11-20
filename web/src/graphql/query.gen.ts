@@ -137,6 +137,7 @@ export interface FetchListings_listings {
   username: string;
   price: number | null;
   sellingName: string;
+  image: string;
   comments: (FetchListings_listings_comments | null)[];
 }
 
