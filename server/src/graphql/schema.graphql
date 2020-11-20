@@ -67,6 +67,7 @@ type User {
   password: String!
   number: String!
   location: String!
+  about: String!
   # authToken
 }
 
@@ -90,6 +91,9 @@ input EditUserInput {
 
   # user's location
   location: String
+
+  # about user
+  about: String
 }
 
 type Survey {

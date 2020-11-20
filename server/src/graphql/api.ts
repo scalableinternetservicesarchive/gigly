@@ -159,7 +159,7 @@ export const graphqlRoot: Resolvers<Context> = {
     },
     editUser: async (_, { editInfo }, ctx) => {
       if (editInfo !== undefined && editInfo !== null) {
-        const { id, email, name, password, number, location } = editInfo
+        const { id, email, name, password, number, location, about } = editInfo
         let user = await User.findOne({ where: { email: email } })
         if (user !== undefined) {
           if (email) {
@@ -173,6 +173,9 @@ export const graphqlRoot: Resolvers<Context> = {
           }
           if (location) {
             user.location = location
+          }
+          if (about) {
+            user.about = about
           }
           user.save()
           return user

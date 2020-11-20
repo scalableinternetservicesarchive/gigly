@@ -83,6 +83,7 @@ export interface EditUser_editUser {
   number: string;
   email: string;
   location: string;
+  about: string;
 }
 
 export interface EditUser {
@@ -524,6 +525,7 @@ export interface EditUserInput {
   password?: string | null;
   number?: string | null;
   location?: string | null;
+  about?: string | null;
 }
 
 export interface ListingInput {
