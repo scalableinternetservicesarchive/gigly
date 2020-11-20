@@ -90,7 +90,7 @@ export function SellingPage(props: LecturesPageProps) {
   const [serviceDescriptionEdited, setServiceDescriptionEdited] = React.useState<string>('')
   const [serviceImageEdited, setServiceImageEdited] = React.useState<string>('')
   const [showPopup, setShowPopup] = React.useState<boolean>(false)
-
+  // const [go, setGo] = React.useState<boolean>(false)
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
     setListingToEdit(id)
@@ -164,6 +164,11 @@ export function SellingPage(props: LecturesPageProps) {
                   $clicked={selectedSort === HeaderItems.LOW_TO_HIGH}
                 >
                   Low to High
+                </SideBarItem>
+                <SideBarItem
+                >
+                  lol
+                  {/* go: {go} */}
                 </SideBarItem>
               </div>
             </div>
@@ -401,39 +406,41 @@ export function SellingPage(props: LecturesPageProps) {
     // Failed GraphQL query :(( fall back on this dummy data
     return <div>yikes</div>
   }
+  function handleSubmit(
+    id: number,
+    sellingName: string | null,
+    price: number | null,
+    startDate: string | null,
+    endDate: string | null,
+    location: string | null,
+    description: string | null,
+    image: string | null
+  ) {
+    // Note that a null in the backend mutation doesn't overwrite anything! so this is safe :)
+    // i.e. it only updates nonnull values, and doesn't clear out anything
+    editListing(getApolloClient(), {
+      id,
+      username: null,
+      price,
+      sellingName,
+      startDate,
+      endDate,
+      location,
+      description,
+      image,
+    })
+      .then(() => {
+        window.location.reload()
+        toast('submitted!')
+      })
+      .catch(err => {
+        console.log('oops')
+        console.log(err)
+      })
+  }
 }
 
-function handleSubmit(
-  id: number,
-  sellingName: string | null,
-  price: number | null,
-  startDate: string | null,
-  endDate: string | null,
-  location: string | null,
-  description: string | null,
-  image: string | null
-) {
-  // Note that a null in the backend mutation doesn't overwrite anything! so this is safe :)
-  // i.e. it only updates nonnull values, and doesn't clear out anything
-  editListing(getApolloClient(), {
-    id,
-    username: null,
-    price,
-    sellingName,
-    startDate,
-    endDate,
-    location,
-    description,
-    image,
-  })
-    .then(() => {
-      toast('submitted!')
-    })
-    .catch(err => {
-      console.log('oops')
-      console.log(err)
-    })
-}
+
 
 const Card = style('div', 'flex white items-center list pa6 ph2 ', {
   backgroundPositionY: 'center',
