@@ -299,6 +299,7 @@ function handleSubmit(
   addListing(getApolloClient(), { username, price, sellingName, startDate, endDate, location, description, image })
     .then(() => {
       toast('submitted!')
+      window.location.replace('/app/selling')
     })
     .catch(err => {
       console.log('oops')
