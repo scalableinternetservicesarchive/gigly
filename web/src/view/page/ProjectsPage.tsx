@@ -57,13 +57,14 @@ export function ProjectsPage(props: ProjectsPageProps) {
     location: curUser.location || 'Westwood, CA',
   })
 
-  function handleSubmit(id: number, email: string, name: string, number: string, location: string) {
+  function handleSubmit(id: number, email: string, name: string, number: string, location: string, about: string) {
     editUser(getApolloClient(), {
       id: id,
       email: email,
       name: name,
       number: number,
       location: location,
+      about: about,
     })
       .then(() => {
         showEditForm(false)
@@ -159,7 +160,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
               <SubmitButton
                 type="button"
                 onClick={() => {
-                  handleSubmit(curUser.id, user.email, user.name, user.phone, user.location)
+                  handleSubmit(curUser.id, user.email, user.name, user.phone, user.location, "Sample about stringg")
                 }}
               >
                 <LabelText>SUBMIT</LabelText>

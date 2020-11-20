@@ -42,6 +42,7 @@ const editUserMutation = gql`
     email
     location
     number
+    about
   }
 }
 `

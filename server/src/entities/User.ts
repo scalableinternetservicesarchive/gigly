@@ -32,6 +32,11 @@ export class User extends BaseEntity implements GraphqlUser {
   location: string
 
   @Column({
+    length: 150,
+  })
+  about: string
+
+  @Column({
     length: 100,
   })
   email: string

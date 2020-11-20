@@ -92,6 +92,7 @@ export interface User {
   password: Scalars['String']
   number: Scalars['String']
   location: Scalars['String']
+  about: Scalars['String']
 }
 
 export enum UserType {
@@ -106,6 +107,7 @@ export interface EditUserInput {
   password?: Maybe<Scalars['String']>
   number?: Maybe<Scalars['String']>
   location?: Maybe<Scalars['String']>
+  about?: Maybe<Scalars['String']>
 }
 
 export interface Survey {
@@ -403,6 +405,7 @@ export type UserResolvers<
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   number?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   location?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  about?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
