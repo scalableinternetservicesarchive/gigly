@@ -1,6 +1,6 @@
 require('honeycomb-beeline')({
   writeKey: process.env.HONEYCOMB_KEY || 'f152d47b9351c3a704c9bf4a883a6a6a',
-  dataset: process.env.APP_NAME || 'bespin',
+  dataset: process.env.APP_NAME || 'gigly',
   serviceName: process.env.APPSERVER_TAG || 'local',
   enabledInstrumentations: ['express', 'mysql2', 'react-dom/server'],
   sampleRate: 10,
@@ -18,7 +18,7 @@ import 'reflect-metadata'
 import { v4 as uuidv4 } from 'uuid'
 import { checkEqual, Unpromise } from '../../common/src/util'
 import { Config } from './config'
-import { migrate } from './db/migrate'
+// import { migrate } from './db/migrate'
 import { initORM } from './db/sql'
 import { Session } from './entities/Session'
 import { User } from './entities/User'
@@ -265,7 +265,7 @@ server.express.post(
 )
 
 initORM()
-  .then(() => migrate())
+  // .then(() => migrate())
   .then(() =>
     server.start(
       {

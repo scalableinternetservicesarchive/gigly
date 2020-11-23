@@ -1,5 +1,5 @@
 variable "app_name" {
-  default = "bespin"
+  default = "gigly"
 }
 variable "subnet_group" {
   default = "redis-subnet"
