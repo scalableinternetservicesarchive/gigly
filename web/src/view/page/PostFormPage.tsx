@@ -2,6 +2,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { useContext } from 'react'
 import { getApolloClient } from '../../graphql/apolloClient'
+import { TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 import { UserContext } from '../auth/user'
 import { AppRouteParams } from '../nav/route'
@@ -27,7 +28,7 @@ interface Post {
   start: string
   end: string
   location: string
-  tags: string
+  tags: TagType[]
   description: string
 }
 
@@ -39,6 +40,19 @@ export function PostFormPage(props: PostFormPageProps) {
     phone: '(123) 456 - 7890',
     location: 'Westwood, CA',
   })
+
+  /* Need to update this every time a new TagType enum is added!! */
+  const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
+  const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
+  const setSelectedTypes = (t: TagType) => {
+    // If the tag isn't already selected, add it.
+    if (!selectedTypes.includes(t)) {
+      _setSelectedTypes(selectedTypes.concat(t))
+    } else {
+      // ...else, remove it
+      _setSelectedTypes(selectedTypes.filter(item => item !== t))
+    }
+  }
 
   const bools = [
     [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -58,7 +72,7 @@ export function PostFormPage(props: PostFormPageProps) {
     start: '',
     end: '',
     location: '',
-    tags: '',
+    tags: [],
     description: '',
   })
   const [imageURL, editImageURL] = React.useState<string>('')
@@ -88,6 +102,7 @@ export function PostFormPage(props: PostFormPageProps) {
   }
 
   console.log('at post form page: ' + user.name)
+  console.log(selectedTypes)
   return (
     <Page>
       <div style={{ paddingTop: '80px' }}>
@@ -189,25 +204,29 @@ export function PostFormPage(props: PostFormPageProps) {
               }
             />
           </FormInput>
-          <FormLabelText> service tags </FormLabelText>
-          <FormInput>
-            <input
-              type="text"
-              placeholder="Service Tags"
-              style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-              onChange={e =>
-                editPost({
-                  name: post.name,
-                  price: post.price,
-                  start: post.start,
-                  end: post.end,
-                  location: post.location,
-                  tags: e.target.value,
-                  description: post.description,
-                })
-              }
-            />
-          </FormInput>
+          <FormLabelText>service tags </FormLabelText>
+          {tagtypes.map((item, index) => {
+            return (
+              <div
+                key={index}
+                style={{
+                  backgroundColor: selectedTypes.includes(item) ? '#18A0FB' : '#C4C4C4',
+                  color: 'white',
+                  padding: '5px',
+                  marginLeft: '2px',
+                  marginRight: '2px',
+                  borderRadius: '25px',
+                  display: 'inline-block',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  setSelectedTypes(item)
+                }}
+              >
+                {item}
+              </div>
+            )
+          })}
           <FormLabelText>service description </FormLabelText>
           <FormInput>
             <input
@@ -255,13 +274,7 @@ export function PostFormPage(props: PostFormPageProps) {
             <LabelText>SUBMIT</LabelText>
           </SubmitButton>
         </form>
-        <h2>{post.name}</h2>
-        <h2>{post.price}</h2>
-        <h2>{post.start} </h2>
-        <h2>{post.end} </h2>
-        <h2>{post.tags} </h2>
-        <h2>{post.location} </h2>
-        <h2>{post.description}</h2>
+        <FormLabelText> service tags </FormLabelText>
         <div style={{ width: '1000px', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
       </div>
     </Page>
@@ -305,6 +318,17 @@ const FormInput = style('div', {
   border: '1px solid #808080',
   display: 'flex',
   borderRadius: '20px',
+  padding: '5px',
+  paddingLeft: '10px',
+  margin: '5px',
+  minHeight: '13px',
+})
+
+const SelectInput = style('select', {
+  border: '1px solid #808080',
+  display: 'flex',
+  borderRadius: '20px',
+  width: '100%',
   padding: '5px',
   paddingLeft: '10px',
   margin: '5px',
