@@ -21,6 +21,7 @@ interface CardData {
   username: string
   profPic: string
   price: number
+  image: string
 }
 
 enum HeaderItems {
@@ -31,6 +32,7 @@ enum HeaderItems {
 function getCard(c: CardData, setCardToEdit: (id: number) => void) {
   return (
     <Card
+      $img={c.image}
       key={c.id}
       onClick={() => {
         setCardToEdit(c.id)
@@ -90,7 +92,7 @@ export function SellingPage(props: LecturesPageProps) {
   const [serviceDescriptionEdited, setServiceDescriptionEdited] = React.useState<string>('')
   const [serviceImageEdited, setServiceImageEdited] = React.useState<string>('')
   const [showPopup, setShowPopup] = React.useState<boolean>(false)
-
+  // const [go, setGo] = React.useState<boolean>(false)
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
     setListingToEdit(id)
@@ -106,6 +108,7 @@ export function SellingPage(props: LecturesPageProps) {
         serviceName: listing.sellingName,
         username: listing.username,
         price: listing.price ?? 0,
+        image: listing.image,
 
         profPic:
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
@@ -401,47 +404,49 @@ export function SellingPage(props: LecturesPageProps) {
     // Failed GraphQL query :(( fall back on this dummy data
     return <div>yikes</div>
   }
+  function handleSubmit(
+    id: number,
+    sellingName: string | null,
+    price: number | null,
+    startDate: string | null,
+    endDate: string | null,
+    location: string | null,
+    description: string | null,
+    image: string | null
+  ) {
+    // Note that a null in the backend mutation doesn't overwrite anything! so this is safe :)
+    // i.e. it only updates nonnull values, and doesn't clear out anything
+    editListing(getApolloClient(), {
+      id,
+      username: null,
+      price,
+      sellingName,
+      startDate,
+      endDate,
+      location,
+      description,
+      image,
+    })
+      .then(() => {
+        window.location.reload()
+        toast('submitted!')
+      })
+      .catch(err => {
+        console.log('oops')
+        console.log(err)
+      })
+  }
 }
 
-function handleSubmit(
-  id: number,
-  sellingName: string | null,
-  price: number | null,
-  startDate: string | null,
-  endDate: string | null,
-  location: string | null,
-  description: string | null,
-  image: string | null
-) {
-  // Note that a null in the backend mutation doesn't overwrite anything! so this is safe :)
-  // i.e. it only updates nonnull values, and doesn't clear out anything
-  editListing(getApolloClient(), {
-    id,
-    username: null,
-    price,
-    sellingName,
-    startDate,
-    endDate,
-    location,
-    description,
-    image,
-  })
-    .then(() => {
-      toast('submitted!')
-    })
-    .catch(err => {
-      console.log('oops')
-      console.log(err)
-    })
-}
-
-const Card = style('div', 'flex white items-center list pa6 ph2 ', {
+const Card = style('div', 'flex white items-center list pa6 ph2 ', (c: { $img?: string }) => ({
   backgroundPositionY: 'center',
   backgroundSize: 'cover',
   backgroundImage:
-    'url(' +
-    'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80' +
-    ')',
+    c.$img !== '' && c.$img !== null && c.$img !== undefined
+      ? 'url(' + c.$img + ')'
+      : 'url(' +
+        'https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80' +
+        ')',
   paddingTop: '20px',
   paddingBottom: '10px',
 
@@ -453,7 +458,7 @@ const Card = style('div', 'flex white items-center list pa6 ph2 ', {
   borderRadius: '25px',
   fontFamily: 'Roboto',
   cursor: 'pointer',
-})
+}))
 
 const CardInfo = style('div', 'flex flex-column', {
   paddingTop: '100px',

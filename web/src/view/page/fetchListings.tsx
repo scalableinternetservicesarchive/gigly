@@ -7,6 +7,7 @@ export const fetchListings = gql`
       username
       price
       sellingName
+      image
       comments {
         commentContents
         userId

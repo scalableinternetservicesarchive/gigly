@@ -1,6 +1,6 @@
 require('honeycomb-beeline')({
   writeKey: process.env.HONEYCOMB_KEY || 'f152d47b9351c3a704c9bf4a883a6a6a',
-  dataset: process.env.APP_NAME || 'bespin',
+  dataset: process.env.APP_NAME || 'gigly',
   serviceName: process.env.APPSERVER_TAG || 'local',
   enabledInstrumentations: ['express', 'mysql2', 'react-dom/server'],
   sampleRate: 10,
@@ -66,6 +66,7 @@ server.express.post(
     user.password = req.body.password
     user.number = req.body.number
     user.location = req.body.location
+    user.about = ''
     // password
     user.userType = UserType.User
 

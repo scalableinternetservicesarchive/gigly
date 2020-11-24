@@ -119,11 +119,14 @@ function handleSubmit(commentContents: string, listingId_ref: number, userId: nu
   let meridiem = 'AM';
   let hr = dateTime.getHours();
   let min = dateTime.getMinutes();
-  if(hr > 12) {
+  if(hr >= 12) {
     meridiem = 'PM';
-    hr = hr % 12;
+    if(hr < 12) {
+      hr = hr % 12;
+    }
+  } else if(hr == 0) {
+    hr = 12;
   }
-
   let date = `${month<10?`0${month}`:`${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`;
 
   addComment(getApolloClient(), { date, commentContents, listingId_ref, userId, username, userPic })
