@@ -163,6 +163,11 @@ export interface FetchListing_listing_comments {
   userPic: string;
 }
 
+export interface FetchListing_listing_tags {
+  __typename: "Tag";
+  type: TagType;
+}
+
 export interface FetchListing_listing {
   __typename: "Listing";
   username: string;
@@ -173,6 +178,7 @@ export interface FetchListing_listing {
   location: string;
   description: string;
   comments: (FetchListing_listing_comments | null)[];
+  tags: (FetchListing_listing_tags | null)[];
 }
 
 export interface FetchListing {

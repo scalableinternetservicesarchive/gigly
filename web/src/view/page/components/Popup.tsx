@@ -17,6 +17,13 @@ import { AvailabilityChart } from './AvailabilityChart'
 //   profPic: string
 // }
 
+enum TagTypeStrings {
+  GROCERIES = "groceries",
+  TUTORING = "tutoring",
+  HAIRCUIT = "haircut",
+  OTHER =  "other"
+}
+
 //Will get rid of email, phone, profpic later
 interface Listing {
   listingId: number
@@ -177,7 +184,7 @@ export function Popup(listingId: number) {
     description: 'This is a test to see if the description works.\nThsadfis should appear on the next line.',
     availability:
       '000000111000011000000000 000000110010011000000000 000000111000011000000000 000000111000001100000000 000000111000011000000000 000000111000011000000000 000000010000011000111000',
-    tags: ['filler_tag', 'random_tag'],
+    tags: [],
   }
 
   // listingId = 4
@@ -209,6 +216,21 @@ export function Popup(listingId: number) {
               commenterPic: comment.userPic,
               comment: comment.commentContents
             });
+        }
+      })
+    }
+    if(listingData.listing.tags) {
+      listingData.listing.tags.map(tag => {
+        if(tag != null) {
+          if(tag.type == "GROCERIES") {
+            listing.tags.push("groceries")
+          } else if(tag.type == "TUTORING") {
+            listing.tags.push("tutoring")
+          } else if(tag.type == "HAIRCUT") {
+            listing.tags.push("haircut")
+          } else {
+            listing.tags.push("other")
+          }
         }
       })
     }
