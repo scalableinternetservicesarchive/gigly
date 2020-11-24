@@ -3,7 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import Modal from 'react-modal'
 import { getApolloClient } from '../../graphql/apolloClient'
-import { FetchListings } from '../../graphql/query.gen'
+import { FetchListings, TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
@@ -11,6 +11,7 @@ import { toast } from '../toast/toast'
 import { Popup } from './components/Popup'
 import { fetchListings } from './fetchListings'
 import { editListing } from './mutateListings'
+import { addTag } from './mutateTags'
 import { Page } from './Page'
 
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
@@ -128,6 +129,19 @@ export function SellingPage(props: LecturesPageProps) {
       filteredCards = filteredCards.sort((a: CardData, b: CardData) => {
         return a.price - b.price
       })
+
+    /* Need to update this every time a new TagType enum is added!! */
+    const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
+    const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
+    const setSelectedTypes = (t: TagType) => {
+      // If the tag isn't already selected, add it.
+      if (!selectedTypes.includes(t)) {
+        _setSelectedTypes(selectedTypes.concat(t))
+      } else {
+        // ...else, remove it
+        _setSelectedTypes(selectedTypes.filter(item => item !== t))
+      }
+    }
 
     const cardUIs = filteredCards.map(card => getCard(card, setCardToEdit))
 
@@ -362,6 +376,30 @@ export function SellingPage(props: LecturesPageProps) {
                 }}
                 onChange={e => setServiceImageEdited(e.target.value)}
               />
+              {tagtypes.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      backgroundColor: selectedTypes.includes(item) ? '#18A0FB' : '#C4C4C4',
+                      color: 'white',
+                      padding: '5px',
+                      marginLeft: '2px',
+                      marginRight: '2px',
+                      marginBottom: '10px',
+                      borderRadius: '25px',
+                      display: 'inline-block',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      setSelectedTypes(item)
+                    }}
+                  >
+                    {item}
+                  </div>
+                )
+              })}
+              <br></br>
               <button
                 onClick={() => {
                   setListingToEdit(0)
@@ -380,7 +418,8 @@ export function SellingPage(props: LecturesPageProps) {
                     serviceEndDateEdited,
                     serviceLocationEdited,
                     serviceDescriptionEdited,
-                    serviceImageEdited
+                    serviceImageEdited,
+                    selectedTypes
                   )
                 }}
                 style={{
@@ -410,7 +449,8 @@ export function SellingPage(props: LecturesPageProps) {
     endDate: string | null,
     location: string | null,
     description: string | null,
-    image: string | null
+    image: string | null,
+    tags: TagType[]
   ) {
     // Note that a null in the backend mutation doesn't overwrite anything! so this is safe :)
     // i.e. it only updates nonnull values, and doesn't clear out anything
@@ -425,6 +465,14 @@ export function SellingPage(props: LecturesPageProps) {
       description,
       image,
     })
+      .then(() => {
+        tags.forEach(tag =>
+          addTag(getApolloClient(), {
+            type: tag,
+            listingId: id,
+          })
+        )
+      })
       .then(() => {
         window.location.reload()
         toast('submitted!')
