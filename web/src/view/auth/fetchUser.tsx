@@ -53,3 +53,14 @@ export function editUser(client: ApolloClient<any>, input: EditUserInput) {
     variables: { input },
   })
 }
+
+export const fetchUserFromID = gql`
+  query FetchUserFromID($userId: Int!) {
+    user(userId: $userId) {
+      name
+      number
+      about
+      email
+    }
+  }
+`

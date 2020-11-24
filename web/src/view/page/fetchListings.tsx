@@ -32,6 +32,10 @@ export const fetchListing = gql`
         username
         userPic
       }
+      tags {
+        type
+      }
+      userId_ref
     }
   }
 `
