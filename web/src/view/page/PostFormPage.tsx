@@ -267,25 +267,6 @@ export function PostFormPage(props: PostFormPageProps) {
     </Page>
   )
 }
-function MyAccountInfo(props: TestUser) {
-  return (
-    <>
-      <HeaderLabelText> MY INFORMATION:</HeaderLabelText>
-      <FormInput>
-        <FormText>{props.name}</FormText>
-      </FormInput>
-      <FormInput>
-        <FormText>{props.email}</FormText>
-      </FormInput>
-      <FormInput>
-        <FormText>{props.phone}</FormText>
-      </FormInput>
-      <FormInput>
-        <FormText>{props.location} </FormText>
-      </FormInput>
-    </>
-  )
-}
 
 function handleSubmit(
   username: string,
@@ -298,7 +279,17 @@ function handleSubmit(
   description: string,
   image: string
 ) {
-  addListing(getApolloClient(), { username, userId_ref, price, sellingName, startDate, endDate, location, description, image })
+  addListing(getApolloClient(), {
+    username,
+    userId_ref,
+    price,
+    sellingName,
+    startDate,
+    endDate,
+    location,
+    description,
+    image,
+  })
     .then(() => {
       toast('submitted!')
       window.location.replace('/app/selling')

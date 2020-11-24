@@ -82,11 +82,11 @@ export function HomePage(props: HomePageProps) {
   return (
     <Home>
       <Page>
-        {!signup && <Spacer $h4 /> }
+        {!signup && <Spacer $h4 />}
         <Subtitle> Welcome to </Subtitle>
-        {!signup && <Spacer $h2 /> }
+        {!signup && <Spacer $h2 />}
         <Title> GiGly </Title>
-        {!signup && <Spacer $h2 /> }
+        {!signup && <Spacer $h2 />}
         <CatchPhrase> Finding and offering services easily! </CatchPhrase>
         <div style={{ width: '100%' }}>
           <div>
@@ -208,84 +208,87 @@ export function HomePage(props: HomePageProps) {
                   </FormInput>
                   {/* {signupUser.password != signupUser.comfirmPassword && <Warning> Warning: passwords don't match</Warning>}
                   {signupUser.password.length < 4 && <Warning> Warning: passwords must have length of at least 4</Warning>} */}
-                  {signupUser.password.length < 4 ? <Warning> Warning: passwords must have length of at least 4</Warning>
-                   : signupUser.password != signupUser.comfirmPassword ? <Warning> Warning: passwords don't match</Warning>
-                   :
+                  {signupUser.password.length < 4 ? (
+                    <Warning> Warning: passwords must have length of at least 4</Warning>
+                  ) : signupUser.password != signupUser.comfirmPassword ? (
+                    <Warning> Warning: passwords don't match</Warning>
+                  ) : (
                     <div>
-                     <br/>
+                      <br />
                       <SubmitButton type="submit">
                         <LabelText>Signup</LabelText>
                       </SubmitButton>
                     </div>
-                  }
-
-
+                  )}
                 </form>
-                <LinkButton onClick={() => setsignup(false)} style={{ marginBottom: '16px' }}>
+                <LinkButton onClick={() => setsignup(false)} style={{ marginBottom: '16px', cursor: 'pointer' }}>
                   <LabelText>Already have an account? Login here!</LabelText>
                 </LinkButton>
               </>
             ) : (
               <>
-                {!curUser &&
-                <form>
-                  <Spacer $h4 />
-                  <FormInput style={{ backgroundColor: 'E3E3E3', borderRadius: '20px' }}>
-                    <input
-                      type="text"
-                      placeholder="Email"
-                      style={{ fontSize: '0.9em', resize: 'none', width: '100%' }}
-                      onChange={e =>
-                        setLogin({
-                          name: e.target.value,
-                          password: loginUser.password,
-                        })
-                      }
-                      value={loginUser.name}
-                    />
-                  </FormInput>
-                  <Spacer $h4 />
-                  <FormInput>
-                    <input
-                      type="text"
-                      placeholder="Password"
-                      style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
-                      onChange={e =>
-                        setLogin({
-                          name: loginUser.name,
-                          password: e.target.value,
-                        })
-                      }
-                      value={loginUser.password}
-                    />
-                  </FormInput>
-                  <Spacer $h4 />
-                  <br />
-                  {/* <SubmitButton type="button" onClick={() => getUser2({ variables: { email: loginUser.name } })}>
+                {!curUser && (
+                  <form>
+                    <Spacer $h4 />
+                    <FormInput style={{ backgroundColor: 'E3E3E3', borderRadius: '20px' }}>
+                      <input
+                        type="text"
+                        placeholder="Email"
+                        style={{ fontSize: '0.9em', resize: 'none', width: '100%' }}
+                        onChange={e =>
+                          setLogin({
+                            name: e.target.value,
+                            password: loginUser.password,
+                          })
+                        }
+                        value={loginUser.name}
+                      />
+                    </FormInput>
+                    <Spacer $h4 />
+                    <FormInput>
+                      <input
+                        type="text"
+                        placeholder="Password"
+                        style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                        onChange={e =>
+                          setLogin({
+                            name: loginUser.name,
+                            password: e.target.value,
+                          })
+                        }
+                        value={loginUser.password}
+                      />
+                    </FormInput>
+                    <Spacer $h4 />
+                    <br />
+                    {/* <SubmitButton type="button" onClick={() => getUser2({ variables: { email: loginUser.name } })}>
                     <LabelText>Login</LabelText></SubmitButton> */}
-                  <SubmitButton type="button" onClick={login}>
-                    <LabelText>Login</LabelText>
-                  </SubmitButton>
-                  {/* {data && <h1>{JSON.stringify(data)} this is data</h1>} */}
-                  {/* {data&&data.self&&(data.self.password === loginUser.password)&&popupSuccess()}
+                    <SubmitButton type="button" onClick={login}>
+                      <LabelText>Login</LabelText>
+                    </SubmitButton>
+                    {/* {data && <h1>{JSON.stringify(data)} this is data</h1>} */}
+                    {/* {data&&data.self&&(data.self.password === loginUser.password)&&popupSuccess()}
                     {data&&data.self&&(data.self.password !== loginUser.password)&&popupReload()}
                     {data&&!data.self&&popupReload()&&<h1>User not found.</h1>} */}
-                </form>}
+                  </form>
+                )}
                 <Spacer $h4 />
-                <LinkButton onClick={() => setsignup(true)} style={{ marginBottom: '16px' }}>
+                <LinkButton onClick={() => setsignup(true)} style={{ marginBottom: '16px', cursor: 'pointer' }}>
                   <LabelText>Don't have an account? Create Now!</LabelText>
                 </LinkButton>
               </>
             )}
-            {curUser && <LinkButton
-              onClick={() => {
-                console.log('logout clicked')
-                logout()
-              }}
-              style={{ marginBottom: '16px' }}
-            >
-              <LabelText>Logout</LabelText>
-            </LinkButton>}
+            {curUser && (
+              <LinkButton
+                onClick={() => {
+                  console.log('logout clicked')
+                  logout()
+                }}
+                style={{ marginBottom: '16px', cursor: 'pointer' }}
+              >
+                <LabelText>Logout</LabelText>
+              </LinkButton>
+            )}
           </div>
         </div>
       </Page>
@@ -380,7 +383,13 @@ function signupFunction(props: SignupForm) {
   fetch('/auth/createUser', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: signup_email, name: signup_username, password: signup_password, number: signup_number, location: signup_location }),
+    body: JSON.stringify({
+      email: signup_email,
+      name: signup_username,
+      password: signup_password,
+      number: signup_number,
+      location: signup_location,
+    }),
   })
     .then(res => {
       console.log('after calling create user')
@@ -487,6 +496,7 @@ const SubmitButton = style('button', {
   marginLeft: 'auto',
   marginRight: 'auto',
   width: '15vw',
+  cursor: 'pointer',
 })
 
 const Warning = style('p', {
@@ -507,6 +517,6 @@ const LinkButton = style('button', {
 })
 
 const FormLabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px', marginLeft: '8px' })
-const LabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px' })
+const LabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px', cursor: 'pointer' })
 const HeaderLabelText = style('h1', { fontSize: '1.2em', letterSpacing: '1.25px' })
 const FormText = style('p', { fontSize: '0.9em', color: 'black', resize: 'none', width: '100%' })

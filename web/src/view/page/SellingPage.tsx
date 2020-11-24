@@ -78,10 +78,8 @@ const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function SellingPage(props: LecturesPageProps) {
-  // Whether or not to read from the listings
-  const [haveListings, setHaveListings] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
-  const { loading, data } = useQuery<FetchListings>(fetchListings)
+  const { data } = useQuery<FetchListings>(fetchListings)
   const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)
   const [listingToEdit, setListingToEdit] = React.useState<number>(0) // 0 means don't show the editing window!
   const [serviceNameEdited, setServiceNameEdited] = React.useState<string>('')
