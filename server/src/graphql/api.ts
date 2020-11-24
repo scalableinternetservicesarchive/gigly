@@ -7,6 +7,7 @@ import { Listing } from '../entities/Listing'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
+import { Tag } from '../entities/Tag'
 import { User } from '../entities/User'
 import { Resolvers } from './schema.types'
 
@@ -88,6 +89,8 @@ export const graphqlRoot: Resolvers<Context> = {
           newListing.image = image
           let newComments: Comment[] = []
           newListing.comments = newComments
+          let newTags: Tag[] = []
+          newListing.tags = newTags
           await newListing.save()
           // update user's listing
           return newListing
@@ -153,6 +156,24 @@ export const graphqlRoot: Resolvers<Context> = {
           await newComment.save()
           return newComment
           // }
+        }
+      }
+      return null
+    },
+    addTag: async (_, { tag }, ctx) => {
+      if (tag !== undefined && tag !== null) {
+        const { type, listingId } = tag
+        const newTag = new Tag()
+        if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
+          newTag.type = type
+          let listing = await Listing.findOne({where: {id: listingId}})
+          if (listing !== undefined && listing !== null) {
+            newTag.listing = listing
+            listing.tags.push(newTag)
+            await listing.save()
+          }
+          await newTag.save()
+          return newTag
         }
       }
       return null
