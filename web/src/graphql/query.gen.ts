@@ -268,6 +268,34 @@ export interface EditListingVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: AddTag
+// ====================================================
+
+export interface AddTag_addTag_listing {
+  __typename: "Listing";
+  id: number;
+}
+
+export interface AddTag_addTag {
+  __typename: "Tag";
+  type: TagType;
+  listing: AddTag_addTag_listing;
+}
+
+export interface AddTag {
+  addTag: AddTag_addTag | null;
+}
+
+export interface AddTagVariables {
+  input: TagInput;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchSurveys
 // ====================================================
 
@@ -493,6 +521,13 @@ export interface SurveyQuestion {
 // START Enums and Input Objects
 //==============================================================
 
+export enum TagType {
+  GROCERIES = "GROCERIES",
+  HAIRCUT = "HAIRCUT",
+  OTHER = "OTHER",
+  TUTORING = "TUTORING",
+}
+
 export enum UserType {
   ADMIN = "ADMIN",
   USER = "USER",
@@ -543,6 +578,11 @@ export interface ListingInput {
 export interface SurveyInput {
   questionId: number;
   answer: string;
+}
+
+export interface TagInput {
+  type: TagType;
+  listingId: number;
 }
 
 //==============================================================

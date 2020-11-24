@@ -48,6 +48,9 @@ type Mutation {
   # Create a new comment on a listing in the database
   addComment(comment: CommentInput): Comment
 
+  # Add a tag to a listing in the database
+  addTag(tag: TagInput): Tag
+
   # Edit an existing listing in the database
   editListing(editInfo: EditListingInput): Listing
 
@@ -168,6 +171,9 @@ type Listing {
 
   #comments on this listing
   comments: [Comment]!
+
+  #tags on this listing
+  tags: [Tag]!
 }
 
 input ListingInput {
@@ -255,4 +261,16 @@ input CommentInput {
 
   # user profile photo associated w/this comment
   userPic: String!
+}
+
+enum TagType { GROCERIES, TUTORING, HAIRCUT, OTHER }
+
+type Tag {
+  type: TagType!
+  listing: Listing!
+}
+
+input TagInput {
+  type: TagType!
+  listingId: Int!
 }

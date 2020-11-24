@@ -46,6 +46,7 @@ export interface Mutation {
   nextSurveyQuestion?: Maybe<Survey>
   addListing?: Maybe<Listing>
   addComment?: Maybe<Comment>
+  addTag?: Maybe<Tag>
   editListing?: Maybe<Listing>
   editUser?: Maybe<User>
 }
@@ -64,6 +65,10 @@ export interface MutationAddListingArgs {
 
 export interface MutationAddCommentArgs {
   comment?: Maybe<CommentInput>
+}
+
+export interface MutationAddTagArgs {
+  tag?: Maybe<TagInput>
 }
 
 export interface MutationEditListingArgs {
@@ -153,6 +158,7 @@ export interface Listing {
   description: Scalars['String']
   image: Scalars['String']
   comments: Array<Maybe<Comment>>
+  tags: Array<Maybe<Tag>>
 }
 
 export interface ListingInput {
@@ -195,6 +201,24 @@ export interface CommentInput {
   userId: Scalars['Int']
   username: Scalars['String']
   userPic: Scalars['String']
+}
+
+export enum TagType {
+  Groceries = 'GROCERIES',
+  Tutoring = 'TUTORING',
+  Haircut = 'HAIRCUT',
+  Other = 'OTHER',
+}
+
+export interface Tag {
+  __typename?: 'Tag'
+  type: TagType
+  listing: Listing
+}
+
+export interface TagInput {
+  type: TagType
+  listingId: Scalars['Int']
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -292,6 +316,9 @@ export type ResolversTypes = {
   EditListingInput: EditListingInput
   Comment: ResolverTypeWrapper<Comment>
   CommentInput: CommentInput
+  TagType: TagType
+  Tag: ResolverTypeWrapper<Tag>
+  TagInput: TagInput
 }
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -313,6 +340,8 @@ export type ResolversParentTypes = {
   EditListingInput: EditListingInput
   Comment: Comment
   CommentInput: CommentInput
+  Tag: Tag
+  TagInput: TagInput
 }
 
 export type QueryResolvers<
@@ -367,6 +396,7 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationAddCommentArgs, never>
   >
+  addTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationAddTagArgs, never>>
   editListing?: Resolver<
     Maybe<ResolversTypes['Listing']>,
     ParentType,
@@ -458,6 +488,7 @@ export type ListingResolvers<
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   image?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   comments?: Resolver<Array<Maybe<ResolversTypes['Comment']>>, ParentType, ContextType>
+  tags?: Resolver<Array<Maybe<ResolversTypes['Tag']>>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
@@ -474,6 +505,15 @@ export type CommentResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
+export type TagResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']
+> = {
+  type?: Resolver<ResolversTypes['TagType'], ParentType, ContextType>
+  listing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
+
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>
   Mutation?: MutationResolvers<ContextType>
@@ -484,6 +524,7 @@ export type Resolvers<ContextType = any> = {
   SurveyAnswer?: SurveyAnswerResolvers<ContextType>
   Listing?: ListingResolvers<ContextType>
   Comment?: CommentResolvers<ContextType>
+  Tag?: TagResolvers<ContextType>
 }
 
 /**
