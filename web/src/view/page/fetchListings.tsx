@@ -35,6 +35,7 @@ export const fetchListing = gql`
       tags {
         type
       }
+      userId_ref
     }
   }
 `

@@ -150,6 +150,7 @@ export interface Listing {
   __typename?: 'Listing'
   id: Scalars['Int']
   username: Scalars['String']
+  userId_ref: Scalars['Int']
   price?: Maybe<Scalars['Int']>
   sellingName: Scalars['String']
   startDate: Scalars['String']
@@ -163,6 +164,7 @@ export interface Listing {
 
 export interface ListingInput {
   username: Scalars['String']
+  userId_ref: Scalars['Int']
   price?: Maybe<Scalars['Int']>
   sellingName: Scalars['String']
   startDate: Scalars['String']
@@ -480,6 +482,7 @@ export type ListingResolvers<
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  userId_ref?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   sellingName?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   startDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>

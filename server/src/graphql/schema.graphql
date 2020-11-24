@@ -152,6 +152,9 @@ type Listing {
   # username of user who posted this listing
   username: String!
 
+  # user ID of user who posted this listing
+  userId_ref: Int!
+
   # price. Null if user is requesting a service
   price: Int
 
@@ -179,6 +182,9 @@ type Listing {
 input ListingInput {
   # username of user who posted this listing
   username: String!
+
+  # user ID of user who posted this listing
+  userId_ref: Int!
 
   # price. Null if user is requesting a service
   price: Int

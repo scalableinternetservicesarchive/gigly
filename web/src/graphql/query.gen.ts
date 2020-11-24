@@ -100,6 +100,31 @@ export interface EditUserVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: FetchUserFromID
+// ====================================================
+
+export interface FetchUserFromID_user {
+  __typename: "User";
+  name: string;
+  number: string;
+  about: string;
+  email: string;
+}
+
+export interface FetchUserFromID {
+  user: FetchUserFromID_user | null;
+}
+
+export interface FetchUserFromIDVariables {
+  userId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchComments
 // ====================================================
 
@@ -179,6 +204,7 @@ export interface FetchListing_listing {
   description: string;
   comments: (FetchListing_listing_comments | null)[];
   tags: (FetchListing_listing_tags | null)[];
+  userId_ref: number;
 }
 
 export interface FetchListing {
@@ -572,6 +598,7 @@ export interface EditUserInput {
 
 export interface ListingInput {
   username: string;
+  userId_ref: number;
   price?: number | null;
   sellingName: string;
   startDate: string;

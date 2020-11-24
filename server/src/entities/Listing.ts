@@ -37,6 +37,10 @@ export class Listing extends BaseEntity {
   @JoinColumn({ name: 'userId' })
   user: User
 
+  //probably not what we want to do but idk how to do the resolver decoupling thing yet
+  @Column()
+  userId_ref: number
+
   @OneToMany(() => Comment, comment => comment.listing, { eager: true })
   @JoinColumn({ name: 'commentId' })
   comments: Comment[]

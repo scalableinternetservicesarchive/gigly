@@ -241,6 +241,7 @@ export function PostFormPage(props: PostFormPageProps) {
             onClick={() => {
               handleSubmit(
                 testuser.name,
+                user.id,
                 post.price,
                 post.name,
                 post.start,
@@ -288,6 +289,7 @@ function MyAccountInfo(props: TestUser) {
 
 function handleSubmit(
   username: string,
+  userId_ref: number,
   price: number,
   sellingName: string,
   startDate: string,
@@ -296,7 +298,7 @@ function handleSubmit(
   description: string,
   image: string
 ) {
-  addListing(getApolloClient(), { username, price, sellingName, startDate, endDate, location, description, image })
+  addListing(getApolloClient(), { username, userId_ref, price, sellingName, startDate, endDate, location, description, image })
     .then(() => {
       toast('submitted!')
       window.location.replace('/app/selling')

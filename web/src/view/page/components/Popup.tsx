@@ -3,12 +3,12 @@ import * as React from 'react'
 import { useContext } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { getApolloClient } from '../../../graphql/apolloClient'
-import { FetchListing /*, FetchUser*/ } from '../../../graphql/query.gen'
+import { FetchListing } from '../../../graphql/query.gen'
 import { style } from '../../../style/styled'
+import { fetchUserFromID } from '../../auth/fetchUser'
 import { UserContext } from '../../auth/user'
 import { toast } from '../../toast/toast'
 import { fetchListing } from '../fetchListings'
-// import { fetchUser } from '../fetchUser'
 import { addComment } from '../mutateComments'
 import { AvailabilityChart } from './AvailabilityChart'
 
@@ -187,19 +187,30 @@ export function Popup(listingId: number) {
     tags: [],
   }
 
-  // listingId = 4
   //find the listing
   let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {variables: {listingId }});
 
   let comments: Comment[] = []
   if (listingData && listingData.listing !== null) {
-    listing.name = listingData.listing.username
+    // listing.name = listingData.listing.username
     listing.title = listingData.listing.sellingName
     listing.price = listingData.listing.price
     listing.startDate = listingData.listing.startDate
     listing.endDate = listingData.listing.endDate
     listing.location = listingData.listing.location
     listing.description = listingData.listing.description
+
+    //find the user who posted this
+    if(listingData.listing.userId_ref) {
+      let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {variables: {userId: listingData.listing.userId_ref}})
+      if (userData && userData?.user) {
+        listing.name = userData?.user.name;
+        listing.phone = userData?.user.number;
+        listing.email = userData?.user.email;
+        listing.about = userData?.user.about;
+      }
+    }
+
     if (listingData.listing.comments) {
       listingData.listing.comments.map(comment => {
           //No longer queries for the username corresponding to the user ID
@@ -234,6 +245,8 @@ export function Popup(listingId: number) {
         }
       })
     }
+  } else { //this is dumb but prevents the "rendered more hooks than previous render" error
+    let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {variables: {userId: 1}})
   }
 
   var pics = [listing.pic1, listing.pic2, listing.pic3]
