@@ -28,7 +28,6 @@ interface Post {
   start: string
   end: string
   location: string
-  tags: TagType[]
   description: string
 }
 
@@ -72,7 +71,6 @@ export function PostFormPage(props: PostFormPageProps) {
     start: '',
     end: '',
     location: '',
-    tags: [],
     description: '',
   })
   const [imageURL, editImageURL] = React.useState<string>('')
@@ -122,7 +120,6 @@ export function PostFormPage(props: PostFormPageProps) {
                   start: post.start,
                   end: post.end,
                   location: post.location,
-                  tags: post.tags,
                   description: post.description,
                 })
               }
@@ -141,7 +138,6 @@ export function PostFormPage(props: PostFormPageProps) {
                   start: post.start,
                   end: post.end,
                   location: post.location,
-                  tags: post.tags,
                   description: post.description,
                 })
               }
@@ -160,7 +156,6 @@ export function PostFormPage(props: PostFormPageProps) {
                   start: e.target.value,
                   end: post.end,
                   location: post.location,
-                  tags: post.tags,
                   description: post.description,
                 })
               }
@@ -179,7 +174,6 @@ export function PostFormPage(props: PostFormPageProps) {
                   start: post.start,
                   end: e.target.value,
                   location: post.location,
-                  tags: post.tags,
                   description: post.description,
                 })
               }
@@ -198,7 +192,6 @@ export function PostFormPage(props: PostFormPageProps) {
                   start: post.start,
                   end: post.end,
                   location: e.target.value,
-                  tags: post.tags,
                   description: post.description,
                 })
               }
@@ -240,7 +233,6 @@ export function PostFormPage(props: PostFormPageProps) {
                   start: post.start,
                   end: post.end,
                   location: post.location,
-                  tags: post.tags,
                   description: e.target.value,
                 })
               }
