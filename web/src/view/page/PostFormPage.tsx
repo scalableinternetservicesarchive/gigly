@@ -30,8 +30,9 @@ interface Post {
   description: string
 }
 
+
 export function PostFormPage(props: PostFormPageProps) {
-  const [editForm, showEditForm] = React.useState(false)
+  const [popup, showPopup] = React.useState(false)
   const [testuser, editUser] = React.useState<TestUser>({
     name: 'Julia Baylon',
     email: 'julia@gmail.com',
@@ -62,6 +63,38 @@ export function PostFormPage(props: PostFormPageProps) {
   const [imageURL, editImageURL] = React.useState<string>('')
 
   const { user } = useContext(UserContext)
+  function handleSubmit(
+    username: string,
+    userId_ref: number,
+    price: number,
+    sellingName: string,
+    startDate: string,
+    endDate: string,
+    location: string,
+    description: string,
+    image: string
+  ) {
+    addListing(getApolloClient(), {
+      username,
+      userId_ref,
+      price,
+      sellingName,
+      startDate,
+      endDate,
+      location,
+      description,
+      image,
+    })
+      .then(() => {
+        // showPopup(true)
+        toast('submitted!')
+        window.location.replace('/app/selling')
+      })
+      .catch(err => {
+        console.log('oops')
+        console.log(err)
+      })
+  }
 
   if (user == null) {
     return (
@@ -89,6 +122,8 @@ export function PostFormPage(props: PostFormPageProps) {
   return (
     <Page>
       <div style={{ paddingTop: '80px' }}>
+        {/* {popup&&<ConfirmSubmit />} */}
+        {popup && <ConfirmSubmit key={2}/>}
         <form>
           <HeaderLabelText>NEW POST: </HeaderLabelText>
           {/* <p>{user === null ? 'no user' : user.name}</p> */}
@@ -210,7 +245,7 @@ export function PostFormPage(props: PostFormPageProps) {
             />
           </FormInput>
           <SubmitButton
-            type="submit"
+            type="button"
             onClick={() => {
               handleSubmit(
                 testuser.name,
@@ -233,39 +268,50 @@ export function PostFormPage(props: PostFormPageProps) {
       </div>
     </Page>
   )
+  function ConfirmSubmit()
+  {
+    return(
+      <>
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '500px',
+            height: '300px',
+            backgroundColor: 'grey',
+          }}
+        >
+          <h1 style={{
+            position: 'fixed',
+            top: '30%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}>Success! </h1>
+          <SubmitButton style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }} type="button" onClick={() => window.location.replace('/app/selling')}>
+            <LabelText>Go to Selling Page</LabelText>
+          </SubmitButton>
+          <SubmitButton style={{
+            position: 'fixed',
+            top: '70%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }} type="button" onClick={()=> showPopup(false)}>
+            <LabelText>Make Another Post</LabelText>
+          </SubmitButton>
+        </div>
+      </>
+    )
+  }
 }
 
-function handleSubmit(
-  username: string,
-  userId_ref: number,
-  price: number,
-  sellingName: string,
-  startDate: string,
-  endDate: string,
-  location: string,
-  description: string,
-  image: string
-) {
-  addListing(getApolloClient(), {
-    username,
-    userId_ref,
-    price,
-    sellingName,
-    startDate,
-    endDate,
-    location,
-    description,
-    image,
-  })
-    .then(() => {
-      toast('submitted!')
-      window.location.replace('/app/selling')
-    })
-    .catch(err => {
-      console.log('oops')
-      console.log(err)
-    })
-}
+
 
 const Row = style('div', { display: 'flex', flexDirection: 'row' })
 const FormInput = style('div', {
