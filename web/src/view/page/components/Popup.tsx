@@ -18,10 +18,10 @@ import { AvailabilityChart } from './AvailabilityChart'
 // }
 
 enum TagTypeStrings {
-  GROCERIES = "groceries",
-  TUTORING = "tutoring",
-  HAIRCUIT = "haircut",
-  OTHER =  "other"
+  GROCERIES = 'groceries',
+  TUTORING = 'tutoring',
+  HAIRCUIT = 'haircut',
+  OTHER = 'other',
 }
 
 //Will get rid of email, phone, profpic later
@@ -117,24 +117,29 @@ function getCommenterPhoto(l: string) {
   )
 }
 
-function handleSubmit(commentContents: string, listingId_ref: number, userId: number, username: string, userPic: string) {
-
-  let dateTime = new Date();
-  let d = dateTime.getDate();
-  let month = dateTime.getMonth() + 1;
-  let year = dateTime.getFullYear();
-  let meridiem = 'AM';
-  let hr = dateTime.getHours();
-  let min = dateTime.getMinutes();
-  if(hr >= 12) {
-    meridiem = 'PM';
-    if(hr < 12) {
-      hr = hr % 12;
+function handleSubmit(
+  commentContents: string,
+  listingId_ref: number,
+  userId: number,
+  username: string,
+  userPic: string
+) {
+  let dateTime = new Date()
+  let d = dateTime.getDate()
+  let month = dateTime.getMonth() + 1
+  let year = dateTime.getFullYear()
+  let meridiem = 'AM'
+  let hr = dateTime.getHours()
+  let min = dateTime.getMinutes()
+  if (hr >= 12) {
+    meridiem = 'PM'
+    if (hr < 12) {
+      hr = hr % 12
     }
-  } else if(hr == 0) {
-    hr = 12;
+  } else if (hr == 0) {
+    hr = 12
   }
-  let date = `${month<10?`0${month}`:`${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`;
+  let date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`
 
   addComment(getApolloClient(), { date, commentContents, listingId_ref, userId, username, userPic })
     .then(() => {
@@ -152,12 +157,12 @@ export function Popup(listingId: number) {
   const { user: curUser } = useContext(UserContext)
   let name = ''
   let id = 1
-  if(curUser) {
+  if (curUser) {
     name = curUser.name
     id = curUser.id
   }
-  let profPic = 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80'
-
+  let profPic =
+    'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80'
 
   let listing: Listing = {
     listingId: listingId,
@@ -188,7 +193,9 @@ export function Popup(listingId: number) {
   }
 
   //find the listing
-  let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {variables: {listingId }});
+  let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {
+    variables: { listingId },
+  })
 
   let comments: Comment[] = []
   if (listingData && listingData.listing !== null) {
@@ -201,52 +208,55 @@ export function Popup(listingId: number) {
     listing.description = listingData.listing.description
 
     //find the user who posted this
-    if(listingData.listing.userId_ref) {
-      let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {variables: {userId: listingData.listing.userId_ref}})
+    if (listingData.listing.userId_ref) {
+      let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
+        variables: { userId: listingData.listing.userId_ref },
+      })
       if (userData && userData?.user) {
-        listing.name = userData?.user.name;
-        listing.phone = userData?.user.number;
-        listing.email = userData?.user.email;
-        listing.about = userData?.user.about;
+        listing.name = userData?.user.name
+        listing.phone = userData?.user.number
+        listing.email = userData?.user.email
+        listing.about = userData?.user.about
       }
     }
 
     if (listingData.listing.comments) {
       listingData.listing.comments.map(comment => {
-          //No longer queries for the username corresponding to the user ID
-          if (comment !== null ) {
-            // let userId = comment.userId
-            // let { loading: userLoading, data: userData } = useQuery<FetchUser>(fetchUser, {variables: { userId }});
-            let username = 'Filler name';
-            // if (userData && userData?.user) {
-            //   username = userData?.user.name;
-            // }
-            comments.push({
-              commenter: comment.username,
-              date: comment.date,
-              commenterPic: comment.userPic,
-              comment: comment.commentContents
-            });
+        //No longer queries for the username corresponding to the user ID
+        if (comment !== null) {
+          // let userId = comment.userId
+          // let { loading: userLoading, data: userData } = useQuery<FetchUser>(fetchUser, {variables: { userId }});
+          let username = 'Filler name'
+          // if (userData && userData?.user) {
+          //   username = userData?.user.name;
+          // }
+          comments.push({
+            commenter: comment.username,
+            date: comment.date,
+            commenterPic: comment.userPic,
+            comment: comment.commentContents,
+          })
         }
       })
     }
-    if(listingData.listing.tags) {
+    if (listingData.listing.tags) {
       listingData.listing.tags.map(tag => {
-        if(tag != null) {
-          if(tag.type == "GROCERIES") {
-            listing.tags.push("groceries")
-          } else if(tag.type == "TUTORING") {
-            listing.tags.push("tutoring")
-          } else if(tag.type == "HAIRCUT") {
-            listing.tags.push("haircut")
+        if (tag != null) {
+          if (tag.type == 'GROCERIES') {
+            listing.tags.push('groceries')
+          } else if (tag.type == 'TUTORING') {
+            listing.tags.push('tutoring')
+          } else if (tag.type == 'HAIRCUT') {
+            listing.tags.push('haircut')
           } else {
-            listing.tags.push("other")
+            listing.tags.push('other')
           }
         }
       })
     }
-  } else { //this is dumb but prevents the "rendered more hooks than previous render" error
-    let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {variables: {userId: 1}})
+  } else {
+    //this is dumb but prevents the "rendered more hooks than previous render" error
+    let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, { variables: { userId: 1 } })
   }
 
   var pics = [listing.pic1, listing.pic2, listing.pic3]
@@ -365,7 +375,9 @@ export function Popup(listingId: number) {
               <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px' }}>LOOKING FOR</h2>
             )}
             <h1 style={{ fontSize: '1.5em', marginTop: '1.5%' }}>{listing.title}</h1>
-            <p style={{ fontSize: '0.9em', marginTop: '2.5%', color: 'rgb(0, 0, 0, 0.75)'  }}>from {listing.startDate} to {listing.endDate}</p>
+            <p style={{ fontSize: '0.9em', marginTop: '2.5%', color: 'rgb(0, 0, 0, 0.75)' }}>
+              from {listing.startDate} to {listing.endDate}
+            </p>
             <div style={{ display: 'flex', marginTop: '3.5%' }}>
               <div style={{ flex: '30%', display: 'flex', alignItems: 'center' }}>
                 <div
@@ -547,7 +559,8 @@ export function Popup(listingId: number) {
                         </div>
                         {comment.comment != '' ? (
                           <CommentPostButtonDark
-                            type="submit"
+                            // type="submit"
+                            type="button"
                             onClick={() => {
                               handleSubmit(comment.comment, listingId, id, name, profPic)
                             }}
@@ -588,5 +601,3 @@ const CommentPostButtonDark = style('button', {
   padding: '10px',
   fontSize: '0.9em',
 })
-
-

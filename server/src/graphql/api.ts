@@ -137,18 +137,25 @@ export const graphqlRoot: Resolvers<Context> = {
     },
     addComment: async (_, { comment }, ctx) => {
       if (comment !== undefined && comment !== null) {
-        const { date, commentContents, listingId_ref, userId, username, userPic} = comment
+        const { date, commentContents, listingId_ref, userId, username, userPic } = comment
         const newComment = new Comment()
-        if (date != undefined && date != null && commentContents !== undefined && commentContents !== null && userId !== undefined && userId !== null) {
+        if (
+          date != undefined &&
+          date != null &&
+          commentContents !== undefined &&
+          commentContents !== null &&
+          userId !== undefined &&
+          userId !== null
+        ) {
           newComment.date = date
           newComment.commentContents = commentContents
           // let user = await User.findOne({ where: { id: userId} })
           // if (user !== undefined && user !== null) {
-            // newComment.user = user
+          // newComment.user = user
           newComment.userId = userId
           newComment.username = username
           newComment.userPic = userPic
-          let listing = await Listing.findOne({ where: { id: listingId_ref} })
+          let listing = await Listing.findOne({ where: { id: listingId_ref } })
           if (listing !== undefined && listing !== null) {
             newComment.listing = listing //we have found that we cannot query this because not eager
             //add this comment to the given listing's comments
@@ -168,7 +175,7 @@ export const graphqlRoot: Resolvers<Context> = {
         const newTag = new Tag()
         if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
           newTag.type = type
-          let listing = await Listing.findOne({where: {id: listingId}})
+          let listing = await Listing.findOne({ where: { id: listingId } })
           if (listing !== undefined && listing !== null) {
             newTag.listing = listing
             listing.tags.push(newTag)
@@ -213,4 +220,9 @@ export const graphqlRoot: Resolvers<Context> = {
       resolve: (payload: any) => payload,
     },
   },
+  // Listing: {
+  //   comments: (self, arg, ctx)=> {
+  //     return Comment.find() as any
+  //   },
+  // }
 }

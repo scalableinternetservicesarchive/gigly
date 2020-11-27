@@ -37,5 +37,4 @@ export class Comment extends BaseEntity {
   @Column()
   userPic: string
 
-
 }
