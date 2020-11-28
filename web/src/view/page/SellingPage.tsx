@@ -3,7 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import Modal from 'react-modal'
 import { getApolloClient } from '../../graphql/apolloClient'
-import { FetchListings, TagType } from '../../graphql/query.gen'
+import { FetchListings, FetchListing_listing_tags, TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
@@ -92,11 +92,17 @@ export function SellingPage(props: LecturesPageProps) {
   const [serviceDescriptionEdited, setServiceDescriptionEdited] = React.useState<string>('')
   const [serviceImageEdited, setServiceImageEdited] = React.useState<string>('')
   const [showPopup, setShowPopup] = React.useState<boolean>(false)
+  const [showTags, setShowTags] = React.useState<TagType[]>([])
   // const [go, setGo] = React.useState<boolean>(false)
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
     setListingToEdit(id)
     setShowPopup(true)
+  }
+
+  const _setShowTags = (tag: TagType) => {
+    if (!showTags.includes(tag)) setShowTags(showTags.concat(tag))
+    else setShowTags(showTags.filter(t => t !== tag))
   }
 
   let cards: CardData[] = []
@@ -122,8 +128,6 @@ export function SellingPage(props: LecturesPageProps) {
       })
     })
 
-    console.log(cards)
-
     // Filter from searchbar
     let filteredCards = cards.filter(card => {
       return (
@@ -131,6 +135,17 @@ export function SellingPage(props: LecturesPageProps) {
         card.username.toLowerCase().includes(search.toLowerCase())
       )
     })
+    // Filter from selected tags, if selected
+    if (showTags.length !== 0)
+      filteredCards = cards.filter(card => {
+        let show = false
+        showTags.forEach(tag => {
+          card.tags.forEach(t => {
+            if (((t as unknown) as FetchListing_listing_tags).type === tag) show = true
+          })
+        })
+        return show
+      })
     // const {loading: loading2, data: data2} = useQuery(fetchUser3);
     // if (loading2) return (<h1>loading...</h1>)
 
@@ -189,6 +204,39 @@ export function SellingPage(props: LecturesPageProps) {
                   $clicked={selectedSort === HeaderItems.LOW_TO_HIGH}
                 >
                   Low to High
+                </SideBarItem>
+                <SideBarHeader>FILTER BY TAG</SideBarHeader>
+                <SideBarItem
+                  onClick={() => {
+                    _setShowTags(TagType.GROCERIES)
+                  }}
+                  $clicked={showTags.includes(TagType.GROCERIES)}
+                >
+                  GROCERIES
+                </SideBarItem>
+                <SideBarItem
+                  onClick={() => {
+                    _setShowTags(TagType.HAIRCUT)
+                  }}
+                  $clicked={showTags.includes(TagType.HAIRCUT)}
+                >
+                  HAIRCUT
+                </SideBarItem>
+                <SideBarItem
+                  onClick={() => {
+                    _setShowTags(TagType.TUTORING)
+                  }}
+                  $clicked={showTags.includes(TagType.TUTORING)}
+                >
+                  TUTORING
+                </SideBarItem>
+                <SideBarItem
+                  onClick={() => {
+                    _setShowTags(TagType.OTHER)
+                  }}
+                  $clicked={showTags.includes(TagType.OTHER)}
+                >
+                  OTHER
                 </SideBarItem>
               </div>
             </div>
@@ -448,7 +496,6 @@ export function SellingPage(props: LecturesPageProps) {
       </>
     )
   } else {
-    // Failed GraphQL query :(( fall back on this dummy data
     return <div>yikes</div>
   }
   function handleSubmit(
