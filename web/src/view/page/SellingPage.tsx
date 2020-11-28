@@ -137,10 +137,11 @@ export function SellingPage(props: LecturesPageProps) {
     })
     // Filter from selected tags, if selected
     if (showTags.length !== 0)
-      filteredCards = cards.filter(card => {
+      filteredCards = filteredCards.filter(card => {
         let show = false
         showTags.forEach(tag => {
           card.tags.forEach(t => {
+            // Sorry this casting got really ugly :')
             if (((t as unknown) as FetchListing_listing_tags).type === tag) show = true
           })
         })
