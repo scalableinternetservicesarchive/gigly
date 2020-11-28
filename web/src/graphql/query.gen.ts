@@ -156,6 +156,11 @@ export interface FetchListings_listings_comments {
   userId: number;
 }
 
+export interface FetchListings_listings_tags {
+  __typename: "Tag";
+  type: TagType;
+}
+
 export interface FetchListings_listings {
   __typename: "Listing";
   id: number;
@@ -164,6 +169,7 @@ export interface FetchListings_listings {
   sellingName: string;
   image: string;
   comments: (FetchListings_listings_comments | null)[];
+  tags: (FetchListings_listings_tags | null)[];
 }
 
 export interface FetchListings {
