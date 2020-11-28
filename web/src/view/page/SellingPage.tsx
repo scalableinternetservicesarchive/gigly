@@ -23,6 +23,7 @@ interface CardData {
   profPic: string
   price: number
   image: string
+  tags: TagType[]
 }
 
 enum HeaderItems {
@@ -102,17 +103,26 @@ export function SellingPage(props: LecturesPageProps) {
   if (data) {
     const cards: CardData[] = []
     data?.listings?.map((listing, index) => {
+      const tagList: TagType[] = []
+      listing.tags.forEach(tag => {
+        if (tag) {
+          tagList.push((tag as unknown) as TagType)
+        }
+      })
       cards.push({
         id: listing.id ?? index,
         serviceName: listing.sellingName,
         username: listing.username,
         price: listing.price ?? 0,
         image: listing.image,
+        tags: tagList,
 
         profPic:
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
       })
     })
+
+    console.log(cards)
 
     // Filter from searchbar
     let filteredCards = cards.filter(card => {
