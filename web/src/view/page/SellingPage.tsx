@@ -3,7 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import Modal from 'react-modal'
 import { getApolloClient } from '../../graphql/apolloClient'
-import { FetchListings, TagType } from '../../graphql/query.gen'
+import { FetchListings, FetchListing_listing_tags, TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
@@ -23,6 +23,7 @@ interface CardData {
   profPic: string
   price: number
   image: string
+  tags: TagType[]
 }
 
 enum HeaderItems {
@@ -91,6 +92,7 @@ export function SellingPage(props: LecturesPageProps) {
   const [serviceDescriptionEdited, setServiceDescriptionEdited] = React.useState<string>('')
   const [serviceImageEdited, setServiceImageEdited] = React.useState<string>('')
   const [showPopup, setShowPopup] = React.useState<boolean>(false)
+  const [showTags, setShowTags] = React.useState<TagType[]>([])
   // const [go, setGo] = React.useState<boolean>(false)
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
@@ -98,16 +100,28 @@ export function SellingPage(props: LecturesPageProps) {
     setShowPopup(true)
   }
 
+  const _setShowTags = (tag: TagType) => {
+    if (!showTags.includes(tag)) setShowTags(showTags.concat(tag))
+    else setShowTags(showTags.filter(t => t !== tag))
+  }
+
   let cards: CardData[] = []
   if (data) {
     const cards: CardData[] = []
     data?.listings?.map((listing, index) => {
+      const tagList: TagType[] = []
+      listing.tags.forEach(tag => {
+        if (tag) {
+          tagList.push((tag as unknown) as TagType)
+        }
+      })
       cards.push({
         id: listing.id ?? index,
         serviceName: listing.sellingName,
         username: listing.username,
         price: listing.price ?? 0,
         image: listing.image,
+        tags: tagList,
 
         profPic:
           'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
@@ -121,6 +135,18 @@ export function SellingPage(props: LecturesPageProps) {
         card.username.toLowerCase().includes(search.toLowerCase())
       )
     })
+    // Filter from selected tags, if selected
+    if (showTags.length !== 0)
+      filteredCards = filteredCards.filter(card => {
+        let show = false
+        showTags.forEach(tag => {
+          card.tags.forEach(t => {
+            // Sorry this casting got really ugly :')
+            if (((t as unknown) as FetchListing_listing_tags).type === tag) show = true
+          })
+        })
+        return show
+      })
     // const {loading: loading2, data: data2} = useQuery(fetchUser3);
     // if (loading2) return (<h1>loading...</h1>)
 
@@ -179,6 +205,39 @@ export function SellingPage(props: LecturesPageProps) {
                   $clicked={selectedSort === HeaderItems.LOW_TO_HIGH}
                 >
                   Low to High
+                </SideBarItem>
+                <SideBarHeader>FILTER BY TAG</SideBarHeader>
+                <SideBarItem
+                  onClick={() => {
+                    _setShowTags(TagType.GROCERIES)
+                  }}
+                  $clicked={showTags.includes(TagType.GROCERIES)}
+                >
+                  GROCERIES
+                </SideBarItem>
+                <SideBarItem
+                  onClick={() => {
+                    _setShowTags(TagType.HAIRCUT)
+                  }}
+                  $clicked={showTags.includes(TagType.HAIRCUT)}
+                >
+                  HAIRCUT
+                </SideBarItem>
+                <SideBarItem
+                  onClick={() => {
+                    _setShowTags(TagType.TUTORING)
+                  }}
+                  $clicked={showTags.includes(TagType.TUTORING)}
+                >
+                  TUTORING
+                </SideBarItem>
+                <SideBarItem
+                  onClick={() => {
+                    _setShowTags(TagType.OTHER)
+                  }}
+                  $clicked={showTags.includes(TagType.OTHER)}
+                >
+                  OTHER
                 </SideBarItem>
               </div>
             </div>
@@ -438,8 +497,12 @@ export function SellingPage(props: LecturesPageProps) {
       </>
     )
   } else {
+<<<<<<< HEAD
     // Failed GraphQL query :(( fall back on this dummy data
     return <div></div>
+=======
+    return <div>yikes</div>
+>>>>>>> d1160622b0fa8a570b64b2d065ae424154fb13f8
   }
   function handleSubmit(
     id: number,

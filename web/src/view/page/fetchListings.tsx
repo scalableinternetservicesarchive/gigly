@@ -12,6 +12,9 @@ export const fetchListings = gql`
         commentContents
         userId
       }
+      tags {
+        type
+      }
     }
   }
 `
