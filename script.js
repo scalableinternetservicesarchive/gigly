@@ -23,18 +23,88 @@ export const options = {
 
 export default function () {
   // recordRates(
+  // const resp = http.post(
+  //   'http://localhost:3000/graphql',
+  //   '{"operationName":"FetchListings","variables":{},"query":"query FetchListings {\n  listings {\n    id\n    username\n    price\n    sellingName\n    __typename\n  }\n}\n"}',
+  //   {
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   }
+  // )
+  // )
+  // http.post(
+  //   'http://localhost:3000/graphql',
+  //   '{"operationName":"AddListing","variables":{"input":{"username":"Julia Baylon","userId_ref":2,"price":0,"sellingName":"hello","startDate":"","endDate":"","location":"","description":"","image":""}},"query":"mutation AddListing($input: ListingInput!) {\n  addListing(listing: $input) {\n    username\n    price\n    sellingName\n    __typename\n  }\n}\n"}',
+  //   {
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  // }
+  // )
+// let query = `
+//   mutation{
+//     addComment(
+//       comment: {
+//         date: "11/26/2020 at 21:50 PM"
+//         commentContents: "testing"
+//         listingId_ref: 3
+//         userId: 2
+//         username: "Chelsey Wang"
+//         userPic: ""
+//       }) {
+//       date
+//       commentContents
+//       listing {
+//         id
+//       }
+//       userId
+//       username
+//       userPic
+//     }
+//   }`;
+//   const resp = http.post(
+//     'http://localhost:3000/graphql',
+//     JSON.stringify({ query: query }),
+//     // '{"operationName":"AddComment","variables":{"input":{"date":"11/26/2020 at 21:50 PM","commentContents":"test","listingId_ref":4,"userId":2,"username":"Chelsey Wang","userPic":"https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80"}},"query":"mutation AddComment($input: CommentInput!){\n  addComment(comment: $input) {\n    date\n    commentContents\n    listing {\n      id\n      __typename\n    }\n    userId\n    username\n    userPic\n    __typename\n  }\n}\n"}',
+//     {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     }
+//   )
+let query = `
+  mutation {
+    addListing(listing: {
+      username: "Julia Baylon"
+      userId_ref: 2
+      price: 0
+      sellingName: "hello10"
+      startDate: ""
+      endDate: ""
+      location: ""
+      description: ""
+      image: ""
+  }) {
+      username
+      price
+      sellingName
+    }
+  }
+  `;
   const resp = http.post(
     'http://localhost:3000/graphql',
-    '{"operationName":"FetchListings","variables":{},"query":"query FetchListings {\n  listings {\n    id\n    username\n    price\n    sellingName\n    __typename\n  }\n}\n"}',
+    JSON.stringify({ query: query }),
+    // '{"operationName":"AddComment","variables":{"input":{"date":"11/26/2020 at 21:50 PM","commentContents":"test","listingId_ref":4,"userId":2,"username":"Chelsey Wang","userPic":"https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80"}},"query":"mutation AddComment($input: CommentInput!){\n  addComment(comment: $input) {\n    date\n    commentContents\n    listing {\n      id\n      __typename\n    }\n    userId\n    username\n    userPic\n    __typename\n  }\n}\n"}',
     {
       headers: {
         'Content-Type': 'application/json',
       },
     }
   )
-  // )
   sleep(1)
-  http.get('http://localhost:3000')
+  // http.get('http://localhost:3000/')
+  recordRates(http.get('http://localhost:3000/app/selling'))
 }
 
 const count200 = new Counter('status_code_2xx')

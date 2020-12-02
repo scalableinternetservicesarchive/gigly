@@ -30,7 +30,6 @@ interface Post {
   description: string
 }
 
-
 export function PostFormPage(props: PostFormPageProps) {
   const [popup, showPopup] = React.useState(false)
   const [testuser, editUser] = React.useState<TestUser>({
@@ -123,7 +122,7 @@ export function PostFormPage(props: PostFormPageProps) {
     <Page>
       <div style={{ paddingTop: '80px' }}>
         {/* {popup&&<ConfirmSubmit />} */}
-        {popup && <ConfirmSubmit key={2}/>}
+        {popup && <ConfirmSubmit key={2} />}
         <form>
           <HeaderLabelText>NEW POST: </HeaderLabelText>
           {/* <p>{user === null ? 'no user' : user.name}</p> */}
@@ -268,9 +267,8 @@ export function PostFormPage(props: PostFormPageProps) {
       </div>
     </Page>
   )
-  function ConfirmSubmit()
-  {
-    return(
+  function ConfirmSubmit() {
+    return (
       <>
         <div
           style={{
@@ -283,26 +281,38 @@ export function PostFormPage(props: PostFormPageProps) {
             backgroundColor: 'grey',
           }}
         >
-          <h1 style={{
-            position: 'fixed',
-            top: '30%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}>Success! </h1>
-          <SubmitButton style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }} type="button" onClick={() => window.location.replace('/app/selling')}>
+          <h1
+            style={{
+              position: 'fixed',
+              top: '30%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            Success!{' '}
+          </h1>
+          <SubmitButton
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+            type="button"
+            onClick={() => window.location.replace('/app/selling')}
+          >
             <LabelText>Go to Selling Page</LabelText>
           </SubmitButton>
-          <SubmitButton style={{
-            position: 'fixed',
-            top: '70%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }} type="button" onClick={()=> showPopup(false)}>
+          <SubmitButton
+            style={{
+              position: 'fixed',
+              top: '70%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+            type="button"
+            onClick={() => showPopup(false)}
+          >
             <LabelText>Make Another Post</LabelText>
           </SubmitButton>
         </div>
@@ -310,8 +320,6 @@ export function PostFormPage(props: PostFormPageProps) {
     )
   }
 }
-
-
 
 const Row = style('div', { display: 'flex', flexDirection: 'row' })
 const FormInput = style('div', {

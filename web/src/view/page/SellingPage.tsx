@@ -182,12 +182,11 @@ export function SellingPage(props: LecturesPageProps) {
                 zIndex: 1,
                 top: 0,
                 left: 0,
-                backgroundColor: '#696969',
                 overflowX: 'hidden',
                 fontFamily: 'Roboto',
               }}
             >
-              <div style={{ marginTop: '100px' }}>
+              <div style={{ paddingTop: '100px', height: '100%', marginRight: '30px',backgroundColor: '#C8C8C8'}}>
                 <SideBarHeader>SORT</SideBarHeader>
                 <SideBarItem
                   onClick={() => {
@@ -467,6 +466,7 @@ export function SellingPage(props: LecturesPageProps) {
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={() => {
                   handleSubmit(
                     listingToEdit as number,
