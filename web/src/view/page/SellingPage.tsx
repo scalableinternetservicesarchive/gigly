@@ -468,6 +468,7 @@ export function SellingPage(props: LecturesPageProps) {
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={() => {
                   handleSubmit(
                     listingToEdit as number,

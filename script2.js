@@ -36,7 +36,7 @@ export const options = {
       // name of the executor to use
       executor: 'ramping-arrival-rate',
       // common scenario configuration
-      startRate: '50',
+      startRate: '30',
       timeUnit: '1s',
       // executor-specific configuration
       preAllocatedVUs: 30,
