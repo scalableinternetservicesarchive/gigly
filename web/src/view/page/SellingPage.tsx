@@ -3,7 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import Modal from 'react-modal'
 import { getApolloClient } from '../../graphql/apolloClient'
-import { FetchListings, FetchListing_listing_tags, TagType } from '../../graphql/query.gen'
+import { FetchListings, TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
@@ -112,7 +112,7 @@ export function SellingPage(props: LecturesPageProps) {
       const tagList: TagType[] = []
       listing.tags.forEach(tag => {
         if (tag) {
-          tagList.push((tag as unknown) as TagType)
+          tagList.push(tag.type)
         }
       })
       cards.push({
@@ -141,8 +141,7 @@ export function SellingPage(props: LecturesPageProps) {
         let show = false
         showTags.forEach(tag => {
           card.tags.forEach(t => {
-            // Sorry this casting got really ugly :')
-            if (((t as unknown) as FetchListing_listing_tags).type === tag) show = true
+            if (t === tag) show = true
           })
         })
         return show
