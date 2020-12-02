@@ -176,10 +176,16 @@ export const graphqlRoot: Resolvers<Context> = {
         if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
           newTag.type = type
           let listing = await Listing.findOne({ where: { id: listingId } })
-          if (listing !== undefined && listing !== null) {
-            newTag.listing = listing
-            listing.tags.push(newTag)
-            await listing.save()
+          if (listing !== undefined && listing !== null && !listing.tags.includes(newTag)) {
+            let hasTag = false
+            listing.tags.forEach(tag => {
+              if (tag.type === type) hasTag = true
+            })
+            if (!hasTag) {
+              newTag.listing = listing
+              listing.tags.push(newTag)
+              await listing.save()
+            }
           }
           await newTag.save()
           return newTag
