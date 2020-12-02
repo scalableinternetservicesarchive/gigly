@@ -559,8 +559,8 @@ export function Popup(listingId: number) {
                         </div>
                         {comment.comment != '' ? (
                           <CommentPostButtonDark
-                            // type="submit"
-                            type="button"
+                            type="submit"
+                            // type="button"
                             onClick={() => {
                               handleSubmit(comment.comment, listingId, id, name, profPic)
                             }}
