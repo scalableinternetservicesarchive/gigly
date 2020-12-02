@@ -3,12 +3,11 @@ import * as React from 'react'
 import { useContext } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { getApolloClient } from '../../../graphql/apolloClient'
-import { FetchListing } from '../../../graphql/query.gen'
+import { FetchListings_listings } from '../../../graphql/query.gen'
 import { style } from '../../../style/styled'
 import { fetchUserFromID } from '../../auth/fetchUser'
 import { UserContext } from '../../auth/user'
 import { toast } from '../../toast/toast'
-import { fetchListing } from '../fetchListings'
 import { addComment } from '../mutateComments'
 import { AvailabilityChart } from './AvailabilityChart'
 
@@ -152,7 +151,7 @@ function handleSubmit(
 }
 
 /* Version of the Popup that takes in relevant info as props, as opposed to performing its own query */
-export function PopupProps(listingId: number) {
+export function PopupProps(listingId: number, listingInfo: FetchListings_listings | null) {
   const [showing, setShowing] = React.useState('Images')
   const [curPic, setCurPic] = React.useState(0)
   const { user: curUser } = useContext(UserContext)
@@ -162,6 +161,7 @@ export function PopupProps(listingId: number) {
     name = curUser.name
     id = curUser.id
   }
+  console.log(listingInfo)
   let profPic =
     'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80'
 
@@ -194,24 +194,24 @@ export function PopupProps(listingId: number) {
   }
 
   //find the listing
-  let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {
-    variables: { listingId },
-  })
+
+  // CHANGED TO USE THE PROPS RATHER THAN PERFORM ANOTHER QUERY
+  const listingData = listingInfo
 
   let comments: Comment[] = []
-  if (listingData && listingData.listing !== null) {
+  if (listingData && listingData !== null) {
     // listing.name = listingData.listing.username
-    listing.title = listingData.listing.sellingName
-    listing.price = listingData.listing.price
-    listing.startDate = listingData.listing.startDate
-    listing.endDate = listingData.listing.endDate
-    listing.location = listingData.listing.location
-    listing.description = listingData.listing.description
+    listing.title = listingData.sellingName
+    listing.price = listingData.price
+    listing.startDate = listingData.startDate
+    listing.endDate = listingData.endDate
+    listing.location = listingData.location
+    listing.description = listingData.description
 
     //find the user who posted this
-    if (listingData.listing.userId_ref) {
+    if (listingData.userId_ref) {
       let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
-        variables: { userId: listingData.listing.userId_ref },
+        variables: { userId: listingData.userId_ref },
       })
       if (userData && userData?.user) {
         listing.name = userData?.user.name
@@ -221,8 +221,8 @@ export function PopupProps(listingId: number) {
       }
     }
 
-    if (listingData.listing.comments) {
-      listingData.listing.comments.map(comment => {
+    if (listingData.comments) {
+      listingData.comments.map(comment => {
         //No longer queries for the username corresponding to the user ID
         if (comment !== null) {
           // let userId = comment.userId
@@ -240,8 +240,8 @@ export function PopupProps(listingId: number) {
         }
       })
     }
-    if (listingData.listing.tags) {
-      listingData.listing.tags.map(tag => {
+    if (listingData.tags) {
+      listingData.tags.map(tag => {
         if (tag != null) {
           if (tag.type == 'GROCERIES') {
             listing.tags.push('groceries')
