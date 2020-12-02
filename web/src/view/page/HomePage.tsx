@@ -218,6 +218,14 @@ export function HomePage(props: HomePageProps) {
                       <SubmitButton type="submit">
                         <LabelText>Signup</LabelText>
                       </SubmitButton>
+                      <SubmitButton
+                        type="button"
+                        onClick={() => {
+                          signupFunction(signupUser)
+                        }}
+                      >
+                        <LabelText>Signup2</LabelText>
+                      </SubmitButton>
                     </div>
                   )}
                 </form>

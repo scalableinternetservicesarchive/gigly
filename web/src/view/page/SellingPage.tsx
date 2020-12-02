@@ -497,12 +497,7 @@ export function SellingPage(props: LecturesPageProps) {
       </>
     )
   } else {
-<<<<<<< HEAD
-    // Failed GraphQL query :(( fall back on this dummy data
-    return <div></div>
-=======
     return <div>yikes</div>
->>>>>>> d1160622b0fa8a570b64b2d065ae424154fb13f8
   }
   function handleSubmit(
     id: number,

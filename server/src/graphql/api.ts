@@ -221,8 +221,11 @@ export const graphqlRoot: Resolvers<Context> = {
     },
   },
   // Listing: {
-  //   comments: (self, arg, ctx)=> {
-  //     return Comment.find() as any
-  //   },
-  // }
+  // comments: (self, arg, ctx)=> {
+  //   return Comment.find() as any
+  // },
+  // tags: (self, arg, ctx) => {
+  //   return Tag.find() as any
+  // },
+  // },
 }
