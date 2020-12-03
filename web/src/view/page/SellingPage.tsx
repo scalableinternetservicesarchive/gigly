@@ -8,7 +8,7 @@ import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
-import { PopupProps } from './components/PopupProps'
+import { Popup } from './components/Popup'
 import { fetchListings } from './fetchListings'
 import { editListing } from './mutateListings'
 import { addTag } from './mutateTags'
@@ -312,7 +312,7 @@ export function SellingPage(props: LecturesPageProps) {
               Edit
             </button>
           </form>
-          {PopupProps(listingToEdit, popupData)}
+          {Popup(listingToEdit)}
         </Modal>
         <Modal isOpen={listingToEdit !== 0 && !showPopup}>
           <form>
