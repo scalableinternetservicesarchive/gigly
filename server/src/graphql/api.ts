@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { getSQLConnection } from '../db/sql'
 import { Comment } from '../entities/Comment'
 import { Listing } from '../entities/Listing'
 import { Survey } from '../entities/Survey'
@@ -10,7 +11,6 @@ import { SurveyQuestion } from '../entities/SurveyQuestion'
 import { Tag } from '../entities/Tag'
 import { User } from '../entities/User'
 import { Resolvers } from './schema.types'
-
 export const pubsub = new PubSub()
 
 export function getSchema() {
@@ -23,6 +23,7 @@ interface Context {
   request: Request
   response: Response
   pubsub: PubSub
+  sqlconnection: typeof getSQLConnection
 }
 
 export const graphqlRoot: Resolvers<Context> = {
@@ -35,7 +36,11 @@ export const graphqlRoot: Resolvers<Context> = {
       }
       return null
     },
-    user: async (_, { userId }) => (await User.findOne({ where: { id: userId } })) || null,
+    user: async (_, { userId }, { sqlconnection }) => {
+      const sql = await sqlconnection()
+      const resolve = await sql.query('SELECT * from user where id = ?', userId)
+      return resolve || null
+    }, //(await User.findOne({ where: { id: userId } })) || null,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
     listing: async (_, { listingId }) => (await Listing.findOne({ where: { id: listingId } })) || null,

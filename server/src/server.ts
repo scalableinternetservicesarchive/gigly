@@ -19,7 +19,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { checkEqual, Unpromise } from '../../common/src/util'
 import { Config } from './config'
 import { migrate } from './db/migrate'
-import { initORM } from './db/sql'
+import { getSQLConnection, initORM } from './db/sql'
 import { Session } from './entities/Session'
 import { User } from './entities/User'
 import { getSchema, graphqlRoot, pubsub } from './graphql/api'
@@ -31,7 +31,7 @@ import { renderApp } from './render'
 const server = new GraphQLServer({
   typeDefs: getSchema(),
   resolvers: graphqlRoot as any,
-  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null }),
+  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null, sqlconnection: getSQLConnection }),
 })
 
 server.express.use(cookieParser())
@@ -71,6 +71,16 @@ server.express.post(
     user.userType = UserType.User
 
     const userExist = await User.findOne({ where: { email: user.email } })
+    // const sql = await getSQLConnection()
+    // const test = await sql.query('SELECT * from user where email = ?', user.email)
+    // console.log('THIS IS TEST:')
+    // console.log(test)
+    // console.log(test.length)
+    // if (test.length > 0) {
+    //   console.log('User already exists. \n')
+    //   console.log(test)
+    //   return
+    // }
     if (userExist) {
       res.status(403).send('User Already Exist')
       return

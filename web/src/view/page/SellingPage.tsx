@@ -196,7 +196,7 @@ export function SellingPage(props: LecturesPageProps) {
                 fontFamily: 'Roboto',
               }}
             >
-              <div style={{ paddingTop: '100px', height: '100%', marginRight: '30px',backgroundColor: '#C8C8C8'}}>
+              <div style={{ paddingTop: '100px', height: '100%', marginRight: '30px', backgroundColor: '#C8C8C8' }}>
                 <SideBarHeader>SORT</SideBarHeader>
                 <SideBarItem
                   onClick={() => {

@@ -22,7 +22,7 @@ export async function initORM() {
     type: 'mysql',
     username: process.env.MYSQL_USER || 'root',
     synchronize: true,
-    logging: false,
+    logging: true,
     entities: [User, Session, Survey, SurveyQuestion, SurveyAnswer, Listing, Comment, Tag],
     extra: {
       connectionLimit: 5,
@@ -60,6 +60,11 @@ function getConnection() {
   )
 }
 
+export async function getSQLConnection() {
+  const conn = await getConnection()
+  console.log('established connection')
+  return new SQL(conn)
+}
 /**
  * Promisified {@code mysql.query}.
  */
