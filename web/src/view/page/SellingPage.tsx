@@ -3,7 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import Modal from 'react-modal'
 import { getApolloClient } from '../../graphql/apolloClient'
-import { FetchListings, TagType } from '../../graphql/query.gen'
+import { FetchListings, FetchListings_listings, TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
@@ -169,6 +169,16 @@ export function SellingPage(props: LecturesPageProps) {
     }
 
     const cardUIs = filteredCards.map(card => getCard(card, setCardToEdit))
+
+    // Get selected listing data
+    let popupData: FetchListings_listings | null = null
+    if (listingToEdit !== 0) {
+      data?.listings?.forEach(listing => {
+        if (listing.id === listingToEdit) {
+          popupData = listing
+        }
+      })
+    }
 
     return (
       <>
