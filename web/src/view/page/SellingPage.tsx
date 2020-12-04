@@ -196,7 +196,7 @@ export function SellingPage(props: LecturesPageProps) {
                 fontFamily: 'Roboto',
               }}
             >
-              <div style={{ paddingTop: '100px', height: '100%', marginRight: '30px',backgroundColor: '#C8C8C8'}}>
+              <div style={{ paddingTop: '100px', height: '100%', marginRight: '30px', backgroundColor: '#C8C8C8' }}>
                 <SideBarHeader>SORT</SideBarHeader>
                 <SideBarItem
                   onClick={() => {
@@ -290,9 +290,10 @@ export function SellingPage(props: LecturesPageProps) {
                 cursor: 'pointer',
                 backgroundColor: '#E3E3E3',
                 borderRadius: '15px',
+                padding: '10px',
               }}
             >
-              Cancel
+              Back
             </button>
             <button
               onClick={() => {
@@ -306,6 +307,7 @@ export function SellingPage(props: LecturesPageProps) {
                 cursor: 'pointer',
                 backgroundColor: '#3C82DC',
                 borderRadius: '15px',
+                padding: '10px',
               }}
             >
               Edit
@@ -332,6 +334,7 @@ export function SellingPage(props: LecturesPageProps) {
                   color: '#303030',
                   resize: 'none',
                   width: '100%',
+                  fontFamily: 'Roboto',
                 }}
                 onChange={e => setServiceNameEdited(e.target.value)}
               />
@@ -350,6 +353,7 @@ export function SellingPage(props: LecturesPageProps) {
                   color: '#303030',
                   resize: 'none',
                   width: '100%',
+                  fontFamily: 'Roboto',
                 }}
                 onChange={e => setServicePriceEdited(parseInt(e.target.value))}
               />
@@ -368,6 +372,7 @@ export function SellingPage(props: LecturesPageProps) {
                   color: '#303030',
                   resize: 'none',
                   width: '100%',
+                  fontFamily: 'Roboto',
                 }}
                 onChange={e => setServiceStartDateEdited(e.target.value)}
               />
@@ -386,6 +391,7 @@ export function SellingPage(props: LecturesPageProps) {
                   color: '#303030',
                   resize: 'none',
                   width: '100%',
+                  fontFamily: 'Roboto',
                 }}
                 onChange={e => setServiceEndDateEdited(e.target.value)}
               />
@@ -404,6 +410,7 @@ export function SellingPage(props: LecturesPageProps) {
                   color: '#303030',
                   resize: 'none',
                   width: '100%',
+                  fontFamily: 'Roboto',
                 }}
                 onChange={e => setServiceLocationEdited(e.target.value)}
               />
@@ -422,6 +429,7 @@ export function SellingPage(props: LecturesPageProps) {
                   color: '#303030',
                   resize: 'none',
                   width: '100%',
+                  fontFamily: 'Roboto',
                 }}
                 onChange={e => setServiceDescriptionEdited(e.target.value)}
               />
@@ -440,6 +448,7 @@ export function SellingPage(props: LecturesPageProps) {
                   color: '#303030',
                   resize: 'none',
                   width: '100%',
+                  fontFamily: 'Roboto',
                 }}
                 onChange={e => setServiceImageEdited(e.target.value)}
               />
@@ -457,6 +466,7 @@ export function SellingPage(props: LecturesPageProps) {
                       borderRadius: '25px',
                       display: 'inline-block',
                       cursor: 'pointer',
+                      fontFamily: 'Roboto',
                     }}
                     onClick={() => {
                       setSelectedTypes(item)
@@ -471,7 +481,13 @@ export function SellingPage(props: LecturesPageProps) {
                 onClick={() => {
                   setListingToEdit(0)
                 }}
-                style={{ fontFamily: 'Roboto', cursor: 'pointer', backgroundColor: '#E3E3E3', borderRadius: '15px' }}
+                style={{
+                  fontFamily: 'Roboto',
+                  cursor: 'pointer',
+                  backgroundColor: '#E3E3E3',
+                  borderRadius: '15px',
+                  padding: '10px',
+                }}
               >
                 Cancel
               </button>
@@ -496,6 +512,7 @@ export function SellingPage(props: LecturesPageProps) {
                   backgroundColor: '#3C82DC',
                   borderRadius: '15px',
                   marginLeft: '50px',
+                  padding: '10px',
                 }}
               >
                 Save

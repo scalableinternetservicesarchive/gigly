@@ -304,7 +304,7 @@ export function PopupProps(listingId: number, listingInfo: FetchListings_listing
             padding: '4.5%',
           }}
         >
-          <div style={{ flex: '37.5%', borderRight: '1px solid #E5E5E5', overflow: 'scroll' }}>
+          <div style={{ flex: '37.5%', borderRight: '1px solid #E5E5E5', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5%', marginTop: '2.5%' }}>
               <div
                 style={{
@@ -368,7 +368,7 @@ export function PopupProps(listingId: number, listingInfo: FetchListings_listing
               {tagsDisplay}
             </p>
           </div>
-          <div style={{ flex: '62.5%', paddingLeft: '7.5%', overflow: 'scroll' }}>
+          <div style={{ flex: '62.5%', paddingLeft: '7.5%', overflowY: 'scroll', overflowX: 'hidden' }}>
             {listing.listingTypeSelling ? (
               <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px' }}>OFFERING</h2>
             ) : (
@@ -599,4 +599,5 @@ const CommentPostButtonDark = style('button', {
   color: 'rgba(24, 160, 251, 1)',
   padding: '10px',
   fontSize: '0.9em',
+  cursor: 'pointer',
 })

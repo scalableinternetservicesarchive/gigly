@@ -140,7 +140,7 @@ function handleSubmit(
     hr = 12
   }
   let date = ''
-  if(min >= 10) {
+  if (min >= 10) {
     date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`
   } else {
     date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:0${min} ${meridiem}`
@@ -309,7 +309,7 @@ export function Popup(listingId: number) {
             padding: '4.5%',
           }}
         >
-          <div style={{ flex: '37.5%', borderRight: '1px solid #E5E5E5', overflow: 'scroll' }}>
+          <div style={{ flex: '37.5%', borderRight: '1px solid #E5E5E5', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5%', marginTop: '2.5%' }}>
               <div
                 style={{
@@ -373,7 +373,7 @@ export function Popup(listingId: number) {
               {tagsDisplay}
             </p>
           </div>
-          <div style={{ flex: '62.5%', paddingLeft: '7.5%', overflow: 'scroll' }}>
+          <div style={{ flex: '62.5%', paddingLeft: '7.5%', overflowY: 'scroll', overflowX: 'hidden' }}>
             {listing.listingTypeSelling ? (
               <h2 style={{ fontSize: '0.9em', letterSpacing: '1.25px' }}>OFFERING</h2>
             ) : (
@@ -605,4 +605,5 @@ const CommentPostButtonDark = style('button', {
   color: 'rgba(24, 160, 251, 1)',
   padding: '10px',
   fontSize: '0.9em',
+  cursor: 'pointer',
 })

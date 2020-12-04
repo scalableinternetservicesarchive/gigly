@@ -262,7 +262,6 @@ export function PostFormPage(props: PostFormPageProps) {
             <LabelText>SUBMIT</LabelText>
           </SubmitButton>
         </form>
-        <FormLabelText> service tags </FormLabelText>
         <div style={{ width: '1000px', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
       </div>
     </Page>
@@ -352,6 +351,7 @@ const SubmitButton = style('button', {
   paddingRight: '15px',
   marginLeft: 'auto',
   marginRight: 'auto',
+  cursor: 'pointer',
 })
 
 const Home = style('div', 'flex', {

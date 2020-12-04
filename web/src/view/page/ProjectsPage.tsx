@@ -22,7 +22,6 @@ interface TestUser {
 }
 
 export function ProjectsPage(props: ProjectsPageProps) {
-
   const { user: curUser } = useContext(UserContext)
   // React.useEffect(() => {
   //   editUserState({ name: user.name, email: user.email, phone: user.phone, location: user.location })
@@ -160,7 +159,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
               <SubmitButton
                 type="button"
                 onClick={() => {
-                  handleSubmit(curUser.id, user.email, user.name, user.phone, user.location, "Sample about stringg")
+                  handleSubmit(curUser.id, user.email, user.name, user.phone, user.location, 'Sample about stringg')
                 }}
               >
                 <LabelText>SUBMIT</LabelText>
@@ -226,6 +225,7 @@ const SubmitButton = style('button', {
   paddingRight: '15px',
   marginLeft: 'auto',
   marginRight: 'auto',
+  cursor: 'pointer',
 })
 const LabelText = style('h1', { fontSize: '0.9em', letterSpacing: '1.25px' })
 const HeaderLabelText = style('h1', { fontSize: '1.2em', letterSpacing: '1.25px' })
