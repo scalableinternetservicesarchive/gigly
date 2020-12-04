@@ -22,7 +22,7 @@ import { migrate } from './db/migrate'
 import { initORM } from './db/sql'
 import { Session } from './entities/Session'
 import { User } from './entities/User'
-import { getSchema, graphqlRoot, pubsub } from './graphql/api'
+import { getSchema, graphqlRoot, pubsub /*, redis*/ } from './graphql/api'
 import { ConnectionManager } from './graphql/ConnectionManager'
 import { UserType } from './graphql/schema.types'
 import { expressLambdaProxy } from './lambda/handler'
@@ -31,7 +31,7 @@ import { renderApp } from './render'
 const server = new GraphQLServer({
   typeDefs: getSchema(),
   resolvers: graphqlRoot as any,
-  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null }),
+  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null/*, redis: redis*/ }),
 })
 
 server.express.use(cookieParser())
@@ -51,6 +51,12 @@ server.express.get('/app/*', (req, res) => {
   console.log('GET /app')
   renderApp(req, res)
 })
+
+// server.express.get('/redis', async (req, res) => {
+//   // const redisResponse = await redis.set('foo', 'bar2')
+//   const redisResponse = await redis.get('foo')
+//   res.status(200).type('json').send(redisResponse)
+// })
 
 const SESSION_DURATION = 30 * 24 * 60 * 60 * 1000 // 30 days
 
