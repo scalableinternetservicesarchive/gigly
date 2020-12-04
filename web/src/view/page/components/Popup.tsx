@@ -133,13 +133,18 @@ function handleSubmit(
   let min = dateTime.getMinutes()
   if (hr >= 12) {
     meridiem = 'PM'
-    if (hr < 12) {
+    if (hr > 12) {
       hr = hr % 12
     }
   } else if (hr == 0) {
     hr = 12
   }
-  let date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`
+  let date = ''
+  if(min >= 10) {
+    date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`
+  } else {
+    date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:0${min} ${meridiem}`
+  }
 
   addComment(getApolloClient(), { date, commentContents, listingId_ref, userId, username, userPic })
     .then(() => {
