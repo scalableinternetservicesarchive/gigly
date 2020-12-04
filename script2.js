@@ -2,50 +2,38 @@ import http from 'k6/http'
 import { check, sleep } from 'k6'
 import { Counter, Rate } from 'k6/metrics'
 export let errorRate = new Rate('errors');
+const listings = 100
 export const options = {
   scenarios: {
+    signup: {
+      executor: 'constant-vus',
+      exec: 'signup',
+      vus: 60,
+      duration: '10s',
+    },
     createListing: {
-      // name of the executor to use
-      executor: 'ramping-arrival-rate',
-      // common scenario configuration
-      startRate: '50',
-      timeUnit: '1s',
-      // executor-specific configuration
-      preAllocatedVUs: 80,
-      maxVUs: 160,
-      stages: [
-        { target: 100, duration: '30s' },
-        { target: 0, duration: '30s' },
-      ],
+      executor: 'per-vu-iterations',
+      exec: 'createListing',
+      vus: 100,
+      iterations: 1,
+      startTime: '10s',
+      maxDuration: '10s',
     },
     addComments: {
-      // name of the executor to use
-      executor: 'ramping-arrival-rate',
-      // common scenario configuration
-      startRate: '50',
-      timeUnit: '1s',
-      // executor-specific configuration
-      preAllocatedVUs: 120,
-      maxVUs: 240,
-      stages: [
-        { target: 100, duration: '30s' },
-        { target: 0, duration: '30s' },
-      ],
+      executor: 'per-vu-iterations',
+      exec: 'addComments',
+      vus: 150,
+      startTime: '20s',
+      maxDuration: '20s',
     },
-    signup: {
-      // name of the executor to use
-      executor: 'ramping-arrival-rate',
-      // common scenario configuration
-      startRate: '30',
-      timeUnit: '1s',
-      // executor-specific configuration
-      preAllocatedVUs: 30,
-      maxVUs: 60,
-      stages: [
-        { target: 60, duration: '30s' },
-        { target: 0, duration: '30s' },
-      ],
+    addTags: {
+      executor: 'per-vu-iterations',
+      exec: 'addTags',
+      vus: 100,
+      startTime: '20s',
+      maxDuration: '20s',
     },
+
   },
 }
 
@@ -53,6 +41,7 @@ export default function() {
   signup()
   createListing()
   addComments()
+  addTags()
   sleep(1)
   recordRates(http.get('http://localhost:3000/app/selling'))
   recordRates(http.get('http://localhost:3000/app/projects')) //my account endpoint
@@ -119,7 +108,7 @@ export function addComments (){
         comment: {
           date: "11/26/2020 at 21:50 PM"
           commentContents: "testing"
-          listingId_ref: ${__VU}
+          listingId_ref: ${Math.floor((Math.random() * listings + 1))}
           userId: 2
           username: "Chelsey Wang"
           userPic: ""
@@ -134,6 +123,35 @@ export function addComments (){
         userPic
       }
     }`;
+  const resp = http.post(
+    'http://localhost:3000/graphql',
+    JSON.stringify({ query: query }),
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  sleep(1)
+}
+const tags = ["GROCERIES", "TUTORING", "HAIRCUT", "OTHER"]
+//         type: ${tags[Math.floor((Math.random() * 4) + 1)]}
+
+
+export function addTags (){
+  let query = `mutation{
+    addTag(
+      tag: {
+        type: ${tags[Math.floor((Math.random() * 4))]}
+        listingId: ${Math.floor((Math.random() * listings + 1))}
+      }
+    ){
+      type
+      listing{
+        id
+      }
+    }
+  }`;
   const resp = http.post(
     'http://localhost:3000/graphql',
     JSON.stringify({ query: query }),
