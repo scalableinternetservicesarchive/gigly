@@ -247,7 +247,7 @@ export function PostFormPage(props: PostFormPageProps) {
             type="button"
             onClick={() => {
               handleSubmit(
-                testuser.name,
+                user.name,
                 user.id,
                 post.price,
                 post.name,
