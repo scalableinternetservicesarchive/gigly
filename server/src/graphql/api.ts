@@ -49,7 +49,7 @@ export const graphqlRoot: Resolvers<Context> = {
       return null
     },
     listings: () => Listing.find(),
-    comments: () => Comment.find(),
+    // comments: () => Comment.find(),
   },
   Mutation: {
     answerSurvey: async (_, { input }, ctx) => {
@@ -237,10 +237,10 @@ export const graphqlRoot: Resolvers<Context> = {
   },
   Listing: {
     comments: (self, arg, ctx)=> {
-      return Comment.find() as any
+      return Comment.find({where: {listing: self }}) as any
     },
     tags: (self, arg, ctx) => {
-      return Tag.find() as any
+      return Tag.find({where: {listing: self }}) as any
     },
   },
   // User: {
