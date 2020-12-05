@@ -67,17 +67,18 @@ export const graphqlRoot: Resolvers<Context> = {
      }
       return null
     },
-    listings: () => {
-      const ap = Listing.find()
-      console.log("TYPEORM:\n")
-      console.log(ap)
-      return ap || null
+    listings: () => Listing.find(),
+    // {
+    //   const ap = Listing.find()
+    //   console.log("TYPEORM:\n")
+    //   console.log(ap)
+    //   return ap || null
       // const sql = await getSQLConnection()
       // const ret = await sql.query('SELECT * from listing')
       // console.log("SQL listings: \n")
       // console.log(ret)
       // return ret || null
-    },
+    // },
     // comments: async () => {
     //   const ap = Comment.find()
     //   console.log("TYPEORM COMMENT:\n")

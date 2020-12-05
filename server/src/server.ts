@@ -73,7 +73,6 @@ server.express.post(
     user.number = req.body.number
     user.location = req.body.location
     user.about = ''
-    // password
     user.userType = UserType.User
 
     const userExist = await User.findOne({ where: { email: user.email } })
@@ -84,11 +83,14 @@ server.express.post(
 
     // save the User model to the database, refresh `user` to get ID
     // user = await user.save()
-    const sql = await getSQLConnection()
-    const input = "\""+req.body.password+"\"" + ","+ "\""+req.body.number+"\""+","+"\""+req.body.location+"\""+","+"\""+"Hello! This is my about section. "+"\""+","+"\""+req.body.email+"\""+","+"2,"+"\""+req.body.name+"\""
-    const kms = await sql.insertAutoId("user", user)
-    console.log("SQL USER: ")
-    console.log(kms)
+
+    // const kms = await (await getSQLConnection()).insertAutoId("user", user)
+    const dynamicInput = "\""+req.body.email+"\", \""+req.body.name+"\", \""+req.body.password+"\", \""+req.body.number+"\", \""+req.body.location+"\", \""+"aboot"+"\", 2"
+    const dIn = "insert into user (email, name, password, number, location, about, userType) values (" + dynamicInput + ");"
+    const kms = await (await getSQLConnection()).query(dIn)
+    // const kms = await (await getSQLConnection()).query("insert into user (email, name, password, number, location, about, userType) values (?);", dynamicInput) // doesn't work :(
+    // const kms = await (await getSQLConnection()).query("insert into user (email, name, password, number, location, about, userType) values (\"die@gmail.com\", \"??\", \"test\", \"123123123\", \"?\", \"t\", 2);", req.body.name, req.body.location) // doesn't work :(
+    // const kms = await (await getSQLConnection()).query("insert into user (email, name, password, number, location, about, userType) values (\"t@gmail.com\", \"t\", \"test\", \"123123123\", \"t\", \"t\", 2);")
     const authToken = await createSession(user)
     res
       .status(200)
