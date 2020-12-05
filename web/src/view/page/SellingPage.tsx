@@ -1,4 +1,5 @@
-import { useQuery } from '@apollo/client'
+import { InMemoryCache, useQuery } from '@apollo/client'
+import { offsetLimitPagination } from '@apollo/client/utilities'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import Modal from 'react-modal'
@@ -80,8 +81,25 @@ const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function SellingPage(props: LecturesPageProps) {
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          feed: offsetLimitPagination(['type']),
+        },
+      },
+    },
+  })
+
   const [search, setSearch] = React.useState<string>('')
-  const { data } = useQuery<FetchListings>(fetchListings)
+  const { data, fetchMore } = useQuery<FetchListings>(fetchListings, {
+    variables: {
+      type: 'PUBLIC',
+      offset: 0,
+      limit: 1,
+    },
+  })
+  console.log(data)
   const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)
   const [listingToEdit, setListingToEdit] = React.useState<number>(0) // 0 means don't show the editing window!
   const [serviceNameEdited, setServiceNameEdited] = React.useState<string>('')
@@ -273,6 +291,27 @@ export function SellingPage(props: LecturesPageProps) {
               style={{ flexDirection: 'row', flexWrap: 'wrap', paddingTop: '80px', maxWidth: '1000px' }}
             >
               {cardUIs}
+            </div>
+            <div
+              style={{
+                fontFamily: 'Roboto',
+                textAlign: 'center',
+                backgroundColor: '#3C82DC',
+                marginLeft: '43%',
+                marginRight: '43%',
+                borderRadius: '25px',
+                color: 'white',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                fetchMore({
+                  variables: {
+                    offset: data.listings?.length,
+                  },
+                })
+              }}
+            >
+              LOAD MORE
             </div>
           </div>
         </Page>
