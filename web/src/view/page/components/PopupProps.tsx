@@ -3,12 +3,11 @@ import * as React from 'react'
 import { useContext } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { getApolloClient } from '../../../graphql/apolloClient'
-import { FetchListing } from '../../../graphql/query.gen'
+import { FetchListings_listings } from '../../../graphql/query.gen'
 import { style } from '../../../style/styled'
 import { fetchUserFromID } from '../../auth/fetchUser'
 import { UserContext } from '../../auth/user'
 import { toast } from '../../toast/toast'
-import { fetchListing } from '../fetchListings'
 import { addComment } from '../mutateComments'
 import { AvailabilityChart } from './AvailabilityChart'
 
@@ -133,18 +132,13 @@ function handleSubmit(
   let min = dateTime.getMinutes()
   if (hr >= 12) {
     meridiem = 'PM'
-    if (hr > 12) {
+    if (hr < 12) {
       hr = hr % 12
     }
   } else if (hr == 0) {
     hr = 12
   }
-  let date = ''
-  if (min >= 10) {
-    date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`
-  } else {
-    date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:0${min} ${meridiem}`
-  }
+  let date = `${month < 10 ? `0${month}` : `${month}`}/${d}/${year} at ${hr}:${min} ${meridiem}`
 
   addComment(getApolloClient(), { date, commentContents, listingId_ref, userId, username, userPic })
     .then(() => {
@@ -156,7 +150,8 @@ function handleSubmit(
     })
 }
 
-export function Popup(listingId: number) {
+/* Version of the Popup that takes in relevant info as props, as opposed to performing its own query */
+export function PopupProps(listingId: number, listingInfo: FetchListings_listings | null) {
   const [showing, setShowing] = React.useState('Images')
   const [curPic, setCurPic] = React.useState(0)
   const { user: curUser } = useContext(UserContext)
@@ -198,24 +193,24 @@ export function Popup(listingId: number) {
   }
 
   //find the listing
-  let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {
-    variables: { listingId },
-  })
+
+  // CHANGED TO USE THE PROPS RATHER THAN PERFORM ANOTHER QUERY
+  const listingData = listingInfo
 
   let comments: Comment[] = []
-  if (listingData && listingData.listing !== null) {
+  if (listingData && listingData !== null) {
     // listing.name = listingData.listing.username
-    listing.title = listingData.listing.sellingName
-    listing.price = listingData.listing.price
-    listing.startDate = listingData.listing.startDate
-    listing.endDate = listingData.listing.endDate
-    listing.location = listingData.listing.location
-    listing.description = listingData.listing.description
+    listing.title = listingData.sellingName
+    listing.price = listingData.price
+    listing.startDate = listingData.startDate
+    listing.endDate = listingData.endDate
+    listing.location = listingData.location
+    listing.description = listingData.description
 
     //find the user who posted this
-    if (listingData.listing.userId_ref) {
+    if (listingData.userId_ref) {
       let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
-        variables: { userId: listingData.listing.userId_ref },
+        variables: { userId: listingData.userId_ref },
       })
       if (userData && userData?.user) {
         listing.name = userData?.user.name
@@ -225,8 +220,8 @@ export function Popup(listingId: number) {
       }
     }
 
-    if (listingData.listing.comments) {
-      listingData.listing.comments.map(comment => {
+    if (listingData.comments) {
+      listingData.comments.map(comment => {
         //No longer queries for the username corresponding to the user ID
         if (comment !== null) {
           // let userId = comment.userId
@@ -244,8 +239,8 @@ export function Popup(listingId: number) {
         }
       })
     }
-    if (listingData.listing.tags) {
-      listingData.listing.tags.map(tag => {
+    if (listingData.tags) {
+      listingData.tags.map(tag => {
         if (tag != null) {
           if (tag.type == 'GROCERIES') {
             listing.tags.push('groceries')
@@ -565,7 +560,6 @@ export function Popup(listingId: number) {
                         {comment.comment != '' ? (
                           <CommentPostButtonDark
                             type="submit"
-                            // type="button"
                             onClick={() => {
                               handleSubmit(comment.comment, listingId, id, name, profPic)
                             }}

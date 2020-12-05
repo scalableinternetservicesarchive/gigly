@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
+// import Redis from 'ioredis'
 import path from 'path'
 import { check } from '../../../common/src/util'
 import { Comment } from '../entities/Comment'
@@ -12,6 +13,7 @@ import { User } from '../entities/User'
 import { Resolvers } from './schema.types'
 
 export const pubsub = new PubSub()
+// export const redis = new Redis()
 
 export function getSchema() {
   const schema = readFileSync(path.join(__dirname, 'schema.graphql'))
@@ -23,6 +25,7 @@ interface Context {
   request: Request
   response: Response
   pubsub: PubSub
+  // redis: Redis.Redis
 }
 
 export const graphqlRoot: Resolvers<Context> = {
@@ -38,7 +41,13 @@ export const graphqlRoot: Resolvers<Context> = {
     user: async (_, { userId }) => (await User.findOne({ where: { id: userId } })) || null,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
-    listing: async (_, { listingId }) => (await Listing.findOne({ where: { id: listingId } })) || null,
+    listing: async (_, { listingId }) => {
+      const l = await Listing.findOne({ where: { id: listingId } })
+      if (l) {
+        return l
+      }
+      return null
+    },
     listings: () => Listing.find(),
     comments: () => Comment.find(),
   },

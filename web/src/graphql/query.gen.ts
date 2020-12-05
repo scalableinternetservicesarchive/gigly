@@ -154,6 +154,9 @@ export interface FetchListings_listings_comments {
   __typename: "Comment";
   commentContents: string;
   userId: number;
+  username: string;
+  userPic: string;
+  date: string;
 }
 
 export interface FetchListings_listings_tags {
@@ -167,9 +170,14 @@ export interface FetchListings_listings {
   username: string;
   price: number | null;
   sellingName: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  description: string;
   image: string;
   comments: (FetchListings_listings_comments | null)[];
   tags: (FetchListings_listings_tags | null)[];
+  userId_ref: number;
 }
 
 export interface FetchListings {

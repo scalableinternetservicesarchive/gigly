@@ -7,14 +7,22 @@ export const fetchListings = gql`
       username
       price
       sellingName
+      startDate
+      endDate
+      location
+      description
       image
       comments {
         commentContents
         userId
+        username
+        userPic
+        date
       }
       tags {
         type
       }
+      userId_ref
     }
   }
 `

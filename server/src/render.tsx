@@ -57,7 +57,7 @@ export function renderApp(req: Request, res: Response) {
             <meta charSet="utf8" />
             <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <link rel="shortcut icon" href={`/app/assets/favicon${Config.isProd ? '' : '-dev'}.ico`} />
+            <link rel="shortcut icon" href={`/app/assets/dolphin.ico`} />
             <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css" />
             <link rel="stylesheet" href="/app/css/app.css" />
             <script

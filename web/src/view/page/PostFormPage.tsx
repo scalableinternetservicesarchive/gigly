@@ -88,6 +88,10 @@ export function PostFormPage(props: PostFormPageProps) {
         // showPopup(true)
         window.location.replace('/app/selling')
         toast('submitted!')
+<<<<<<< HEAD
+=======
+        window.location.replace('/app/selling')
+>>>>>>> 81c32f6231419225e12f75555ea31da29d0a3d7e
       })
       .catch(err => {
         console.log('oops')
@@ -247,7 +251,7 @@ export function PostFormPage(props: PostFormPageProps) {
             type="button"
             onClick={() => {
               handleSubmit(
-                testuser.name,
+                user.name,
                 user.id,
                 post.price,
                 post.name,
@@ -262,7 +266,6 @@ export function PostFormPage(props: PostFormPageProps) {
             <LabelText>SUBMIT</LabelText>
           </SubmitButton>
         </form>
-        <FormLabelText> service tags </FormLabelText>
         <div style={{ width: '1000px', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
       </div>
     </Page>
@@ -352,6 +355,7 @@ const SubmitButton = style('button', {
   paddingRight: '15px',
   marginLeft: 'auto',
   marginRight: 'auto',
+  cursor: 'pointer',
 })
 
 const Home = style('div', 'flex', {
