@@ -22,7 +22,7 @@ import { migrate } from './db/migrate'
 import { initORM } from './db/sql'
 import { Session } from './entities/Session'
 import { User } from './entities/User'
-import { getSchema, graphqlRoot, pubsub /*, redis*/ } from './graphql/api'
+import { getSchema, graphqlRoot, pubsub, redis } from './graphql/api'
 import { ConnectionManager } from './graphql/ConnectionManager'
 import { UserType } from './graphql/schema.types'
 import { expressLambdaProxy } from './lambda/handler'
@@ -31,7 +31,7 @@ import { renderApp } from './render'
 const server = new GraphQLServer({
   typeDefs: getSchema(),
   resolvers: graphqlRoot as any,
-  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null/*, redis: redis*/ }),
+  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null, redis: redis }),
 })
 
 server.express.use(cookieParser())
@@ -52,11 +52,24 @@ server.express.get('/app/*', (req, res) => {
   renderApp(req, res)
 })
 
-// server.express.get('/redis', async (req, res) => {
-//   // const redisResponse = await redis.set('foo', 'bar2')
-//   const redisResponse = await redis.get('foo')
-//   res.status(200).type('json').send(redisResponse)
-// })
+//endpoint that shows the emails that are currently in Redis cache
+server.express.get('/redis', async (req, res) => {
+  const rTest = await redis.smembers('userEmails')
+  res.status(200).type('json').send(rTest)
+})
+
+//must hit this endpoint once in order to populate the Redis cache with the email data
+//(afterward, though, any new users will have their emails added to the Redis cache)
+server.express.get('/initredis', async (req, res) => {
+  const allUsers = await User.find()
+  console.log(allUsers.length)
+  let i = 0
+  for(i; i < allUsers.length; i++) {
+    await redis.sadd('userEmails', allUsers[i].email)
+  }
+  const rTest = await redis.smembers('userEmails')
+  res.status(200).type('json').send(rTest)
+})
 
 const SESSION_DURATION = 30 * 24 * 60 * 60 * 1000 // 30 days
 
@@ -76,11 +89,14 @@ server.express.post(
     // password
     user.userType = UserType.User
 
-    const userExist = await User.findOne({ where: { email: user.email } })
+    //Check Redis cache to see if this user email already exists
+    const userExist = await redis.sismember('userEmails', user.email)
+    // const userExist = await User.findOne({ where: { email: user.email } })
     if (userExist) {
-      res.status(403).send('User Already Exist')
+      res.status(403).send('User Already Exists')
       return
     }
+    await redis.sadd('userEmails', user.email)
 
     // save the User model to the database, refresh `user` to get ID
     user = await user.save()

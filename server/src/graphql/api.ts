@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
-// import Redis from 'ioredis'
+import Redis from 'ioredis'
 import path from 'path'
 import { check } from '../../../common/src/util'
 import { Comment } from '../entities/Comment'
@@ -13,7 +13,7 @@ import { User } from '../entities/User'
 import { Resolvers } from './schema.types'
 
 export const pubsub = new PubSub()
-// export const redis = new Redis()
+export const redis = new Redis()
 
 export function getSchema() {
   const schema = readFileSync(path.join(__dirname, 'schema.graphql'))
@@ -25,7 +25,7 @@ interface Context {
   request: Request
   response: Response
   pubsub: PubSub
-  // redis: Redis.Redis
+  redis: Redis.Redis
 }
 
 export const graphqlRoot: Resolvers<Context> = {
@@ -202,12 +202,15 @@ export const graphqlRoot: Resolvers<Context> = {
       }
       return null
     },
-    editUser: async (_, { editInfo }, ctx) => {
+    editUser: async (_, { editInfo }, {redis}) => {
       if (editInfo !== undefined && editInfo !== null) {
         const { id, email, name, password, number, location, about } = editInfo
         let user = await User.findOne({ where: { email: email } })
         if (user !== undefined) {
           if (email) {
+            //replace old email with new email in Redis cache
+            await redis.srem('userEmails', user.email)
+            await redis.sadd('userEmails', email)
             user.email = email
           }
           if (name) {
