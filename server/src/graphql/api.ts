@@ -3,6 +3,7 @@ import { PubSub } from 'graphql-yoga'
 // import Redis from 'ioredis'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { getSQLConnection } from '../db/sql'
 import { Comment } from '../entities/Comment'
 import { Listing } from '../entities/Listing'
 import { Survey } from '../entities/Survey'
@@ -38,18 +39,57 @@ export const graphqlRoot: Resolvers<Context> = {
       }
       return null
     },
-    user: async (_, { userId }) => (await User.findOne({ where: { id: userId } })) || null,
+    user: async (_, { userId }) =>
+    {
+      const sql = await getSQLConnection()
+      const ret = await sql.query('SELECT * from user where id = ?', userId)
+      return ret[0] || null
+    },
+    // (await User.findOne({ where: { id: userId } })) || null,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
-    listing: async (_, { listingId }) => {
+    listing: async (_, { listingId }) =>
+    // {
+    //   const sql = await getSQLConnection()
+    //   const ret = await sql.query('SELECT * from listing where id = ?', listingId)
+    //   const l = await Listing.findOne({ where: { id: listingId } })
+    //   console.log("TYPEORM:\n")
+    //   console.log(l)
+    //   console.log("SQL: \n")
+    //   console.log(ret[0])
+    //   return ret[0] || null
+    // },
+    {
       const l = await Listing.findOne({ where: { id: listingId } })
       if (l) {
         return l
-      }
+     }
       return null
     },
-    listings: () => Listing.find(),
-    comments: () => Comment.find(),
+    listings: () => {
+      const ap = Listing.find()
+      console.log("TYPEORM:\n")
+      console.log(ap)
+      return ap || null
+      // const sql = await getSQLConnection()
+      // const ret = await sql.query('SELECT * from listing')
+      // console.log("SQL listings: \n")
+      // console.log(ret)
+      // return ret || null
+    },
+    comments: async () => {
+      const ap = Comment.find()
+      console.log("TYPEORM COMMENT:\n")
+      console.log(ap)
+      // return ap || null
+      const sql = await getSQLConnection()
+      const ret = await sql.query('SELECT * from comment')
+      console.log("SQL comment: \n")
+      console.log(ret)
+      return ret || null
+    },
+    // listings: () => Listing.find(),
+    // comments: () => Comment.find(),
   },
   Mutation: {
     answerSurvey: async (_, { input }, ctx) => {

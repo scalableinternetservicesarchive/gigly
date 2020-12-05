@@ -60,6 +60,12 @@ function getConnection() {
   )
 }
 
+export async function getSQLConnection() {
+  const conn = await getConnection()
+  console.log('established connection')
+  return new SQL(conn)
+}
+
 /**
  * Promisified {@code mysql.query}.
  */
