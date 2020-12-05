@@ -86,8 +86,8 @@ export function PostFormPage(props: PostFormPageProps) {
     })
       .then(() => {
         // showPopup(true)
-        toast('submitted!')
         window.location.replace('/app/selling')
+        toast('submitted!')
       })
       .catch(err => {
         console.log('oops')

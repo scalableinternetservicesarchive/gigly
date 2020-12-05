@@ -275,12 +275,17 @@ export const graphqlRoot: Resolvers<Context> = {
       resolve: (payload: any) => payload,
     },
   },
-  // Listing: {
-  // comments: (self, arg, ctx)=> {
-  //   return Comment.find() as any
-  // },
-  // tags: (self, arg, ctx) => {
-  //   return Tag.find() as any
-  // },
+  Listing: {
+    comments: (self, arg, ctx)=> {
+      return Comment.find() as any
+    },
+    tags: (self, arg, ctx) => {
+      return Tag.find() as any
+    },
+  },
+  // User: {
+  //   listings: (self, arg, ctx) => {
+  //     return Listing.find() as any
+  //   },
   // },
 }
