@@ -62,7 +62,6 @@ server.express.get('/redis', async (req, res) => {
 //(afterward, though, any new users will have their emails added to the Redis cache)
 server.express.get('/initredis', async (req, res) => {
   const allUsers = await User.find()
-  console.log(allUsers.length)
   let i = 0
   for(i; i < allUsers.length; i++) {
     await redis.sadd('userEmails', allUsers[i].email)
