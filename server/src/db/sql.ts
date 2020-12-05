@@ -22,7 +22,7 @@ export async function initORM() {
     type: 'mysql',
     username: process.env.MYSQL_USER || 'root',
     synchronize: true,
-    logging: true,
+    logging: false,
     entities: [User, Session, Survey, SurveyQuestion, SurveyAnswer, Listing, Comment, Tag],
     extra: {
       connectionLimit: 5,

@@ -27,6 +27,7 @@ interface Context {
   response: Response
   pubsub: PubSub
   // redis: Redis.Redis
+  sql: typeof getSQLConnection
 }
 
 export const graphqlRoot: Resolvers<Context> = {
@@ -77,19 +78,23 @@ export const graphqlRoot: Resolvers<Context> = {
       // console.log(ret)
       // return ret || null
     },
-    comments: async () => {
-      const ap = Comment.find()
-      console.log("TYPEORM COMMENT:\n")
-      console.log(ap)
-      // return ap || null
-      const sql = await getSQLConnection()
-      const ret = await sql.query('SELECT * from comment')
-      console.log("SQL comment: \n")
-      console.log(ret)
-      return ret || null
-    },
+    // comments: async () => {
+    //   const ap = Comment.find()
+    //   console.log("TYPEORM COMMENT:\n")
+    //   console.log(ap)
+    //   // return ap || null
+    //   const sql = await getSQLConnection()
+    //   const ret = await sql.query('SELECT * from comment')
+    //   console.log("SQL comment: \n")
+    //   console.log(ret)
+    //   return ret || null
+    // },
     // listings: () => Listing.find(),
-    // comments: () => Comment.find(),
+    // comments: () => {
+    //   console.log("COUPLE COMMENT: \n")
+    //   console.log(Comment.find())
+    //   return Comment.find()
+    // },
   },
   Mutation: {
     answerSurvey: async (_, { input }, ctx) => {
@@ -142,6 +147,8 @@ export const graphqlRoot: Resolvers<Context> = {
           newListing.comments = newComments
           let newTags: Tag[] = []
           newListing.tags = newTags
+          // const sql = await getSQLConnection()
+          // const resp = await sql.insertAutoId("listing", newListing)
           await newListing.save()
           // update user's listing
           return newListing
@@ -277,10 +284,33 @@ export const graphqlRoot: Resolvers<Context> = {
   },
   Listing: {
     comments: (self, arg, ctx)=> {
-      return Comment.find() as any
+      return Comment.find({where: {listing: self }}) as any
     },
+    // comments: async (self, arg, {sql}) => {
+    //   const s = await sql()
+    //   console.log("Da ID: ")
+    //   console.log(self.id)
+    //   // const ret = await s.query('SELECT * from comment where listingId_ref = ?', self.id) || null
+    //   // console.log(ret)
+    //   console.log("TYPEORM COMETN: ")
+    //   console.log(Comment.find({where: {listing: self }}) as any)
+    //   // let ans = []
+    //   // for (var i = 0; i < ret.length; i++)
+    //   // {
+    //   //   console.log(i)
+    //   //   console.log(":")
+    //   //   console.log(ret[i])
+    //   //   ans.push(ret[i])
+    //   // }
+    //   return []
+    // },
+    // tags: async (self, arg, ctx) => {
+    //   const sqlsql = await getSQLConnection()
+    //   const resp = await sqlsql.query('SELECT * from tag where listingId = ?', self.id) || null
+    //   return resp || null
+    // },
     tags: (self, arg, ctx) => {
-      return Tag.find() as any
+      return Tag.find({where: {listing: self }}) as any
     },
   },
   // User: {

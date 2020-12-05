@@ -19,7 +19,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { checkEqual, Unpromise } from '../../common/src/util'
 import { Config } from './config'
 import { migrate } from './db/migrate'
-import { initORM } from './db/sql'
+import { getSQLConnection, initORM } from './db/sql'
 import { Session } from './entities/Session'
 import { User } from './entities/User'
 import { getSchema, graphqlRoot, pubsub /*, redis*/ } from './graphql/api'
@@ -31,7 +31,7 @@ import { renderApp } from './render'
 const server = new GraphQLServer({
   typeDefs: getSchema(),
   resolvers: graphqlRoot as any,
-  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null/*, redis: redis*/ }),
+  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null/*, redis: redis*/, sql: getSQLConnection }),
 })
 
 server.express.use(cookieParser())
@@ -83,8 +83,12 @@ server.express.post(
     }
 
     // save the User model to the database, refresh `user` to get ID
-    user = await user.save()
-
+    // user = await user.save()
+    const sql = await getSQLConnection()
+    const input = "\""+req.body.password+"\"" + ","+ "\""+req.body.number+"\""+","+"\""+req.body.location+"\""+","+"\""+"Hello! This is my about section. "+"\""+","+"\""+req.body.email+"\""+","+"2,"+"\""+req.body.name+"\""
+    const kms = await sql.insertAutoId("user", user)
+    console.log("SQL USER: ")
+    console.log(kms)
     const authToken = await createSession(user)
     res
       .status(200)
