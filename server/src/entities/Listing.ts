@@ -45,7 +45,7 @@ export class Listing extends BaseEntity {
   @JoinColumn({ name: 'commentId' })
   comments: Comment[]
 
-  @OneToMany(() => Tag, tag => tag.listing)//, { eager: true })
+  @OneToMany(() => Tag, tag => tag.listing, { eager: true })
   @JoinColumn({ name: 'tagId' })
   tags: Tag[]
 }
