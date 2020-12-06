@@ -71,6 +71,7 @@ type User {
   number: String!
   location: String!
   about: String!
+  image: String
   # authToken
 }
 
@@ -97,6 +98,9 @@ input EditUserInput {
 
   # about user
   about: String
+
+  # profile pic of the user
+  image: String
 }
 
 type Survey {

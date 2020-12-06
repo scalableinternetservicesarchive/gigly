@@ -204,7 +204,7 @@ export const graphqlRoot: Resolvers<Context> = {
     },
     editUser: async (_, { editInfo }, ctx) => {
       if (editInfo !== undefined && editInfo !== null) {
-        const { id, email, name, password, number, location, about } = editInfo
+        const { id, email, name, password, number, location, about, image } = editInfo
         let user = await User.findOne({ where: { email: email } })
         if (user !== undefined) {
           if (email) {
@@ -221,6 +221,9 @@ export const graphqlRoot: Resolvers<Context> = {
           }
           if (about) {
             user.about = about
+          }
+          if (image) {
+            user.image = image
           }
           user.save()
           return user

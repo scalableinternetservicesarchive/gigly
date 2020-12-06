@@ -48,6 +48,8 @@ export function ProjectsPage(props: ProjectsPageProps) {
     )
   }
 
+  const [userPic, setUserPic] = React.useState<string>(curUser.image || '') // url to user pic
+
   const [editForm, showEditForm] = React.useState(false)
   const [user, editUserState] = React.useState<TestUser>({
     name: curUser.name || 'not available',
@@ -56,7 +58,15 @@ export function ProjectsPage(props: ProjectsPageProps) {
     location: curUser.location || 'Westwood, CA',
   })
 
-  function handleSubmit(id: number, email: string, name: string, number: string, location: string, about: string) {
+  function handleSubmit(
+    id: number,
+    email: string,
+    name: string,
+    number: string,
+    location: string,
+    about: string,
+    image: string
+  ) {
     editUser(getApolloClient(), {
       id: id,
       email: email,
@@ -64,6 +74,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
       number: number,
       location: location,
       about: about,
+      image,
     })
       .then(() => {
         showEditForm(false)
@@ -74,7 +85,6 @@ export function ProjectsPage(props: ProjectsPageProps) {
         console.log(err)
       })
   }
-
   return (
     <Page>
       <div style={{ marginTop: '120px' }}></div>
@@ -91,7 +101,9 @@ export function ProjectsPage(props: ProjectsPageProps) {
               backgroundSize: 'cover',
               backgroundImage:
                 'url(' +
-                'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' +
+                (userPic !== ''
+                  ? userPic
+                  : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png') +
                 ')',
             }}
           ></div>
@@ -154,12 +166,28 @@ export function ProjectsPage(props: ProjectsPageProps) {
                   value={user.location}
                 />
               </FormInput>
-              <input accept="image" type="file" />
+              <FormInput>
+                <input
+                  type="text"
+                  placeholder="Profile Picture URL"
+                  style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                  onChange={e => setUserPic(e.target.value)}
+                  value={userPic}
+                />
+              </FormInput>
               <br />
               <SubmitButton
                 type="button"
                 onClick={() => {
-                  handleSubmit(curUser.id, user.email, user.name, user.phone, user.location, 'Sample about stringg')
+                  handleSubmit(
+                    curUser.id,
+                    user.email,
+                    user.name,
+                    user.phone,
+                    user.location,
+                    'Sample about stringg',
+                    userPic
+                  )
                 }}
               >
                 <LabelText>SUBMIT</LabelText>
