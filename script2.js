@@ -9,29 +9,44 @@ export const options = {
       executor: 'constant-vus',
       exec: 'signup',
       vus: 60,
-      duration: '10s',
+      duration: '15s',
     },
     createListing: {
       executor: 'per-vu-iterations',
       exec: 'createListing',
       vus: 100,
       iterations: 1,
-      startTime: '10s',
-      maxDuration: '10s',
+      startTime: '15s',
+      maxDuration: '5s',
     },
     addComments: {
       executor: 'per-vu-iterations',
       exec: 'addComments',
       vus: 150,
+      iterations: 5,
       startTime: '20s',
-      maxDuration: '20s',
+      maxDuration: '10s',
     },
     addTags: {
       executor: 'per-vu-iterations',
       exec: 'addTags',
       vus: 100,
       startTime: '20s',
+      maxDuration: '10s',
+    },
+    selling: {
+      executor: 'per-vu-iterations',
+      exec: 'selling',
+      vus: 50,
+      startTime: '40s',
       maxDuration: '20s',
+    },
+    profile: {
+      executor: 'per-vu-iterations',
+      exec: 'profile',
+      vus: 50,
+      startTime: '30s',
+      maxDuration: '10s',
     },
 
   },
@@ -43,10 +58,16 @@ export default function() {
   addComments()
   addTags()
   sleep(1)
-  recordRates(http.get('http://localhost:3000/app/selling'))
-  recordRates(http.get('http://localhost:3000/app/projects')) //my account endpoint
+  selling()
+  profile()
 }
 
+export function profile () {
+  recordRates(http.get('http://localhost:3000/app/projects')) //my account endpoint
+}
+export function selling () {
+  http.get('http://localhost:3000/app/selling')
+}
 export function signup () {
   var url = 'http://localhost:3000/auth/createUser';
   var params = {
