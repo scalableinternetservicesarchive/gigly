@@ -49,6 +49,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
   }
 
   const [userPic, setUserPic] = React.useState<string>(curUser.image || '') // url to user pic
+  const [about, setAbout] = React.useState<string>(curUser.about || '')
 
   const [editForm, showEditForm] = React.useState(false)
   const [user, editUserState] = React.useState<TestUser>({
@@ -107,6 +108,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
                 ')',
             }}
           ></div>
+          <div style={{ textAlign: 'center', marginTop: '10px', fontStyle: 'italic' }}>{about}</div>
         </div>
         <div style={{ flex: 2, flexDirection: 'column' }}>
           {editForm ? (
@@ -175,19 +177,20 @@ export function ProjectsPage(props: ProjectsPageProps) {
                   value={userPic}
                 />
               </FormInput>
+              <FormInput>
+                <input
+                  type="text"
+                  placeholder="About Me (Your Tagline!)"
+                  style={{ fontSize: '0.9em', color: '#303030', resize: 'none', width: '100%' }}
+                  onChange={e => setAbout(e.target.value)}
+                  value={about}
+                />
+              </FormInput>
               <br />
               <SubmitButton
                 type="button"
                 onClick={() => {
-                  handleSubmit(
-                    curUser.id,
-                    user.email,
-                    user.name,
-                    user.phone,
-                    user.location,
-                    'Sample about stringg',
-                    userPic
-                  )
+                  handleSubmit(curUser.id, user.email, user.name, user.phone, user.location, about, userPic)
                 }}
               >
                 <LabelText>SUBMIT</LabelText>
