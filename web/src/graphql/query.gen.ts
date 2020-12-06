@@ -61,6 +61,7 @@ export interface FetchUserContext3_self2 {
   userType: UserType;
   number: string;
   location: string;
+  image: string | null;
 }
 
 export interface FetchUserContext3 {
@@ -84,6 +85,7 @@ export interface EditUser_editUser {
   email: string;
   location: string;
   about: string;
+  image: string | null;
 }
 
 export interface EditUser {

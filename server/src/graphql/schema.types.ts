@@ -98,6 +98,7 @@ export interface User {
   number: Scalars['String']
   location: Scalars['String']
   about: Scalars['String']
+  image?: Maybe<Scalars['String']>
 }
 
 export enum UserType {
@@ -439,6 +440,7 @@ export type UserResolvers<
   number?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   location?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   about?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 

@@ -71,6 +71,7 @@ type User {
   number: String!
   location: String!
   about: String!
+  image: String
   # authToken
 }
 

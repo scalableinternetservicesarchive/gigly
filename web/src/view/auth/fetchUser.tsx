@@ -30,21 +30,23 @@ export const fetchUser3 = gql`
       userType
       number
       location
+      image
     }
   }
 `
 const editUserMutation = gql`
   mutation EditUser($input: EditUserInput) {
-  editUser(editInfo: $input) {
-    id
-    name
-    number
-    email
-    location
-    number
-    about
+    editUser(editInfo: $input) {
+      id
+      name
+      number
+      email
+      location
+      number
+      about
+      image
+    }
   }
-}
 `
 
 export function editUser(client: ApolloClient<any>, input: EditUserInput) {
