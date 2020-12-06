@@ -542,7 +542,13 @@ export function Popup(listingId: number) {
                 ) : (
                   <div style={{ width: '99%' }}>
                     <div style={{ width: '100%', display: 'flex', marginTop: '5%' }}>
-                      <div style={{ flex: '10%' }}> {getCommenterPhoto(profPic)} </div>
+                      <div style={{ flex: '10%' }}>
+                        {' '}
+                        {getCommenterPhoto(
+                          curUser?.image ??
+                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+                        )}{' '}
+                      </div>
                       <form style={{ width: '100%', flex: '90%', display: 'flex' }}>
                         <div
                           style={{
@@ -572,7 +578,14 @@ export function Popup(listingId: number) {
                             type="submit"
                             // type="button"
                             onClick={() => {
-                              handleSubmit(comment.comment, listingId, id, name, profPic)
+                              handleSubmit(
+                                comment.comment,
+                                listingId,
+                                id,
+                                name,
+                                curUser?.image ??
+                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+                              )
                             }}
                           >
                             POST
