@@ -9,8 +9,8 @@ export const options = {
       exec: 'sell',
       startVUs: 0,
       stages: [
-        { duration: '30s', target: 500 },
-        { duration: '30s', target: 0 },
+        { duration: '15s', target: 500 },
+        { duration: '15s', target: 0 },
       ],
       gracefulRampDown: '0s',
     },
