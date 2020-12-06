@@ -54,7 +54,7 @@ export class User extends BaseEntity implements GraphqlUser {
   })
   name: string
 
-  @Column()
+  @Column({ nullable: true })
   image: string
 
   @OneToMany(() => Listing, listing => listing.user, { eager: true })

@@ -166,7 +166,6 @@ export function Popup(listingId: number) {
   if (curUser) {
     name = curUser.name
     id = curUser.id
-    image = curUser.image
   }
   let profPic =
     image !== null && image !== ''
@@ -226,6 +225,11 @@ export function Popup(listingId: number) {
         listing.phone = userData?.user.number
         listing.email = userData?.user.email
         listing.about = userData?.user.about
+        let image = userData?.user.image
+        profPic =
+          image !== null && image !== ''
+            ? image
+            : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
       }
     }
 

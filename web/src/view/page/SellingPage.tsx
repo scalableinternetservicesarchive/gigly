@@ -5,7 +5,7 @@ import Modal from 'react-modal'
 import { getApolloClient } from '../../graphql/apolloClient'
 import { FetchListings, FetchListings_listings, TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
-import { UserContext } from '../auth/user'
+import { fetchUserFromID } from '../auth/fetchUser'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
@@ -117,9 +117,9 @@ export function SellingPage(props: LecturesPageProps) {
         }
       })
 
-      // Get user context
-
-      const { user } = React.useContext(UserContext)
+      let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
+        variables: { userId: listing.userId_ref },
+      })
 
       cards.push({
         id: listing.id ?? index,
@@ -130,7 +130,8 @@ export function SellingPage(props: LecturesPageProps) {
         tags: tagList,
 
         profPic:
-          user?.image ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+          userData?.user.image ??
+          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
       })
     })
 

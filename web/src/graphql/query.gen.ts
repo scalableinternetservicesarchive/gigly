@@ -111,6 +111,7 @@ export interface FetchUserFromID_user {
   number: string;
   about: string;
   email: string;
+  image: string | null;
 }
 
 export interface FetchUserFromID {
