@@ -6,7 +6,6 @@ import { style } from '../../style/styled'
 import { UserContext } from '../auth/user'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
-import { AvailabilityChart } from './components/AvailabilityChart'
 import { addListing } from './mutateListings'
 import { Page } from './Page'
 
@@ -120,7 +119,7 @@ export function PostFormPage(props: PostFormPageProps) {
   console.log('at post form page: ' + user.name)
   return (
     <Page>
-      <div style={{ paddingTop: '80px' }}>
+      <div style={{ paddingTop: '80px', width: '60vw'}}>
         {/* {popup&&<ConfirmSubmit />} */}
         {popup && <ConfirmSubmit key={2} />}
         <form>
@@ -262,7 +261,7 @@ export function PostFormPage(props: PostFormPageProps) {
             <LabelText>SUBMIT</LabelText>
           </SubmitButton>
         </form>
-        <div style={{ width: '1000px', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div>
+        {/* <div style={{ width: '1000px', display: 'flex' }}> {AvailabilityChart(bools, edit)} </div> */}
       </div>
     </Page>
   )

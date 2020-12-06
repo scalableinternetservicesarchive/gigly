@@ -15,6 +15,15 @@ import { editListing } from './mutateListings'
 import { addTag } from './mutateTags'
 import { Page } from './Page'
 
+const customStyles = {
+  content : {
+    backgroundColor: 'transparent',
+    border: 'none',
+    paddingTop: '0px',
+    overflow: 'hidden'
+  }
+};
+
 
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
 
@@ -293,7 +302,7 @@ export function SellingPage(props: LecturesPageProps) {
             </div>
           </div>
         </Page>
-        <Modal isOpen={showPopup && listingToEdit !== 0}>
+        <Modal isOpen={showPopup && listingToEdit !== 0} style={customStyles}>
           <form>
             <button
               onClick={() => {
@@ -301,13 +310,14 @@ export function SellingPage(props: LecturesPageProps) {
                 setShowPopup(false)
               }}
               style={{
-                marginTop: '20px',
+                // marginTop: '20px',
                 marginLeft: '300px',
                 fontFamily: 'Roboto',
+                fontSize: '0.9em',
                 cursor: 'pointer',
                 backgroundColor: '#E3E3E3',
-                borderRadius: '15px',
-                padding: '10px',
+                borderRadius: '12.5px',
+                padding: '7.5px',
               }}
             >
               Back
@@ -318,13 +328,14 @@ export function SellingPage(props: LecturesPageProps) {
                 setShowPopup(false)
               }}
               style={{
-                marginTop: '20px',
-                marginLeft: '50px',
+                // marginTop: '20px',
+                marginLeft: '30px',
                 fontFamily: 'Roboto',
+                fontSize: '0.9em',
                 cursor: 'pointer',
                 backgroundColor: '#3C82DC',
-                borderRadius: '15px',
-                padding: '10px',
+                borderRadius: '12.5px',
+                padding: '7.5px',
               }}
             >
               Edit

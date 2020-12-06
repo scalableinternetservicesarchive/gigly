@@ -220,6 +220,7 @@ export interface FetchListing_listing {
   endDate: string;
   location: string;
   description: string;
+  image: string;
   comments: (FetchListing_listing_comments | null)[];
   tags: (FetchListing_listing_tags | null)[];
   userId_ref: number;

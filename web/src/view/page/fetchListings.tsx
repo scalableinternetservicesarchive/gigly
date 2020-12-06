@@ -36,6 +36,7 @@ export const fetchListing = gql`
       endDate
       location
       description
+      image
       comments {
         date
         commentContents
