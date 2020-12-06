@@ -41,11 +41,11 @@ export class Listing extends BaseEntity {
   @Column()
   userId_ref: number
 
-  @OneToMany(() => Comment, comment => comment.listing, { eager: true })
+  @OneToMany(() => Comment, comment => comment.listing)//, { eager: true })
   @JoinColumn({ name: 'commentId' })
   comments: Comment[]
 
-  @OneToMany(() => Tag, tag => tag.listing, { eager: true })
+  @OneToMany(() => Tag, tag => tag.listing)//, { eager: true })
   @JoinColumn({ name: 'tagId' })
   tags: Tag[]
 }

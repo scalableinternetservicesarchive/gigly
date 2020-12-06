@@ -1,19 +1,19 @@
 import { useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
-import Modal from 'react-modal'
-import { getApolloClient } from '../../graphql/apolloClient'
-import { FetchListings, FetchListings_listings, TagType } from '../../graphql/query.gen'
+import { FetchListings, TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
-import { toast } from '../toast/toast'
-import { Popup } from './components/Popup'
 import { fetchListings } from './fetchListings'
-import { editListing } from './mutateListings'
-import { addTag } from './mutateTags'
 import { Page } from './Page'
 
+/*
+import { toast } from '../toast/toast'
+import { Popup } from './components/Popup'
+import { editListing } from './mutateListings'
+import { addTag } from './mutateTags'
+*/
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
 
 interface CardData {
@@ -79,6 +79,65 @@ function getCard(c: CardData, setCardToEdit: (id: number) => void) {
 const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+export function SellingPage(props: LecturesPageProps) {
+  const [listingToEdit, setListingToEdit] = React.useState<number>(0) // 0 means don't show the editing window!
+  const [showPopup, setShowPopup] = React.useState<boolean>(false)
+  const [showTags, setShowTags] = React.useState<TagType[]>([])
+
+  const { loading, error, data } = useQuery<FetchListings>(fetchListings)
+  if (loading)
+  {
+    return <><h1>LOADING...</h1></>;
+  }
+  if (error)
+  {
+    return <><h1>ERROR !!! VERY SAD. :(</h1></>;
+  }
+  const setCardToEdit = (id: number) => {
+    setListingToEdit(id)
+    setShowPopup(true)
+  }
+
+  const _setShowTags = (tag: TagType) => {
+    if (!showTags.includes(tag)) setShowTags(showTags.concat(tag))
+    else setShowTags(showTags.filter(t => t !== tag))
+  }
+  // let cards: CardData[] = []
+  const cards: CardData[] = []
+  data?.listings?.map((listing, index) => {
+    const tagList: TagType[] = []
+    listing.tags.forEach(tag => {
+      if (tag) {
+        tagList.push(tag.type)
+      }
+    })
+    cards.push({
+      id: listing.id ?? index,
+      serviceName: listing.sellingName,
+      username: listing.username,
+      price: listing.price ?? 0,
+      image: listing.image,
+      tags: tagList,
+
+      profPic:
+        'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80',
+    })
+  })
+  let filteredCards = cards
+  const cardUIs = filteredCards.map(card => getCard(card, setCardToEdit))
+
+  return (
+    <>
+    <Page>
+    <h1>LISTINGS</h1>
+    <div>{cardUIs}</div>
+    </Page>
+    </>
+  )
+}
+
+/*
 export function SellingPage(props: LecturesPageProps) {
   const [search, setSearch] = React.useState<string>('')
   const { data } = useQuery<FetchListings>(fetchListings)
@@ -93,6 +152,8 @@ export function SellingPage(props: LecturesPageProps) {
   const [serviceImageEdited, setServiceImageEdited] = React.useState<string>('')
   const [showPopup, setShowPopup] = React.useState<boolean>(false)
   const [showTags, setShowTags] = React.useState<TagType[]>([])
+  const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
+  const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
   // const [go, setGo] = React.useState<boolean>(false)
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
@@ -155,9 +216,7 @@ export function SellingPage(props: LecturesPageProps) {
         return a.price - b.price
       })
 
-    /* Need to update this every time a new TagType enum is added!! */
-    const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
-    const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
+    // Need to update this every time a new TagType enum is added!!
     const setSelectedTypes = (t: TagType) => {
       // If the tag isn't already selected, add it.
       if (!selectedTypes.includes(t)) {
@@ -171,6 +230,7 @@ export function SellingPage(props: LecturesPageProps) {
     const cardUIs = filteredCards.map(card => getCard(card, setCardToEdit))
 
     // Get selected listing data
+    // let popupData: FetchListings_listings | null = null
     let popupData: FetchListings_listings | null = null
     if (listingToEdit !== 0) {
       data?.listings?.forEach(listing => {
@@ -567,6 +627,7 @@ export function SellingPage(props: LecturesPageProps) {
       })
   }
 }
+*/
 
 const Card = style('div', 'flex white items-center list pa6 ph2 ', (c: { $img?: string }) => ({
   backgroundPositionY: 'center',

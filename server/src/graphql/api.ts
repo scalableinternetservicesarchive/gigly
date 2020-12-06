@@ -168,7 +168,7 @@ export const graphqlRoot: Resolvers<Context> = {
           if (listing !== undefined && listing !== null) {
             newComment.listing = listing //we have found that we cannot query this because not eager
             //add this comment to the given listing's comments
-            listing.comments.push(newComment)
+            //listing.comments.push(newComment)
             await listing.save()
           }
           await newComment.save()
@@ -178,23 +178,46 @@ export const graphqlRoot: Resolvers<Context> = {
       }
       return null
     },
-    addTag: async (_, { tag }, ctx) => {
+    addTag: async (_, { tag }, ctx) =>
+    // {
+    //   if (tag !== undefined && tag !== null) {
+    //     const { type, listingId } = tag
+    //     const newTag = new Tag()
+    //     if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
+    //       newTag.type = type
+    //       let listing = await Listing.findOne({ where: { id: listingId } })
+    //       if (listing !== undefined && listing !== null && !listing.tags.includes(newTag)) {
+    //         let hasTag = false
+    //         listing.tags.forEach(tag => {
+    //           if (tag.type === type) hasTag = true
+    //         })
+    //         if (!hasTag) {
+    //           newTag.listing = listing
+    //           listing.tags.push(newTag)
+    //           await listing.save()
+    //         }
+    //       }
+    //       await newTag.save()
+    //       return newTag
+    //     }
+    //   }
+    //   return null
+    // },
+    // decoupled version:
+    {
       if (tag !== undefined && tag !== null) {
         const { type, listingId } = tag
         const newTag = new Tag()
         if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
           newTag.type = type
           let listing = await Listing.findOne({ where: { id: listingId } })
-          if (listing !== undefined && listing !== null && !listing.tags.includes(newTag)) {
-            let hasTag = false
-            listing.tags.forEach(tag => {
-              if (tag.type === type) hasTag = true
-            })
-            if (!hasTag) {
-              newTag.listing = listing
-              listing.tags.push(newTag)
-              await listing.save()
-            }
+          let testTag = await Tag.findOne({where: {listing: listing}})
+          if (testTag !== undefined) // tag associated with listing exists, exit early
+            return null
+          if (listing !== undefined && listing !== null) {
+            newTag.listing = listing
+            // listing.tags.push(newTag) // decoupled!
+            await listing.save()
           }
           await newTag.save()
           return newTag
@@ -235,12 +258,12 @@ export const graphqlRoot: Resolvers<Context> = {
       resolve: (payload: any) => payload,
     },
   },
-  // Listing: {
-  // comments: (self, arg, ctx)=> {
-  //   return Comment.find() as any
-  // },
-  // tags: (self, arg, ctx) => {
-  //   return Tag.find() as any
-  // },
-  // },
+  Listing: {
+    comments: async (self, arg, ctx)=> {
+      return Comment.find({where: {listing: self}}) as any
+    },
+    tags: async (self, arg, ctx) => {
+      return Tag.find({where: {listing: self}}) as any
+    },
+  },
 }
