@@ -156,10 +156,26 @@ function handleSubmit(
     })
 }
 
-export function Popup(listingId: number) {
+export function Popup(props: {listingId: number}) {
+  const listingId = props.listingId
+  const { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {
+    variables: { listingId },
+  })
+  const { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
+    variables: { userId: listingData?.listing?.userId_ref },
+    skip: !listingData?.listing?.userId_ref
+  })
   const [showing, setShowing] = React.useState('Images')
   const [curPic, setCurPic] = React.useState(0)
   const { user: curUser } = useContext(UserContext)
+  const [comment, editComment] = React.useState<Comment>({
+    commenter: '',
+    date: '',
+    commenterPic: '',
+    comment: '',
+  })
+
+
   let name = ''
   let id = 1
   let image: string | null = ''
@@ -201,12 +217,12 @@ export function Popup(listingId: number) {
   }
 
   //find the listing
-  let { loading: listingLoading, data: listingData } = useQuery<FetchListing>(fetchListing, {
-    variables: { listingId },
-  })
+
+  if (listingLoading || !listingData) return<><h1>LOADING...</h1></>
 
   let comments: Comment[] = []
-  if (listingData && listingData.listing !== null) {
+  // if (listingData && listingData.listing !== null) {
+  if (listingData && listingData.listing){
     // listing.name = listingData.listing.username
     listing.title = listingData.listing.sellingName
     listing.price = listingData.listing.price
@@ -214,35 +230,24 @@ export function Popup(listingId: number) {
     listing.endDate = listingData.listing.endDate
     listing.location = listingData.listing.location
     listing.description = listingData.listing.description
-
+  }
     //find the user who posted this
-    if (listingData.listing.userId_ref) {
-      let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
-        variables: { userId: listingData.listing.userId_ref },
-      })
-      if (userData && userData?.user) {
-        listing.name = userData?.user.name
-        listing.phone = userData?.user.number
-        listing.email = userData?.user.email
-        listing.about = userData?.user.about
-        let image = userData?.user.image
-        profPic =
-          image !== null && image !== ''
-            ? image
-            : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
-      }
+    if (userData && userData?.user) {
+      listing.name = userData?.user.name
+      listing.phone = userData?.user.number
+      listing.email = userData?.user.email
+      listing.about = userData?.user.about
+      let image = userData?.user.image
+      profPic =
+        image !== null && image !== ''
+          ? image
+          : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
     }
-
-    if (listingData.listing.comments) {
+    if (listingData && listingData.listing && listingData.listing.comments) {
       listingData.listing.comments.map(comment => {
         //No longer queries for the username corresponding to the user ID
         if (comment !== null) {
-          // let userId = comment.userId
-          // let { loading: userLoading, data: userData } = useQuery<FetchUser>(fetchUser, {variables: { userId }});
           let username = 'Filler name'
-          // if (userData && userData?.user) {
-          //   username = userData?.user.name;
-          // }
           comments.push({
             commenter: comment.username,
             date: comment.date,
@@ -252,7 +257,7 @@ export function Popup(listingId: number) {
         }
       })
     }
-    if (listingData.listing.tags) {
+    if (listingData && listingData.listing && listingData.listing.tags) {
       listingData.listing.tags.map(tag => {
         if (tag != null) {
           if (tag.type == 'GROCERIES') {
@@ -267,10 +272,6 @@ export function Popup(listingId: number) {
         }
       })
     }
-  } else {
-    //this is dumb but prevents the "rendered more hooks than previous render" error
-    let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, { variables: { userId: 1 } })
-  }
 
   var pics = [listing.pic1, listing.pic2, listing.pic3]
   var picIndices = []
@@ -285,13 +286,6 @@ export function Popup(listingId: number) {
   var availability = strToMatrix(listing.availability)
 
   var tagsDisplay = listing.tags.join(', ')
-
-  const [comment, editComment] = React.useState<Comment>({
-    commenter: '',
-    date: '',
-    commenterPic: '',
-    comment: '',
-  })
 
   return (
     <>

@@ -23,7 +23,7 @@ export const options = {
       executor: 'per-vu-iterations',
       exec: 'addComments',
       vus: 150,
-      iterations: 5,
+      iterations: 3,
       startTime: '20s',
       maxDuration: '10s',
     },
@@ -37,7 +37,7 @@ export const options = {
     selling: {
       executor: 'per-vu-iterations',
       exec: 'selling',
-      vus: 50,
+      vus: 200,
       startTime: '40s',
       maxDuration: '20s',
     },

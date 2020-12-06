@@ -7,7 +7,7 @@ export const options = {
     sell: {
       executor: 'per-vu-iterations',
       exec: 'sell',
-      vus: 100,
+      vus: 200,
       iterations: 1,
       startTime: '0s',
       maxDuration: '30s',

@@ -15,6 +15,7 @@ import { editListing } from './mutateListings'
 import { addTag } from './mutateTags'
 import { Page } from './Page'
 
+
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
 
 interface CardData {
@@ -80,6 +81,7 @@ function getCard(c: CardData, setCardToEdit: (id: number) => void) {
 const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export function SellingPage(props: LecturesPageProps) {
   const [search, setSearch] = React.useState<string>('')
   const { data } = useQuery<FetchListings>(fetchListings)
@@ -94,6 +96,8 @@ export function SellingPage(props: LecturesPageProps) {
   const [serviceImageEdited, setServiceImageEdited] = React.useState<string>('')
   const [showPopup, setShowPopup] = React.useState<boolean>(false)
   const [showTags, setShowTags] = React.useState<TagType[]>([])
+  const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
+  const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
   // const [go, setGo] = React.useState<boolean>(false)
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
@@ -116,11 +120,9 @@ export function SellingPage(props: LecturesPageProps) {
           tagList.push(tag.type)
         }
       })
-
       let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
         variables: { userId: listing.userId_ref },
       })
-
       cards.push({
         id: listing.id ?? index,
         serviceName: listing.sellingName,
@@ -130,9 +132,8 @@ export function SellingPage(props: LecturesPageProps) {
         tags: tagList,
 
         profPic:
-          userData?.user.image ??
-          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-      })
+        userData?.user.image ??
+        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',})
     })
 
     // Filter from searchbar
@@ -162,9 +163,7 @@ export function SellingPage(props: LecturesPageProps) {
         return a.price - b.price
       })
 
-    /* Need to update this every time a new TagType enum is added!! */
-    const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
-    const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
+    // Need to update this every time a new TagType enum is added!!
     const setSelectedTypes = (t: TagType) => {
       // If the tag isn't already selected, add it.
       if (!selectedTypes.includes(t)) {
@@ -178,6 +177,7 @@ export function SellingPage(props: LecturesPageProps) {
     const cardUIs = filteredCards.map(card => getCard(card, setCardToEdit))
 
     // Get selected listing data
+    // let popupData: FetchListings_listings | null = null
     let popupData: FetchListings_listings | null = null
     if (listingToEdit !== 0) {
       data?.listings?.forEach(listing => {
@@ -320,7 +320,7 @@ export function SellingPage(props: LecturesPageProps) {
               Edit
             </button>
           </form>
-          {Popup(listingToEdit)}
+          <Popup listingId={listingToEdit} />
         </Modal>
         <Modal isOpen={listingToEdit !== 0 && !showPopup}>
           <form>
@@ -530,7 +530,7 @@ export function SellingPage(props: LecturesPageProps) {
       </>
     )
   } else {
-    return <div>yikes</div>
+    return <div>please i just need a second :^)</div>
   }
   function handleSubmit(
     id: number,
