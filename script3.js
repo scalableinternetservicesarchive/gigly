@@ -5,12 +5,14 @@ export let errorRate = new Rate('errors');
 export const options = {
   scenarios: {
     sell: {
-      executor: 'per-vu-iterations',
+      executor: 'ramping-vus',
       exec: 'sell',
-      vus: 200,
-      iterations: 1,
-      startTime: '0s',
-      maxDuration: '30s',
+      startVUs: 0,
+      stages: [
+        { duration: '10s', target: 50 },
+        { duration: '10s', target: 0 },
+      ],
+      gracefulRampDown: '10s',
     },
   },
 }
