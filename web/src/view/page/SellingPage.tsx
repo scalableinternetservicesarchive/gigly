@@ -5,8 +5,8 @@ import Modal from 'react-modal'
 import { getApolloClient } from '../../graphql/apolloClient'
 import { FetchListings, FetchListings_listings, TagType } from '../../graphql/query.gen'
 import { style } from '../../style/styled'
-import { fetchUserFromID } from '../auth/fetchUser'
 // import { fetchUser3 } from '../auth/fetchUser'
+// import { fetchUserFromID } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
 import { Popup } from './components/Popup'
@@ -81,6 +81,12 @@ function getCard(c: CardData, setCardToEdit: (id: number) => void) {
 const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// const Pictures = (id: number) => {
+//   const { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
+//       variables: { userId: id },
+//     })
+//     return userData
+// }
 
 export function SellingPage(props: LecturesPageProps) {
   const [search, setSearch] = React.useState<string>('')
@@ -98,6 +104,10 @@ export function SellingPage(props: LecturesPageProps) {
   const [showTags, setShowTags] = React.useState<TagType[]>([])
   const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
   const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
+  // const { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
+  //   variables: { userId: data?.listings.listing.userId_ref },
+  // })
+
   // const [go, setGo] = React.useState<boolean>(false)
   // Function passed to each card to set the state to the listing to be edited
   const setCardToEdit = (id: number) => {
@@ -120,9 +130,9 @@ export function SellingPage(props: LecturesPageProps) {
           tagList.push(tag.type)
         }
       })
-      let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
-        variables: { userId: listing.userId_ref },
-      })
+      // let { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
+      //   variables: { userId: listing.userId_ref },
+      // })
       cards.push({
         id: listing.id ?? index,
         serviceName: listing.sellingName,
@@ -132,7 +142,7 @@ export function SellingPage(props: LecturesPageProps) {
         tags: tagList,
 
         profPic:
-        userData?.user.image ??
+        // Pictures(listing.userId_ref)?.user.image ??
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',})
     })
 

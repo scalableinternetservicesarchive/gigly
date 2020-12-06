@@ -58,7 +58,7 @@ export function PlaygroundPage(props: PlaygroundPageProps) {
 
   return <>
     <NavBar />
-    {Popup(listingId)}
+    <Popup listingId={listingId} />
      <div style={{ backgroundColor: 'rgb(88,98,111)', display: 'flex', justifyContent: 'center', height: '100vh', width: '100%', padding: '6%' }}></div>
   </>
 }
