@@ -97,6 +97,9 @@ input EditUserInput {
 
   # about user
   about: String
+
+  # profile pic of the user
+  image: String
 }
 
 type Survey {

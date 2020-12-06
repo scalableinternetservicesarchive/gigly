@@ -113,6 +113,7 @@ export interface EditUserInput {
   number?: Maybe<Scalars['String']>
   location?: Maybe<Scalars['String']>
   about?: Maybe<Scalars['String']>
+  image?: Maybe<Scalars['String']>
 }
 
 export interface Survey {

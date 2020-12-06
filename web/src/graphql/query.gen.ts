@@ -608,6 +608,7 @@ export interface EditUserInput {
   number?: string | null;
   location?: string | null;
   about?: string | null;
+  image?: string | null;
 }
 
 export interface ListingInput {

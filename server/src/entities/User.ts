@@ -6,7 +6,7 @@ import {
   JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm'
 import { User as GraphqlUser, UserType } from '../graphql/schema.types'
 import { Listing } from './Listing'
@@ -53,6 +53,9 @@ export class User extends BaseEntity implements GraphqlUser {
     nullable: true,
   })
   name: string
+
+  @Column()
+  image: string
 
   @OneToMany(() => Listing, listing => listing.user, { eager: true })
   @JoinColumn({ name: 'listingId' })
