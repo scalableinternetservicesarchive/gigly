@@ -31,6 +31,7 @@ export const fetchUser3 = gql`
       number
       location
       image
+      about
     }
   }
 `

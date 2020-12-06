@@ -62,6 +62,7 @@ export interface FetchUserContext3_self2 {
   number: string;
   location: string;
   image: string | null;
+  about: string;
 }
 
 export interface FetchUserContext3 {
