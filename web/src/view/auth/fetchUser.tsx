@@ -63,6 +63,7 @@ export const fetchUserFromID = gql`
       number
       about
       email
+      image
     }
   }
 `
