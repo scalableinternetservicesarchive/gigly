@@ -162,12 +162,16 @@ export function Popup(listingId: number) {
   const { user: curUser } = useContext(UserContext)
   let name = ''
   let id = 1
+  let image: string | null = ''
   if (curUser) {
     name = curUser.name
     id = curUser.id
+    image = curUser.image
   }
   let profPic =
-    'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80'
+    image !== null && image !== ''
+      ? image
+      : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
 
   let listing: Listing = {
     listingId: listingId,
@@ -320,10 +324,7 @@ export function Popup(listingId: number) {
                   border: '0.5px solid #18A0FB',
                   backgroundPositionY: 'center',
                   backgroundSize: 'cover',
-                  backgroundImage:
-                    'url(' +
-                    'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=670&q=80' +
-                    ')',
+                  backgroundImage: 'url(' + profPic + ')',
                 }}
               ></div>
               <h1 style={{ marginLeft: '5%', fontSize: '1.6em' }}>{listing.name}</h1>
