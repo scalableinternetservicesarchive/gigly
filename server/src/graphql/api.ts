@@ -158,43 +158,68 @@ export const graphqlRoot: Resolvers<Context> = {
         ) {
           newComment.date = date
           newComment.commentContents = commentContents
-          // let user = await User.findOne({ where: { id: userId} })
-          // if (user !== undefined && user !== null) {
-          // newComment.user = user
           newComment.userId = userId
           newComment.username = username
           newComment.userPic = userPic
           let listing = await Listing.findOne({ where: { id: listingId_ref } })
           if (listing !== undefined && listing !== null) {
-            newComment.listing = listing //we have found that we cannot query this because not eager
-            //add this comment to the given listing's comments
-            listing.comments.push(newComment)
+            newComment.listing = listing
+            // no longer need to add
+            // listing.comments.push(newComment)
             await listing.save()
           }
           await newComment.save()
           return newComment
-          // }
         }
       }
       return null
     },
-    addTag: async (_, { tag }, ctx) => {
+    addTag: async (_, { tag }, ctx) =>
+    // {
+    //   if (tag !== undefined && tag !== null) {
+    //     const { type, listingId } = tag
+    //     const newTag = new Tag()
+    //     if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
+    //       newTag.type = type
+    //       let listing = await Listing.findOne({ where: { id: listingId } })
+    //       if (listing !== undefined && listing !== null && !listing.tags.includes(newTag)) {
+    //         let hasTag = false
+    //         listing.tags.forEach(tag => {
+    //           if (tag.type === type)
+    //           {
+    //             hasTag = true
+    //             return
+    //           }
+    //         })
+    //         if (hasTag)
+    //           return null
+    //         if (!hasTag) {
+    //           newTag.listing = listing
+    //           listing.tags.push(newTag)
+    //           await listing.save()
+    //         }
+    //       }
+    //       await newTag.save()
+    //       return newTag
+    //     }
+    //   }
+    //   return null
+    // },
+    // decoupled version:
+    {
       if (tag !== undefined && tag !== null) {
         const { type, listingId } = tag
         const newTag = new Tag()
         if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
           newTag.type = type
           let listing = await Listing.findOne({ where: { id: listingId } })
-          if (listing !== undefined && listing !== null && !listing.tags.includes(newTag)) {
-            let hasTag = false
-            listing.tags.forEach(tag => {
-              if (tag.type === type) hasTag = true
-            })
-            if (!hasTag) {
-              newTag.listing = listing
-              listing.tags.push(newTag)
-              await listing.save()
-            }
+          let testTag = await Tag.findOne({where: {listing: listing}})
+          if (testTag !== undefined) // tag associated with listing exists, exit early
+            return null
+          if (listing !== undefined && listing !== null) {
+            newTag.listing = listing
+            // listing.tags.push(newTag) // decoupled!
+            await listing.save()
           }
           await newTag.save()
           return newTag
@@ -204,7 +229,7 @@ export const graphqlRoot: Resolvers<Context> = {
     },
     editUser: async (_, { editInfo }, ctx) => {
       if (editInfo !== undefined && editInfo !== null) {
-        const { id, email, name, password, number, location, about, image } = editInfo
+        const { id, email, name, password, number, location, about } = editInfo
         let user = await User.findOne({ where: { email: email } })
         if (user !== undefined) {
           if (email) {
@@ -222,9 +247,6 @@ export const graphqlRoot: Resolvers<Context> = {
           if (about) {
             user.about = about
           }
-          if (image) {
-            user.image = image
-          }
           user.save()
           return user
         }
@@ -238,12 +260,12 @@ export const graphqlRoot: Resolvers<Context> = {
       resolve: (payload: any) => payload,
     },
   },
-  // Listing: {
-  // comments: (self, arg, ctx)=> {
-  //   return Comment.find() as any
-  // },
-  // tags: (self, arg, ctx) => {
-  //   return Tag.find() as any
-  // },
-  // },
+  Listing: {
+  comments: async (self, arg, ctx)=> {
+    return Comment.find({where: {listing: self}}) as any
+  },
+  tags: async (self, arg, ctx) => {
+    return Tag.find({where: {listing: self}}) as any
+  },
+  },
 }

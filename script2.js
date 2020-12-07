@@ -25,7 +25,7 @@ export const options = {
       vus: 150,
       iterations: 3,
       startTime: '20s',
-      maxDuration: '10s',
+      maxDuration: '30s',
     },
     addTags: {
       executor: 'per-vu-iterations',
