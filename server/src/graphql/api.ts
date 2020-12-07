@@ -3,6 +3,7 @@ import { PubSub } from 'graphql-yoga'
 import Redis from 'ioredis'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { getSQLConnection } from '../db/sql'
 import { Comment } from '../entities/Comment'
 import { Listing } from '../entities/Listing'
 import { Survey } from '../entities/Survey'
@@ -32,9 +33,13 @@ export const graphqlRoot: Resolvers<Context> = {
   Query: {
     self2: (_, args, ctx) => ctx.user,
     self: async (_, { email }) => {
-      const user = await User.findOne({ where: { email: email } })
+      // const user = await User.findOne({ where: { email: email } })
+      const user = await (await getSQLConnection()).query('select * from user where email = ?', email)
+      console.log("sql query user")
+      console.log(user)
       if (user) {
-        return user
+        // return user
+        return user[0]
       }
       return null
     },
@@ -42,14 +47,41 @@ export const graphqlRoot: Resolvers<Context> = {
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
     listing: async (_, { listingId }) => {
-      const l = await Listing.findOne({ where: { id: listingId } })
+      // const l = await Listing.findOne({ where: { id: listingId } })
+      const l = await (await getSQLConnection()).query('select * from listing where id = ?', listingId)// as any
       if (l) {
-        return l
+        return l[0]
       }
       return null
     },
-    listings: () => Listing.find(),
-    comments: () => Comment.find(),
+    listings: //() => Listing.find(),
+    async () =>
+    {
+      const l = await (await getSQLConnection()).query('select * from listing')// as any
+      let ans = []
+      for (var i = 0; i < l.length; i++)
+      {
+        ans.push(l[i])
+      }
+      if (l) {
+        return ans
+      }
+      return null
+    },
+    comments: //() => Comment.find(),
+    async () =>
+    {
+      const l = await (await getSQLConnection()).query('select * from comment')// as any
+      let ans = []
+      for (var i = 0; i < l.length; i++)
+      {
+        ans.push(l[i])
+      }
+      if (l) {
+        return ans
+      }
+      return null
+    },
   },
   Mutation: {
     answerSurvey: async (_, { input }, ctx) => {
@@ -265,10 +297,37 @@ export const graphqlRoot: Resolvers<Context> = {
   },
   Listing: {
   comments: async (self, arg, ctx)=> {
+    // console.log(Comment.find({where: {listing: self}}) as any)
     return Comment.find({where: {listing: self}}) as any
+    // const l = await (await getSQLConnection()).query('select * from comment where listingId_ref = ?', self.id)// as any
+    // console.log("L")
+    // console.log(l)
+    // return l as any
+    // console.log("comment: ")
+    // console.log(l)
+    // console.log("id:")
+    // console.log(self.id)
+    // console.log(l.length)
+    // let ans = []
+    // for (var i = 0; i < l.length; i++)
+    // {
+    //   ans.push(l[i])
+    // }
+    // if (l) {
+    //   return ans as any
+    // }
+    // return null
   },
   tags: async (self, arg, ctx) => {
     return Tag.find({where: {listing: self}}) as any
+
+    // const l = await (await getSQLConnection()).query('select * from tag where listingId = ?', self.id)// as any
+    // let ans = []
+    // for (var i = 0; i < l.length; i++)
+    // {
+    //   ans.push(l[i])
+    // }
+    // return ans as any
   },
   },
 }
