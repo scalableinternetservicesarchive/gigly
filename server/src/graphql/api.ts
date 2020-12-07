@@ -175,61 +175,62 @@ export const graphqlRoot: Resolvers<Context> = {
       return null
     },
     addTag: async (_, { tag }, ctx) =>
-    // {
-    //   if (tag !== undefined && tag !== null) {
-    //     const { type, listingId } = tag
-    //     const newTag = new Tag()
-    //     if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
-    //       newTag.type = type
-    //       let listing = await Listing.findOne({ where: { id: listingId } })
-    //       if (listing !== undefined && listing !== null && !listing.tags.includes(newTag)) {
-    //         let hasTag = false
-    //         listing.tags.forEach(tag => {
-    //           if (tag.type === type)
-    //           {
-    //             hasTag = true
-    //             return
-    //           }
-    //         })
-    //         if (hasTag)
-    //           return null
-    //         if (!hasTag) {
-    //           newTag.listing = listing
-    //           listing.tags.push(newTag)
-    //           await listing.save()
-    //         }
-    //       }
-    //       await newTag.save()
-    //       return newTag
-    //     }
-    //   }
-    //   return null
-    // },
-    // decoupled version:
-    {
-      if (tag !== undefined && tag !== null) {
-        const { type, listingId } = tag
-        const newTag = new Tag()
-        if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
-          newTag.type = type
-          let listing = await Listing.findOne({ where: { id: listingId } })
-          let testTag = await Tag.findOne({where: {listing: listing}})
-          if (testTag !== undefined) // tag associated with listing exists, exit early
-            return null
-          if (listing !== undefined && listing !== null) {
-            newTag.listing = listing
-            // listing.tags.push(newTag) // decoupled!
-            await listing.save()
+      // {
+      //   if (tag !== undefined && tag !== null) {
+      //     const { type, listingId } = tag
+      //     const newTag = new Tag()
+      //     if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
+      //       newTag.type = type
+      //       let listing = await Listing.findOne({ where: { id: listingId } })
+      //       if (listing !== undefined && listing !== null && !listing.tags.includes(newTag)) {
+      //         let hasTag = false
+      //         listing.tags.forEach(tag => {
+      //           if (tag.type === type)
+      //           {
+      //             hasTag = true
+      //             return
+      //           }
+      //         })
+      //         if (hasTag)
+      //           return null
+      //         if (!hasTag) {
+      //           newTag.listing = listing
+      //           listing.tags.push(newTag)
+      //           await listing.save()
+      //         }
+      //       }
+      //       await newTag.save()
+      //       return newTag
+      //     }
+      //   }
+      //   return null
+      // },
+      // decoupled version:
+      {
+        if (tag !== undefined && tag !== null) {
+          const { type, listingId } = tag
+          const newTag = new Tag()
+          if (type != undefined && type != null && listingId !== undefined && listingId !== null) {
+            newTag.type = type
+            let listing = await Listing.findOne({ where: { id: listingId } })
+            let testTag = await Tag.findOne({ where: { listing: listing } })
+            if (testTag !== undefined)
+              // tag associated with listing exists, exit early
+              return null
+            if (listing !== undefined && listing !== null) {
+              newTag.listing = listing
+              // listing.tags.push(newTag) // decoupled!
+              await listing.save()
+            }
+            await newTag.save()
+            return newTag
           }
-          await newTag.save()
-          return newTag
         }
-      }
-      return null
-    },
-    editUser: async (_, { editInfo }, {redis}) => {
+        return null
+      },
+    editUser: async (_, { editInfo }, { redis }) => {
       if (editInfo !== undefined && editInfo !== null) {
-        const { id, email, name, password, number, location, about } = editInfo
+        const { id, email, name, password, number, location, about, image } = editInfo
         let user = await User.findOne({ where: { email: email } })
         if (user !== undefined) {
           if (email) {
@@ -250,6 +251,9 @@ export const graphqlRoot: Resolvers<Context> = {
           if (about) {
             user.about = about
           }
+          if (image) {
+            user.image = image
+          }
           user.save()
           return user
         }
@@ -264,11 +268,11 @@ export const graphqlRoot: Resolvers<Context> = {
     },
   },
   Listing: {
-  comments: async (self, arg, ctx)=> {
-    return Comment.find({where: {listing: self}}) as any
-  },
-  tags: async (self, arg, ctx) => {
-    return Tag.find({where: {listing: self}}) as any
-  },
+    comments: async (self, arg, ctx) => {
+      return Comment.find({ where: { listing: self } }) as any
+    },
+    tags: async (self, arg, ctx) => {
+      return Tag.find({ where: { listing: self } }) as any
+    },
   },
 }
