@@ -90,7 +90,7 @@ export function ProjectsPage(props: ProjectsPageProps) {
     <Page>
       <div style={{ marginTop: '120px' }}></div>
       <Row>
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, width: '800px' }}>
           <div
             style={{
               margin: 'auto',
@@ -208,10 +208,6 @@ export function ProjectsPage(props: ProjectsPageProps) {
           )}
         </div>
       </Row>
-      <p style={{ color: 'white' }}>
-        The goal of the course project is to gain hands-on experience building and deploying a scalable web service on
-        the internet. This is a "learn
-      </p>
     </Page>
   )
 }
