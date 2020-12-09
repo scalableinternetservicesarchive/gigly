@@ -30,6 +30,14 @@ const customStyles = {
   },
 }
 
+const customStylesEdit = {
+  content: {
+    backgroundColor: 'white',
+    border: 'none',
+    paddingTop: '0px',
+    overflow: 'hidden',
+  },
+}
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
 
 interface CardData {
@@ -401,7 +409,7 @@ export function SellingPage(props: LecturesPageProps) {
           </form>
           <Popup listingId={listingToEdit} />
         </Modal>
-        <Modal isOpen={listingToEdit !== 0 && !showPopup}>
+        <Modal isOpen={listingToEdit !== 0 && !showPopup} style={customStylesEdit}>
           <form>
             <div style={{ paddingTop: '100px', marginLeft: '250px' }}>
               <div style={{ fontFamily: 'Roboto', fontSize: '28px' }}>Edit Listing (ID: {listingToEdit})</div>
