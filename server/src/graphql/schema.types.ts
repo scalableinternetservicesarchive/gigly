@@ -21,6 +21,7 @@ export interface Query {
   survey?: Maybe<Survey>
   listing?: Maybe<Listing>
   listings?: Maybe<Array<Listing>>
+  listingsPaginated?: Maybe<Array<Listing>>
   comments?: Maybe<Array<Comment>>
 }
 
@@ -38,6 +39,10 @@ export interface QuerySurveyArgs {
 
 export interface QueryListingArgs {
   listingId: Scalars['Int']
+}
+
+export interface QueryListingsPaginatedArgs {
+  input?: Maybe<ListingInputPaginated>
 }
 
 export interface Mutation {
@@ -86,6 +91,11 @@ export interface Subscription {
 
 export interface SubscriptionSurveyUpdatesArgs {
   surveyId: Scalars['Int']
+}
+
+export interface ListingInputPaginated {
+  offset: Scalars['Int']
+  limit?: Maybe<Scalars['Int']>
 }
 
 export interface User {
@@ -308,6 +318,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   Subscription: ResolverTypeWrapper<{}>
+  ListingInputPaginated: ListingInputPaginated
   User: ResolverTypeWrapper<User>
   UserType: UserType
   EditUserInput: EditUserInput
@@ -333,6 +344,7 @@ export type ResolversParentTypes = {
   Mutation: {}
   Boolean: Scalars['Boolean']
   Subscription: {}
+  ListingInputPaginated: ListingInputPaginated
   User: User
   EditUserInput: EditUserInput
   Survey: Survey
@@ -369,6 +381,12 @@ export type QueryResolvers<
     RequireFields<QueryListingArgs, 'listingId'>
   >
   listings?: Resolver<Maybe<Array<ResolversTypes['Listing']>>, ParentType, ContextType>
+  listingsPaginated?: Resolver<
+    Maybe<Array<ResolversTypes['Listing']>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryListingsPaginatedArgs, never>
+  >
   comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>
 }
 

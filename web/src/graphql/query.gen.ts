@@ -194,6 +194,53 @@ export interface FetchListings {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: FetchListingsPaginated
+// ====================================================
+
+export interface FetchListingsPaginated_listingsPaginated_comments {
+  __typename: "Comment";
+  commentContents: string;
+  userId: number;
+  username: string;
+  userPic: string;
+  date: string;
+}
+
+export interface FetchListingsPaginated_listingsPaginated_tags {
+  __typename: "Tag";
+  type: TagType;
+}
+
+export interface FetchListingsPaginated_listingsPaginated {
+  __typename: "Listing";
+  id: number;
+  username: string;
+  price: number | null;
+  sellingName: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  description: string;
+  image: string;
+  comments: (FetchListingsPaginated_listingsPaginated_comments | null)[];
+  tags: (FetchListingsPaginated_listingsPaginated_tags | null)[];
+  userId_ref: number;
+}
+
+export interface FetchListingsPaginated {
+  listingsPaginated: FetchListingsPaginated_listingsPaginated[] | null;
+}
+
+export interface FetchListingsPaginatedVariables {
+  input: ListingInputPaginated;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchListing
 // ====================================================
 
@@ -626,6 +673,11 @@ export interface ListingInput {
   location: string;
   description: string;
   image: string;
+}
+
+export interface ListingInputPaginated {
+  offset: number;
+  limit?: number | null;
 }
 
 export interface SurveyInput {

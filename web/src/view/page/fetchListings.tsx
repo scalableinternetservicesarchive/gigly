@@ -26,6 +26,33 @@ export const fetchListings = gql`
     }
   }
 `
+export const fetchListingsPaginated = gql`
+  query FetchListingsPaginated($input: ListingInputPaginated!) {
+    listingsPaginated(input: $input) {
+      id
+      username
+      price
+      sellingName
+      startDate
+      endDate
+      location
+      description
+      image
+      comments {
+        commentContents
+        userId
+        username
+        userPic
+        date
+      }
+      tags {
+        type
+      }
+      userId_ref
+    }
+  }
+`
+
 export const fetchListing = gql`
   query FetchListing($listingId: Int!) {
     listing(listingId: $listingId) {

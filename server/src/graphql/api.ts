@@ -49,6 +49,22 @@ export const graphqlRoot: Resolvers<Context> = {
       return null
     },
     listings: () => Listing.find(),
+    listingsPaginated: async (_, { input }) => {
+      if (input == undefined || !input) return []
+      const { offset, limit } = input
+      let allListings = await Listing.find()
+      let ret = []
+      let i = 0
+      if (limit)
+        if (offset + limit > allListings.length) {
+          return allListings
+        }
+      if (limit)
+        for (; i < offset + limit; i++) {
+          ret.push(allListings[i])
+        }
+      return ret
+    },
     comments: () => Comment.find(),
   },
   Mutation: {
