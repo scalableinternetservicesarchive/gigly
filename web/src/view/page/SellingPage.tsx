@@ -127,6 +127,7 @@ export function SellingPage(props: LecturesPageProps) {
   const [showTags, setShowTags] = React.useState<TagType[]>([])
   const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
   const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
+  const [limit, setLimit] = React.useState<number>(1)
 
   // const { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
   //   variables: { userId: data?.listings.listing.userId_ref },
@@ -291,7 +292,7 @@ export function SellingPage(props: LecturesPageProps) {
                 </SideBarItem>
               </div>
             </div>
-            <div>
+            <div className="flex" style={{ flexDirection: 'column' }}>
               <input
                 className="input"
                 type="text"
@@ -309,6 +310,23 @@ export function SellingPage(props: LecturesPageProps) {
                   setSearch(e.target.value)
                 }}
               />
+              <label style={{ paddingTop: '5px' }}>
+                Set number to load:
+                <select
+                  value={limit}
+                  onChange={e => {
+                    setLimit(parseInt(e.target.value))
+                  }}
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+                <br />
+              </label>
             </div>
             <div
               className="flex flex-row"
@@ -330,7 +348,7 @@ export function SellingPage(props: LecturesPageProps) {
               onClick={() => {
                 paginatedFetchMore({
                   variables: {
-                    input: { offset: data.listingsPaginated?.length, limit: 1 },
+                    input: { offset: data.listingsPaginated?.length, limit },
                   },
                   updateQuery: (prev, { fetchMoreResult }) => {
                     return fetchMoreResult
