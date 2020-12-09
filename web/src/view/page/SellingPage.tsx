@@ -452,7 +452,7 @@ export function SellingPage(props: LecturesPageProps) {
                 onChange={e => setServicePriceEdited(parseInt(e.target.value))}
               />
               <input
-                type="text"
+                type="date"
                 placeholder="Availability: Start Date"
                 style={{
                   border: '1px solid #808080',
@@ -471,7 +471,7 @@ export function SellingPage(props: LecturesPageProps) {
                 onChange={e => setServiceStartDateEdited(e.target.value)}
               />
               <input
-                type="text"
+                type="date"
                 placeholder="Availability: End Date"
                 style={{
                   border: '1px solid #808080',
