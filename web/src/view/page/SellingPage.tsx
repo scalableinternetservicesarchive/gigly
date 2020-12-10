@@ -1,31 +1,43 @@
-import { InMemoryCache, useQuery } from '@apollo/client'
-import { offsetLimitPagination } from '@apollo/client/utilities'
+import { useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import Modal from 'react-modal'
 import { getApolloClient } from '../../graphql/apolloClient'
-import { FetchListings, FetchListings_listings, TagType } from '../../graphql/query.gen'
+import {
+  FetchListings,
+  FetchListingsPaginated,
+  FetchListingsPaginatedVariables,
+  FetchListings_listings,
+  TagType,
+} from '../../graphql/query.gen'
 import { style } from '../../style/styled'
 // import { fetchUser3 } from '../auth/fetchUser'
 // import { fetchUserFromID } from '../auth/fetchUser'
 import { AppRouteParams } from '../nav/route'
 import { toast } from '../toast/toast'
 import { Popup } from './components/Popup'
-import { fetchListings } from './fetchListings'
+import { fetchListings, fetchListingsPaginated } from './fetchListings'
 import { editListing } from './mutateListings'
 import { addTag } from './mutateTags'
 import { Page } from './Page'
 
 const customStyles = {
-  content : {
+  content: {
     backgroundColor: 'transparent',
     border: 'none',
     paddingTop: '0px',
-    overflow: 'hidden'
-  }
-};
+    overflow: 'hidden',
+  },
+}
 
-
+const customStylesEdit = {
+  content: {
+    backgroundColor: 'white',
+    border: 'none',
+    paddingTop: '0px',
+    overflow: 'hidden',
+  },
+}
 interface LecturesPageProps extends RouteComponentProps, AppRouteParams {}
 
 interface CardData {
@@ -99,25 +111,17 @@ const sortHeaderItems = [HeaderItems.MOST_RECENT, HeaderItems.LOW_TO_HIGH]
 // }
 
 export function SellingPage(props: LecturesPageProps) {
-  const cache = new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          feed: offsetLimitPagination(['type']),
-        },
-      },
-    },
-  })
-
   const [search, setSearch] = React.useState<string>('')
-  const { data, fetchMore } = useQuery<FetchListings>(fetchListings, {
-    variables: {
-      type: 'PUBLIC',
-      offset: 0,
-      limit: 1,
-    },
-  })
-  console.log(data)
+  const { data: _ } = useQuery<FetchListings>(fetchListings)
+  const { data, fetchMore: paginatedFetchMore } = useQuery<FetchListingsPaginated, FetchListingsPaginatedVariables>(
+    fetchListingsPaginated,
+    {
+      variables: {
+        input: { offset: 0, limit: 1 },
+      },
+      fetchPolicy: 'cache-and-network',
+    }
+  )
   const [selectedSort, setSelectedSort] = React.useState<HeaderItems>(HeaderItems.MOST_RECENT)
   const [listingToEdit, setListingToEdit] = React.useState<number>(0) // 0 means don't show the editing window!
   const [serviceNameEdited, setServiceNameEdited] = React.useState<string>('')
@@ -131,6 +135,8 @@ export function SellingPage(props: LecturesPageProps) {
   const [showTags, setShowTags] = React.useState<TagType[]>([])
   const tagtypes = [TagType.GROCERIES, TagType.HAIRCUT, TagType.TUTORING, TagType.OTHER]
   const [selectedTypes, _setSelectedTypes] = React.useState<TagType[]>([])
+  const [limit, setLimit] = React.useState<number>(1)
+
   // const { loading: userLoading, data: userData } = useQuery(fetchUserFromID, {
   //   variables: { userId: data?.listings.listing.userId_ref },
   // })
@@ -150,7 +156,7 @@ export function SellingPage(props: LecturesPageProps) {
   let cards: CardData[] = []
   if (data) {
     const cards: CardData[] = []
-    data?.listings?.map((listing, index) => {
+    data?.listingsPaginated?.map((listing, index) => {
       const tagList: TagType[] = []
       listing.tags.forEach(tag => {
         if (tag) {
@@ -169,8 +175,9 @@ export function SellingPage(props: LecturesPageProps) {
         tags: tagList,
 
         profPic:
-        // Pictures(listing.userId_ref)?.user.image ??
-        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',})
+          // Pictures(listing.userId_ref)?.user.image ??
+          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+      })
     })
 
     // Filter from searchbar
@@ -217,7 +224,7 @@ export function SellingPage(props: LecturesPageProps) {
     // let popupData: FetchListings_listings | null = null
     let popupData: FetchListings_listings | null = null
     if (listingToEdit !== 0) {
-      data?.listings?.forEach(listing => {
+      data?.listingsPaginated?.forEach(listing => {
         if (listing.id === listingToEdit) {
           popupData = listing
         }
@@ -293,7 +300,7 @@ export function SellingPage(props: LecturesPageProps) {
                 </SideBarItem>
               </div>
             </div>
-            <div>
+            <div className="flex" style={{ flexDirection: 'column' }}>
               <input
                 className="input"
                 type="text"
@@ -311,6 +318,23 @@ export function SellingPage(props: LecturesPageProps) {
                   setSearch(e.target.value)
                 }}
               />
+              <label style={{ paddingTop: '5px' }}>
+                Set number to load:
+                <select
+                  value={limit}
+                  onChange={e => {
+                    setLimit(parseInt(e.target.value))
+                  }}
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+                <br />
+              </label>
             </div>
             <div
               className="flex flex-row"
@@ -330,9 +354,12 @@ export function SellingPage(props: LecturesPageProps) {
                 cursor: 'pointer',
               }}
               onClick={() => {
-                fetchMore({
+                paginatedFetchMore({
                   variables: {
-                    offset: data.listings?.length,
+                    input: { offset: data.listingsPaginated?.length, limit },
+                  },
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    return fetchMoreResult
                   },
                 })
               }}
@@ -382,7 +409,7 @@ export function SellingPage(props: LecturesPageProps) {
           </form>
           <Popup listingId={listingToEdit} />
         </Modal>
-        <Modal isOpen={listingToEdit !== 0 && !showPopup}>
+        <Modal isOpen={listingToEdit !== 0 && !showPopup} style={customStylesEdit}>
           <form>
             <div style={{ paddingTop: '100px', marginLeft: '250px' }}>
               <div style={{ fontFamily: 'Roboto', fontSize: '28px' }}>Edit Listing (ID: {listingToEdit})</div>
@@ -425,7 +452,7 @@ export function SellingPage(props: LecturesPageProps) {
                 onChange={e => setServicePriceEdited(parseInt(e.target.value))}
               />
               <input
-                type="text"
+                type="date"
                 placeholder="Availability: Start Date"
                 style={{
                   border: '1px solid #808080',
@@ -444,7 +471,7 @@ export function SellingPage(props: LecturesPageProps) {
                 onChange={e => setServiceStartDateEdited(e.target.value)}
               />
               <input
-                type="text"
+                type="date"
                 placeholder="Availability: End Date"
                 style={{
                   border: '1px solid #808080',
