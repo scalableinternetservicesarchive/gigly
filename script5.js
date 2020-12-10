@@ -1,20 +1,21 @@
 import http from 'k6/http'
 import { check, sleep } from 'k6'
 import { Counter, Rate } from 'k6/metrics'
-export let errorRate = new Rate('errors');
-const listings = 100
+export let errorRate = new Rate('errors')
+const listings = 50
+const users = 30
 export const options = {
   scenarios: {
     signup: {
       executor: 'constant-vus',
       exec: 'signup',
-      vus: 60,
+      vus: 30,
       duration: '15s',
     },
     createListing: {
       executor: 'per-vu-iterations',
       exec: 'createListing',
-      vus: 100,
+      vus: 50,
       iterations: 1,
       startTime: '15s',
       maxDuration: '5s',
@@ -22,7 +23,7 @@ export const options = {
     addComments: {
       executor: 'per-vu-iterations',
       exec: 'addComments',
-      vus: 150,
+      vus: 100,
       iterations: 3,
       startTime: '20s',
       maxDuration: '30s',
@@ -30,72 +31,53 @@ export const options = {
     addTags: {
       executor: 'per-vu-iterations',
       exec: 'addTags',
-      vus: 100,
+      vus: 80,
       startTime: '20s',
-      maxDuration: '10s',
-    },
-    selling: {
-      executor: 'per-vu-iterations',
-      exec: 'selling',
-      vus: 200,
-      startTime: '40s',
-      maxDuration: '20s',
-    },
-    profile: {
-      executor: 'per-vu-iterations',
-      exec: 'profile',
-      vus: 50,
-      startTime: '30s',
       maxDuration: '10s',
     },
   },
 }
 
-export default function() {
+export default function () {
   signup()
   createListing()
   addComments()
   addTags()
   sleep(1)
-  selling()
-  profile()
 }
 
-export function profile () {
-  recordRates(http.get('http://localhost:3000/app/projects')) //my account endpoint
-}
-export function selling () {
-  http.get('http://localhost:3000/app/selling')
-}
-export function signup () {
-  var url = 'http://localhost:3000/auth/createUser';
+const names = ['Rachel', 'Chelsey', 'Julia', 'Katherine', 'Rach', 'Chels', 'Julie', 'Kat']
+export function signup() {
+  var url = 'http://gigly.cloudcity.computer/auth/createUser'
   var params = {
     headers: {
       // Authorization: 'Token ffc62b27db68502eebc6e90b7c1476d29c581f4d',
       'Content-Type': 'application/json',
     },
-  };
+  }
   var data = JSON.stringify({
     email: `${__VU}@gmail.com`,
-    name: `John`,
+    name: `${Math.floor(Math.random() * names.length() + 1)}`,
     password: `1234`,
     number: `123123123`,
     location: `Westwood`,
-  });
+  })
   check(http.post(url, data, params), {
-    'status is 201': (r) => r.status == 201,
-  }) || errorRate.add(1);
-  sleep(1);
+    'status is 201': r => r.status == 201,
+  }) || errorRate.add(1)
+  sleep(1)
 }
 
-export function createListing () {
+const names = ['Rachel', 'Chelsey', 'Julia', 'Katherine', 'Rach', 'Chels', 'Julie', 'Kat']
+const listings = ['haircut', 'tutor', 'piano lesson', 'web dev', 'massage']
+export function createListing() {
   let query = `
     mutation {
       addListing(listing: {
-        username: "bobaaaas"
+        username: ${Math.floor(Math.random() * names.length() + 1)}
         userId_ref: 2
         price: 0
-        sellingName: "boba"
+        sellingName: ${Math.floor(Math.random() * listings.length() + 1)}
         startDate: ""
         endDate: ""
         location: ""
@@ -107,28 +89,24 @@ export function createListing () {
         sellingName
       }
     }
-  `;
+  `
 
-  const resp = http.post(
-    'http://localhost:3000/graphql',
-    JSON.stringify({ query: query }),
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+  const resp = http.post('http://gigly.cloudcity.computer/graphql', JSON.stringify({ query: query }), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
   sleep(1)
 }
 
-export function addComments (){
+export function addComments() {
   let query = `
     mutation{
       addComment(
         comment: {
           date: "11/26/2020 at 21:50 PM"
           commentContents: "testing"
-          listingId_ref: ${Math.floor((Math.random() * listings + 1))}
+          listingId_ref: ${Math.floor(Math.random() * listings + 1)}
           userId: 2
           username: "Chelsey Wang"
           userPic: ""
@@ -142,28 +120,23 @@ export function addComments (){
         username
         userPic
       }
-    }`;
-  const resp = http.post(
-    'http://localhost:3000/graphql',
-    JSON.stringify({ query: query }),
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+    }`
+  const resp = http.post('http://gigly.cloudcity.computer/graphql', JSON.stringify({ query: query }), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
   sleep(1)
 }
-const tags = ["GROCERIES", "TUTORING", "HAIRCUT", "OTHER"]
+const tags = ['GROCERIES', 'TUTORING', 'HAIRCUT', 'OTHER']
 //         type: ${tags[Math.floor((Math.random() * 4) + 1)]}
 
-
-export function addTags (){
+export function addTags() {
   let query = `mutation{
     addTag(
       tag: {
-        type: ${tags[Math.floor((Math.random() * 4))]}
-        listingId: ${Math.floor((Math.random() * listings + 1))}
+        type: ${tags[Math.floor(Math.random() * 4)]}
+        listingId: ${Math.floor(Math.random() * listings + 1)}
       }
     ){
       type
@@ -171,16 +144,12 @@ export function addTags (){
         id
       }
     }
-  }`;
-  const resp = http.post(
-    'http://localhost:3000/graphql',
-    JSON.stringify({ query: query }),
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+  }`
+  const resp = http.post('http://gigly.cloudcity.computer/graphql', JSON.stringify({ query: query }), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
   sleep(1)
 }
 

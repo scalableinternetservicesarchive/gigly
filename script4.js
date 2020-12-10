@@ -62,13 +62,13 @@ export default function() {
 }
 
 export function profile () {
-  recordRates(http.get('http://localhost:3000/app/projects')) //my account endpoint
+  recordRates(http.get('http://gigly.cloudcity.computer/app/projects')) //my account endpoint
 }
 export function selling () {
-  http.get('http://localhost:3000/app/selling')
+  http.get('http://gigly.cloudcity.computer/app/selling')
 }
 export function signup () {
-  var url = 'http://localhost:3000/auth/createUser';
+  var url = 'http://gigly.cloudcity.computer/auth/createUser';
   var params = {
     headers: {
       // Authorization: 'Token ffc62b27db68502eebc6e90b7c1476d29c581f4d',
@@ -110,7 +110,7 @@ export function createListing () {
   `;
 
   const resp = http.post(
-    'http://localhost:3000/graphql',
+    'http://gigly.cloudcity.computer/graphql',
     JSON.stringify({ query: query }),
     {
       headers: {
@@ -144,7 +144,7 @@ export function addComments (){
       }
     }`;
   const resp = http.post(
-    'http://localhost:3000/graphql',
+    'http://gigly.cloudcity.computer/graphql',
     JSON.stringify({ query: query }),
     {
       headers: {
@@ -173,7 +173,7 @@ export function addTags (){
     }
   }`;
   const resp = http.post(
-    'http://localhost:3000/graphql',
+    'http://gigly.cloudcity.computer/graphql',
     JSON.stringify({ query: query }),
     {
       headers: {
